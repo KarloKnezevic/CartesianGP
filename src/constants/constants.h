@@ -1,0 +1,46 @@
+/*
+ * constants.h
+ *
+ *  Created on: 15. pro 2016.
+ *      Author: Karlo Knezevic
+ *		  Mail: karlo.knezevic@fer.hr
+ */
+
+#ifndef CONSTANTS_H_
+#define CONSTANTS_H_
+
+//-----------------------------------------------------------------
+//                       FUNCTION SET SIZE
+//-----------------------------------------------------------------
+
+#define FUNCTIONSETSIZE					50
+
+//-----------------------------------------------------------------
+//                         STRING LENGTH
+//-----------------------------------------------------------------
+
+#define FUNCTIONNAMELENGTH				11
+#define FITNESSFUNCTIONNAMELENGTH 		21
+#define MUTATIONTYPENAMELENGTH 			21
+#define SELECTIONSCHEMENAMELENGTH 		21
+#define REPRODUCTIONSCHEMENAMELENGTH 	21
+
+//-----------------------------------------------------------------
+//                             CGA
+//-----------------------------------------------------------------
+
+#define MU								1
+#define LAMBDA							4
+#define EVOLUTIONARYSTRATEGY			'+'
+#define MUTATIONRATE					0.05
+#define RECCURENTCONNECTIONPROBABILITY	0.00
+#define SHORTCUTCONNECTIONS				1
+#define TARGETFITNESS					0
+
+//-----------------------------------------------------------------
+//                             PRINT
+//-----------------------------------------------------------------
+
+#define UPDATEFREQUENCY					1
+
+#endif /* CONSTANTS_H_ */

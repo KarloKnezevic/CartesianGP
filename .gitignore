@@ -1,0 +1,12 @@
+#IDE specific
+.project
+.cproject
+.settings/*
+.idea/
+
+#CMake
+cmake-build-debug/*
+
+#EXE
+Debug/*
+Release/*
