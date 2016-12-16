@@ -319,13 +319,13 @@ int getChromosomeGenerations(struct chromosome *chromo);
 
 //-----------------------------------------------------------------
 
-//--struct dataSet *initialiseDataSetFromArrays(
-//        int numInputs,
-//        int numOutputs,
-//        int numSamples,
-//        double *inputs,
-//        double *outputs
-//);
+struct dataSet *initialiseDataSetFromArrays(
+        int numInputs,
+        int numOutputs,
+        int numSamples,
+        double *inputs,
+        double *outputs
+);
 
 /**
  * First line: in, out, #samples
@@ -339,9 +339,9 @@ int getChromosomeGenerations(struct chromosome *chromo);
  */
 //--struct dataSet *initialiseDataSetFromFile(char const *file);
 
-//--void freeDataSet(struct dataSet *data);
+void freeDataSet(struct dataSet *data);
 
-//--void printDataSet(struct dataSet *data);
+void printDataSet(struct dataSet *data);
 
 //--void saveDataSet(struct dataSet *data, char const *fileName);
 
@@ -366,15 +366,15 @@ double *getDataSetSampleInputs(struct dataSet *data, int sample);
  * @param input
  * @return
  */
-//--double getDataSetSampleInput(struct dataSet *data, int sample, int input);
+double getDataSetSampleInput(struct dataSet *data, int sample, int input);
 
-//--double *getDataSetSampleOutputs(struct dataSet *data, int sample);
+double *getDataSetSampleOutputs(struct dataSet *data, int sample);
 
 double getDataSetSampleOutput(struct dataSet *data, int sample, int output);
 
 //-----------------------------------------------------------------
 
-//--void freeResults(struct results *rels);
+void freeResults(struct results *rels);
 
 //--void saveResults(struct results *rels, char const *fileName);
 
@@ -384,7 +384,7 @@ double getDataSetSampleOutput(struct dataSet *data, int sample, int output);
  * @param run
  * @return
  */
-//--struct chromosome* getChromosome(struct results *rels, int run);
+struct chromosome* getChromosome(struct results *rels, int run);
 
 int getNumChromosomes(struct results *rels);
 

@@ -18,7 +18,7 @@ void probabilisticMutation(struct parameters *params, struct chromosome *chromo)
 	for (i = 0; i < params->numNodes; i++) {
 
 		//mutate the function gene
-		if (randDecimal() <= params->mutationRate) {
+		if (_randDecimal() <= params->mutationRate) {
 			chromo->nodes[i]->function = _getRandomFunction(
 					chromo->funcSet->numFunctions);
 		}
@@ -27,7 +27,7 @@ void probabilisticMutation(struct parameters *params, struct chromosome *chromo)
 		for (j = 0; j < params->arity; j++) {
 
 			//mutate random node input
-			if (randDecimal() <= params->mutationRate) {
+			if (_randDecimal() <= params->mutationRate) {
 				chromo->nodes[i]->inputs[j] = _getRandomNodeInput(
 						chromo->numInputs, chromo->numNodes, i,
 						params->recurrentConnectionProbability);
@@ -39,7 +39,7 @@ void probabilisticMutation(struct parameters *params, struct chromosome *chromo)
 	//for every chromosome output
 	for (i = 0; i < params->numOutputs; i++) {
 		//mutate chromosome output
-		if (randDecimal() <= params->mutationRate) {
+		if (_randDecimal() <= params->mutationRate) {
 			chromo->outputNodes[i] = _getRandomChromosomeOutput(
 					chromo->numInputs, chromo->numNodes,
 					params->shortcutConnections);

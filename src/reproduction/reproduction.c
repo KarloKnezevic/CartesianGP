@@ -18,7 +18,7 @@ void mutateRandomParent(struct parameters *params, struct chromosome **parents,
 
 	//for each child
 	for (i = 0; i < numChildren; i++) {
-		_copyChromosome(children[i], parents[randInt(numParents)]);
+		_copyChromosome(children[i], parents[_randInt(numParents)]);
 
 		_mutateChromosome(params, children[i]);
 	}

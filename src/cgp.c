@@ -56,6 +56,12 @@ struct chromosome *initialiseChromosomeFromChromosome(struct chromosome *chromo)
 	return _initialiseChromosomeFromChromosome(chromo);
 }
 
+struct dataSet *initialiseDataSetFromArrays(int numInputs, int numOutputs,
+		int numSamples, double *inputs, double *outputs) {
+	return _initialiseDataSetFromArrays(numInputs, numOutputs, numSamples,
+			inputs, outputs);
+}
+
 //-----------------------------------------------------------------
 //                          DESTROY
 //-----------------------------------------------------------------
@@ -68,6 +74,14 @@ void freeChromosome(struct chromosome *chromo) {
 	_freeChromosome(chromo);
 }
 
+void freeResults(struct results *rels) {
+	_freeResults(rels);
+}
+
+void freeDataSet(struct dataSet *data) {
+	_freeDataSet(data);
+}
+
 //-----------------------------------------------------------------
 //                          PRINT
 //-----------------------------------------------------------------
@@ -78,6 +92,10 @@ void printChromosome(struct chromosome *chromo) {
 
 void printParameters(struct parameters *params) {
 	_printParameters(params);
+}
+
+void printDataSet(struct dataSet *data) {
+	_printDataSet(data);
 }
 
 //-----------------------------------------------------------------
@@ -269,6 +287,14 @@ double *getDataSetSampleInputs(struct dataSet *data, int sample) {
 	return _getDataSetSampleInputs(data, sample);
 }
 
+double getDataSetSampleInput(struct dataSet *data, int sample, int input) {
+	return _getDataSetSampleInput(data, sample, input);
+}
+
+double *getDataSetSampleOutputs(struct dataSet *data, int sample) {
+	return _getDataSetSampleOutputs(data, sample);
+}
+
 int getChromosomeNodeArity(struct chromosome *chromo, int index) {
 	return _getChromosomeNodeArity(chromo, index);
 }
@@ -289,6 +315,10 @@ int compareChromosomes(struct chromosome *chromoA, struct chromosome *chromoB) {
 	return _compareChromosomes(chromoA, chromoB);
 }
 
+struct chromosome* getChromosome(struct results *rels, int run) {
+	return _getChromosome(rels, run);
+}
+
 int getNumChromosomes(struct results *rels) {
 	return _getNumChromosomes(rels);
 }
@@ -302,7 +332,7 @@ double getMedianFitness(struct results *rels) {
 }
 
 double getAverageActiveNodes(struct results *rels) {
-	return getAverageActiveNodes(rels);
+	return _getAverageActiveNodes(rels);
 }
 
 //-----------------------------------------------------------------
@@ -508,10 +538,10 @@ struct results* repeatCGP(struct parameters *params, struct dataSet *data,
 
 	printf("----------------------------------------------------\n");
 	//todo
-//	printf("MEAN\t%f\t%f\t%f\n", getAverageFitness(rels),
-//			getAverageGenerations(rels), getAverageActiveNodes(rels));
-//	printf("MEDIAN\t%f\t%f\t%f\n", getMedianFitness(rels),
-//			getMedianGenerations(rels), getMedianActiveNodes(rels));
+	printf("MEAN\t%f\t%f\t%f\n", getAverageFitness(rels),
+			_getAverageGenerations(rels), getAverageActiveNodes(rels));
+	printf("MEDIAN\t%f\t%f\t%f\n", getMedianFitness(rels),
+			_getMedianGenerations(rels), _getMedianActiveNodes(rels));
 	printf("----------------------------------------------------\n\n");
 
 	params->updateFrequency = updateFrequency;

@@ -8,6 +8,7 @@
 
 #include "results.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "chromosome.h"
 #include "util.h"
@@ -49,6 +50,23 @@ double _getAverageFitness(struct results *rels) {
 	return avgFit;
 }
 
+double _getAverageGenerations(struct results *rels) {
+	int i;
+	double avgGens = 0;
+	struct chromosome *chromoTemp;
+
+	for (i = 0; i < _getNumChromosomes(rels); i++) {
+
+		chromoTemp = rels->bestChromosomes[i];
+
+		avgGens += _getChromosomeGenerations(chromoTemp);
+	}
+
+	avgGens = avgGens / _getNumChromosomes(rels);
+
+	return avgGens;
+}
+
 double _getMedianFitness(struct results *rels) {
 	int i;
 	double med = 0;
@@ -63,6 +81,38 @@ double _getMedianFitness(struct results *rels) {
 	return med;
 }
 
+double _getMedianGenerations(struct results *rels) {
+	int i;
+	double med = 0;
+
+	int *array = (int*) malloc(_getNumChromosomes(rels) * sizeof(int));
+
+	for (i = 0; i < _getNumChromosomes(rels); i++) {
+		array[i] = _getChromosomeGenerations(rels->bestChromosomes[i]);
+	}
+
+	med = _medianInt(array, _getNumChromosomes(rels));
+
+	free(array);
+	return med;
+}
+
+double _getMedianActiveNodes(struct results *rels) {
+	int i;
+	double medActiveNodes = 0;
+
+	int *array = (int*) malloc(_getNumChromosomes(rels) * sizeof(int));
+
+	for (i = 0; i < _getNumChromosomes(rels); i++) {
+		array[i] = _getNumChromosomeActiveNodes(rels->bestChromosomes[i]);
+	}
+
+	medActiveNodes = _medianInt(array, _getNumChromosomes(rels));
+
+	free(array);
+	return medActiveNodes;
+}
+
 double _getAverageActiveNodes(struct results *rels) {
 	int i;
 	double avgActiveNodes = 0;
@@ -75,4 +125,38 @@ double _getAverageActiveNodes(struct results *rels) {
 
 	avgActiveNodes = avgActiveNodes / _getNumChromosomes(rels);
 	return avgActiveNodes;
+}
+
+struct chromosome* _getChromosome(struct results *rels, int run) {
+	struct chromosome *chromo;
+
+	if (rels == NULL) {
+		printf(
+				"Error: cannot get best chromosome from uninitialised results.\nTerminating.\n");
+		exit(0);
+	}
+
+	chromo = _initialiseChromosomeFromChromosome(rels->bestChromosomes[run]);
+
+	return chromo;
+}
+
+//-----------------------------------------------------------------
+//                          DESTRUCT
+//-----------------------------------------------------------------
+
+void _freeResults(struct results *rels) {
+	int i;
+
+	if (rels == NULL) {
+		printf("Warning: double freeing of results prevented.\n");
+		return;
+	}
+
+	for (i = 0; i < rels->numRuns; i++) {
+		_freeChromosome(rels->bestChromosomes[i]);
+	}
+
+	free(rels->bestChromosomes);
+	free(rels);
 }

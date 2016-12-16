@@ -266,7 +266,7 @@ void _setChromosomeActiveNodes(struct chromosome *chromo) {
 	}
 
 	//place active nodes in order
-	sortIntArray(chromo->activeNodes, chromo->numActiveNodes);
+	_sortIntArray(chromo->activeNodes, chromo->numActiveNodes);
 }
 
 void _setChromosomeFitness(struct parameters *params, struct chromosome *chromo,
@@ -516,7 +516,7 @@ int _getRandomFunction(int numFunctions) {
 		exit(0);
 	}
 
-	return randInt(numFunctions);
+	return _randInt(numFunctions);
 }
 
 int _getRandomNodeInput(int numChromoInputs, int numNodes, int nodePosition,
@@ -524,11 +524,11 @@ int _getRandomNodeInput(int numChromoInputs, int numNodes, int nodePosition,
 	int input;
 
 	//pick any ahead node or node itself
-	if (randDecimal() <= recurrentConnectionProbability) {
-		input = randInt(numNodes - nodePosition) + nodePosition + 1;
+	if (_randDecimal() <= recurrentConnectionProbability) {
+		input = _randInt(numNodes - nodePosition) + nodePosition + 1;
 	} else {
 		//pick any previous node
-		input = randInt(numChromoInputs + nodePosition);
+		input = _randInt(numChromoInputs + nodePosition);
 	}
 
 	return input;
@@ -540,10 +540,10 @@ int _getRandomChromosomeOutput(int numInputs, int numNodes,
 
 	//input can be directly connected do output
 	if (shortcutConnections == 1) {
-		output = randInt(numInputs + numNodes);
+		output = _randInt(numInputs + numNodes);
 	} else {
 		//only nodes output can be connected to output
-		output = randInt(numNodes) + numInputs;
+		output = _randInt(numNodes) + numInputs;
 	}
 
 	return output;

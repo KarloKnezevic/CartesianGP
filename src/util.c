@@ -10,12 +10,19 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 
-double randDecimal(void) {
+#define epsilon 1e-10
+
+//-----------------------------------------------------------------
+//                            RANDOM
+//-----------------------------------------------------------------
+
+double _randDecimal(void) {
 	return (double) rand() / (double) RAND_MAX;
 }
 
-int randInt(int n) {
+int _randInt(int n) {
 	if ((n - 1) == RAND_MAX) {
 		return rand();
 	} else {
@@ -33,12 +40,45 @@ int randInt(int n) {
 
 }
 
-void sortIntArray(int *array, const int length) {
-	//todo
+//-----------------------------------------------------------------
+//                            COMPARE
+//-----------------------------------------------------------------
+
+int compare(const void * a, const void * b) {
+	double diff = *(double *) a - *(double *) b;
+
+	if (fabs(diff) < epsilon) {
+		return 0;
+	}
+
+	return diff > 0 ? 1 : -1;
 }
 
-double medianInt(const int *anArray, const int length) {
+int _cmpInt(const void * a, const void * b) {
+	return compare(a, b);
+}
 
+int _cmpDouble(const void * a, const void * b) {
+	return compare(a, b);
+}
+
+//-----------------------------------------------------------------
+//                            SORT
+//-----------------------------------------------------------------
+
+void _sortIntArray(int *array, const int length) {
+	qsort(array, length, sizeof(int), _cmpInt);
+}
+
+void _sortDoubleArray(double *array, const int length) {
+	qsort(array, length, sizeof(double), _cmpDouble);
+}
+
+//-----------------------------------------------------------------
+//                            MEDIAN
+//-----------------------------------------------------------------
+
+double _medianInt(const int *anArray, const int length) {
 	int i;
 	int *copyArray = (int*) malloc(length * sizeof(int));
 	double median;
@@ -47,24 +87,19 @@ double medianInt(const int *anArray, const int length) {
 		copyArray[i] = anArray[i];
 	}
 
-	//todo: sort!
-	//sortIntArray(copyArray, length);
+	_sortIntArray(copyArray, length);
 
 	if (length % 2 == 0) {
 		median = (copyArray[(length / 2)] + copyArray[(length / 2) - 1]) / 2;
-	}
-
-	else {
+	} else {
 		median = copyArray[(length - 1) / 2];
 	}
 
 	free(copyArray);
-
 	return median;
 }
 
 double _medianDouble(const double *anArray, const int length) {
-
 	int i;
 	double *copyArray = (double*) malloc(length * sizeof(double));
 	double median;
@@ -73,19 +108,15 @@ double _medianDouble(const double *anArray, const int length) {
 		copyArray[i] = anArray[i];
 	}
 
-	//todo: sort!
-	//sortDoubleArray(copyArray, length);
+	_sortDoubleArray(copyArray, length);
 
 	if (length % 2 == 0) {
 		median = (copyArray[(length / 2)] + copyArray[(length / 2) - 1]) / 2;
-	}
-
-	else {
+	} else {
 		median = copyArray[(length - 1) / 2];
 	}
 
 	free(copyArray);
-
 	return median;
 }
 

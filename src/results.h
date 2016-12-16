@@ -32,8 +32,22 @@ int _getNumChromosomes(struct results *rels);
 
 double _getAverageFitness(struct results *rels);
 
-double _getMedianFitness(struct results *rels);
+double _getAverageGenerations(struct results *rels);
 
 double _getAverageActiveNodes(struct results *rels);
+
+double _getMedianFitness(struct results *rels);
+
+double _getMedianGenerations(struct results *rels);
+
+double _getMedianActiveNodes(struct results *rels);
+
+struct chromosome* _getChromosome(struct results *rels, int run);
+
+//-----------------------------------------------------------------
+//                          DESTRUCT
+//-----------------------------------------------------------------
+
+void _freeResults(struct results *rels);
 
 #endif /* RESULTS_H_ */

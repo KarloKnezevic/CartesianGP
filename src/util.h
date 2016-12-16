@@ -9,11 +9,33 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
-double randDecimal();
+//-----------------------------------------------------------------
+//                            RANDOM
+//-----------------------------------------------------------------
 
-int randInt(int n);
+double _randDecimal(void);
 
-void sortIntArray(int *array, const int length);
+int _randInt(int n);
+
+//-----------------------------------------------------------------
+//                            COMPARE
+//-----------------------------------------------------------------
+
+int _cmpInt(const void * a, const void * b);
+
+int _cmpDouble(const void * a, const void * b);
+
+//-----------------------------------------------------------------
+//                            SORT
+//-----------------------------------------------------------------
+
+void _sortIntArray(int *array, const int length);
+
+void _sortDoubleArray(double *array, const int length);
+
+//-----------------------------------------------------------------
+//                            MEDIAN
+//-----------------------------------------------------------------
 
 double _medianInt(const int *anArray, const int length);
 
