@@ -10,3 +10,6 @@ cmake-build-debug/*
 #EXE
 Debug/*
 Release/*
+
+#data
+data/*

@@ -15,6 +15,8 @@ set(SOURCE_FILES
     src/reproduction/reproduction.h
     src/selection/selection.c
     src/selection/selection.h
+        src/stream/stream.c
+        src/stream/stream.h
     src/cgp.c
     src/cgp.h
     src/chromosome.c

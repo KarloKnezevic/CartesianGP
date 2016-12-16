@@ -247,7 +247,7 @@ int isNodeActive(struct chromosome *chromo, int node);
 
 //-----------------------------------------------------------------
 
-//--void saveChromosome(struct chromosome *chromo, char const *fileName);
+void saveChromosome(struct chromosome *chromo, char const *fileName);
 
 //-----------------------------------------------------------------
 

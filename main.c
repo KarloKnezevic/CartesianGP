@@ -26,6 +26,8 @@ int main(int argc, char *argv[]) {
 
 	printChromosome(chromo);
 
+	saveChromosome(chromo, "data/chromosome.txt");
+
 	freeChromosome(chromo);
 	freeParameters(params);
 
