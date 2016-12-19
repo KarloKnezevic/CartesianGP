@@ -61,7 +61,8 @@ void addCustomNodeFunction(
         struct parameters *params,
         double (*function)(
                 const int numInputs,
-                const double *inputs
+                const double *inputs,
+				const double *weights
         ),
         char const *functionName,
         int maxNumInputs
@@ -118,6 +119,8 @@ void setRecurrentConnectionProbability(
  * @param shortcutConnections
  */
 void setShortcutConnections(struct parameters *params, int shortcutConnections);
+
+void setConnectionWeightRange(struct parameters *params, double weightRange);
 
 //-----------------------------------------------------------------
 
@@ -215,7 +218,7 @@ void freeChromosome(struct chromosome *chromo);
  * Active nodes labeled with an '*'.
  * @param chromo
  */
-void printChromosome(struct chromosome *chromo);
+void printChromosome(struct chromosome *chromo, int weights);
 
 //-----------------------------------------------------------------
 

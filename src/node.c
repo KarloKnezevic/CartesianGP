@@ -17,19 +17,21 @@
 //-----------------------------------------------------------------
 
 struct node *_initialiseNode(int numInputs, int numNodes, int arity,
-		int numFunctions, double recurrentConnectionProbability,
+		int numFunctions, double connectionWeightRange, double recurrentConnectionProbability,
 		int nodePosition) {
 	struct node *n;
 	int i;
 
 	n = (struct node*) malloc(sizeof(struct node));
 	n->inputs = (int*) malloc(arity * sizeof(int));
+	n->weights = (double*)malloc(arity * sizeof(double));
 	n->function = _getRandomFunction(numFunctions);
 	n->active = 1;
 
 	for (i = 0; i < arity; i++) {
 		n->inputs[i] = _getRandomNodeInput(numInputs, numNodes, nodePosition,
 				recurrentConnectionProbability);
+		n->weights[i] = _getRandomConnection(connectionWeightRange);
 	}
 
 	n->output = _initialiseMatrixFromScalar(0);
@@ -50,6 +52,7 @@ void _freeNode(struct node *n) {
 
 	_freeMatrix(n->output);
 	free(n->inputs);
+	free(n->weights);
 	free(n);
 }
 
@@ -69,5 +72,6 @@ void _copyNode(struct node *nodeDest, struct node *nodeSrc) {
 
 	for (i = 0; i < nodeSrc->maxArity; i++) {
 		nodeDest->inputs[i] = nodeSrc->inputs[i];
+		nodeDest->weights[i] = nodeSrc->weights[i];
 	}
 }

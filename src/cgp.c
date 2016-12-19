@@ -100,8 +100,8 @@ void freeDataSet(struct dataSet *data) {
 //                          PRINT
 //-----------------------------------------------------------------
 
-void printChromosome(struct chromosome *chromo) {
-	_printChromosome(chromo);
+void printChromosome(struct chromosome *chromo, int weights) {
+	_printChromosome(chromo, weights);
 }
 
 void printParameters(struct parameters *params) {
@@ -145,7 +145,7 @@ void addNodeFunction(struct parameters *params, char const *functionNames) {
 }
 
 void addCustomNodeFunction(struct parameters *params,
-		double (*function)(const int numInputs, const double *inputs),
+		double (*function)(const int numInputs, const double *inputs, const double *weights),
 		char const *functionName, int maxNumInputs) {
 	_addCustomNodeFunction(params, function, functionName, maxNumInputs);
 }
@@ -218,6 +218,10 @@ void setRecurrentConnectionProbability(struct parameters *params,
 
 void setShortcutConnections(struct parameters *params, int shortcutConnections) {
 	_setShortcutConnections(params, shortcutConnections);
+}
+
+void setConnectionWeightRange(struct parameters *params, double weightRange) {
+	_setConnectionWeightRange(params, weightRange);
 }
 
 void setCustomFitnessFunction(struct parameters *params,

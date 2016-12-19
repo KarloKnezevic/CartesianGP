@@ -13,15 +13,16 @@
 #include <stdio.h>
 #include <string.h>
 
-
-double __sumInputs(const int numInputs, const double *inputs);
+double sumWeigtedInputs(const int numInputs, const double *inputs,
+		const double *connectionWeights);
 
 //-----------------------------------------------------------------
 //                           FACTORY
 //-----------------------------------------------------------------
 
 struct function *_init(const char *functionName,
-		double (*function)(const int numInputs, const double *inputs), int args) {
+		double (*function)(const int numInputs, const double *inputs,
+				const double *connectionWeights), int args) {
 	struct function *object = (struct function*) malloc(
 			sizeof(struct function));
 
@@ -119,7 +120,9 @@ struct function *getFunction(char const *functionName) {
 //                          FUNCTIONS
 //-----------------------------------------------------------------
 
-double _add(const int numInputs, const double *inputs) {
+double _add(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 	double sum = inputs[0];
 
@@ -130,7 +133,12 @@ double _add(const int numInputs, const double *inputs) {
 	return sum;
 }
 
-double _sub(const int numInputs, const double *inputs) {
+/*
+ Node function sub. Returns the first input minus all remaining inputs.
+ */
+double _sub(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 	double sum = inputs[0];
 
@@ -141,7 +149,12 @@ double _sub(const int numInputs, const double *inputs) {
 	return sum;
 }
 
-double _mul(const int numInputs, const double *inputs) {
+/*
+ Node function mul. Returns the multiplication of all the inputs.
+ */
+double _mul(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 	double multiplication = inputs[0];
 
@@ -152,7 +165,12 @@ double _mul(const int numInputs, const double *inputs) {
 	return multiplication;
 }
 
-double _divide(const int numInputs, const double *inputs) {
+/*
+ Node function div. Returns the first input divided by the second input divided by the third input etc
+ */
+double _divide(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 	double divide = inputs[0];
 
@@ -163,68 +181,116 @@ double _divide(const int numInputs, const double *inputs) {
 	return divide;
 }
 
-//Node function abs. Returns the absolute of the first input
-double _absolute(const int numInputs, const double *inputs) {
+/*
+ Node function abs. Returns the absolute of the first input
+ */
+double _absolute(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return fabs(inputs[0]);
 }
 
-//Node function sqrt.  Returns the square root of the first input
-double _squareRoot(const int numInputs, const double *inputs) {
+/*
+ Node function sqrt.  Returns the square root of the first input
+ */
+double _squareRoot(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return sqrt(inputs[0]);
 }
 
-//Node function squ.  Returns the square of the first input
-double _square(const int numInputs, const double *inputs) {
+/*
+ Node function squ.  Returns the square of the first input
+ */
+double _square(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return pow(inputs[0], 2);
 }
 
-//Node function cub.  Returns the cube of the first input
-double _cube(const int numInputs, const double *inputs) {
+/*
+ Node function cub.  Returns the cube of the first input
+ */
+double _cube(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return pow(inputs[0], 3);
 }
 
-//Node function power.  Returns the first output to the power of the second
-double _power(const int numInputs, const double *inputs) {
+/*
+ Node function power.  Returns the first output to the power of the second
+ */
+double _power(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return pow(inputs[0], inputs[1]);
 }
 
-//Node function exp.  Returns the exponential of the first input
-double _exponential(const int numInputs, const double *inputs) {
+/*
+ Node function exp.  Returns the exponential of the first input
+ */
+double _exponential(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return exp(inputs[0]);
 }
 
-//Node function sin.  Returns the sine of the first input
-double _sine(const int numInputs, const double *inputs) {
+/*
+ Node function sin.  Returns the sine of the first input
+ */
+double _sine(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return sin(inputs[0]);
 }
 
-//Node function cos.  Returns the cosine of the first input
-double _cosine(const int numInputs, const double *inputs) {
+/*
+ Node function cos.  Returns the cosine of the first input
+ */
+double _cosine(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return cos(inputs[0]);
 }
 
-//Node function tan.  Returns the tangent of the first input
-double _tangent(const int numInputs, const double *inputs) {
+/*
+ Node function tan.  Returns the tangent of the first input
+ */
+double _tangent(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	return tan(inputs[0]);
 }
 
-//Node function one.  Always returns 1
-double _constOne(const int numInputs, const double *inputs) {
+/*
+ Node function one.  Always returns 1
+ */
+double _constOne(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
 	return 1;
 }
 
-//Node function zero.  Always returns 0
-double _constZero(const int numInputs, const double *inputs) {
+/*
+ Node function one.  Always returns 0
+ */
+double _constZero(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
 	return 0;
 }
 
-//Node function pi.  Always returns PI
-double _constPI(const int numInputs, const double *inputs) {
+/*
+ Node function one.  Always returns PI
+ */
+double _constPI(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
 	return M_PI;
 }
 
-//Node function rand.  Returns a random number between minus one and positive one
-double _randFloat(const int numInputs, const double *inputs) {
+/*
+ Node function rand.  Returns a random number between minus one and positive one
+ */
+double _randFloat(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
 
 	double random;
 
@@ -239,7 +305,9 @@ double _randFloat(const int numInputs, const double *inputs) {
  Node function and. logical AND, returns '1' if all inputs are '1'
  else, '0'
  */
-double _and(const int numInputs, const double *inputs) {
+double _and(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 
 	for (i = 0; i < numInputs; i++) {
@@ -253,10 +321,12 @@ double _and(const int numInputs, const double *inputs) {
 }
 
 /*
- Node function nand. logical NAND, returns '0' if all inputs are '1'
+ Node function and. logical NAND, returns '0' if all inputs are '1'
  else, '1'
  */
-double _nand(const int numInputs, const double *inputs) {
+double _nand(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 
 	for (i = 0; i < numInputs; i++) {
@@ -273,7 +343,9 @@ double _nand(const int numInputs, const double *inputs) {
  Node function or. logical OR, returns '0' if all inputs are '0'
  else, '1'
  */
-double _or(const int numInputs, const double *inputs) {
+double _or(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 
 	for (i = 0; i < numInputs; i++) {
@@ -290,7 +362,9 @@ double _or(const int numInputs, const double *inputs) {
  Node function nor. logical NOR, returns '1' if all inputs are '0'
  else, '0'
  */
-double _nor(const int numInputs, const double *inputs) {
+double _nor(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 
 	for (i = 0; i < numInputs; i++) {
@@ -307,7 +381,9 @@ double _nor(const int numInputs, const double *inputs) {
  Node function xor. logical XOR, returns '1' iff one of the inputs is '1'
  else, '0'. AKA 'one hot'.
  */
-double _xor(const int numInputs, const double *inputs) {
+double _xor(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 	int numOnes = 0;
 	int out;
@@ -336,7 +412,9 @@ double _xor(const int numInputs, const double *inputs) {
  Node function xnor. logical XNOR, returns '0' iff one of the inputs is '1'
  else, '1'.
  */
-double _xnor(const int numInputs, const double *inputs) {
+double _xnor(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
 	int numOnes = 0;
 	int out;
@@ -361,8 +439,12 @@ double _xnor(const int numInputs, const double *inputs) {
 	return out;
 }
 
-//Node function not. logical NOT, returns '1' if first input is '0', else '1'
-double _not(const int numInputs, const double *inputs) {
+/*
+ Node function not. logical NOT, returns '1' if first input is '0', else '1'
+ */
+double _not(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	double out;
 
 	if (inputs[0] == 0) {
@@ -374,11 +456,16 @@ double _not(const int numInputs, const double *inputs) {
 	return out;
 }
 
-//Node function wire. simply acts as a wire returning the first input
+/*
+ Node function wire. simply acts as a wire returning the first input
+ */
+double _wire(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
 
-double _wire(const int numInputs, const double *inputs) {
 	double out;
+
 	out = inputs[0];
+
 	return out;
 }
 
@@ -387,13 +474,15 @@ double _wire(const int numInputs, const double *inputs) {
  The specific sigmoid function used in the logistic function.
  range: [0,1]
  */
-double _sigmoid(const int numInputs, const double *inputs) {
-	double inputSum;
+double _sigmoid(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
+	double weightedInputSum;
 	double out;
 
-	inputSum = __sumInputs(numInputs, inputs);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights);
 
-	out = 1 / (1 + exp(-inputSum));
+	out = 1 / (1 + exp(-weightedInputSum));
 
 	return out;
 }
@@ -402,16 +491,18 @@ double _sigmoid(const int numInputs, const double *inputs) {
  Node function Gaussian. returns the Gaussian of the sum of weighted inputs.
  range: [0,1]
  */
-double _gaussian(const int numInputs, const double *inputs) {
-	double inputSum;
+double _gaussian(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
+	double weightedInputSum;
 	double out;
 
 	int centre = 0;
 	int width = 1;
 
-	inputSum = __sumInputs(numInputs, inputs);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights);
 
-	out = exp(-(pow(inputSum - centre, 2)) / (2 * pow(width, 2)));
+	out = exp(-(pow(weightedInputSum - centre, 2)) / (2 * pow(width, 2)));
 
 	return out;
 }
@@ -420,13 +511,15 @@ double _gaussian(const int numInputs, const double *inputs) {
  Node function step. returns the step function of the sum of weighted inputs.
  range: [0,1]
  */
-double _step(const int numInputs, const double *inputs) {
-	double inputSum;
+double _step(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
+	double weightedInputSum;
 	double out;
 
-	inputSum = __sumInputs(numInputs, inputs);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights);
 
-	if (inputSum < 0) {
+	if (weightedInputSum < 0) {
 		out = 0;
 	} else {
 		out = 1;
@@ -439,13 +532,15 @@ double _step(const int numInputs, const double *inputs) {
  Node function step. returns the step function of the sum of weighted inputs.
  range: [-1,1]
  */
-double _softsign(const int numInputs, const double *inputs) {
-	double inputSum;
+double _softsign(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
+	double weightedInputSum;
 	double out;
 
-	inputSum = __sumInputs(numInputs, inputs);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights);
 
-	out = inputSum / (1 + fabs(inputSum));
+	out = weightedInputSum / (1 + fabs(weightedInputSum));
 
 	return out;
 }
@@ -454,28 +549,32 @@ double _softsign(const int numInputs, const double *inputs) {
  Node function tanh. returns the tanh function of the sum of weighted inputs.
  range: [-1,1]
  */
-double _hyperbolicTangent(const int numInputs, const double *inputs) {
-	double inputSum;
+double _hyperbolicTangent(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
+	double weightedInputSum;
 	double out;
 
-	inputSum = __sumInputs(numInputs, inputs);
+	weightedInputSum = sumWeigtedInputs(numInputs, inputs, connectionWeights);
 
-	out = tanh(inputSum);
+	out = tanh(weightedInputSum);
 
 	return out;
 }
 
 /*
- Returns the sum of the inputs.
+ Returns the sum of the weighted inputs.
  */
-double __sumInputs(const int numInputs, const double *inputs) {
+double sumWeigtedInputs(const int numInputs, const double *inputs,
+		const double *connectionWeights) {
+
 	int i;
-	double sum = 0;
+	double weightedSum = 0;
 
 	for (i = 0; i < numInputs; i++) {
-		sum += inputs[i];
+		weightedSum += (inputs[i] * connectionWeights[i]);
 	}
 
-	return sum;
+	return weightedSum;
 }
 

@@ -23,6 +23,8 @@ struct parameters {
 
 	double recurrentConnectionProbability;
 
+	double connectionWeightRange;
+
 	int numInputs;
 	int numNodes;
 	int numOutputs;
@@ -85,6 +87,8 @@ void _setUpdateFrequency(struct parameters *params, int updateFrequency);
 
 void _setShortcutConnections(struct parameters *params, int shortcutConnections);
 
+void _setConnectionWeightRange(struct parameters *params, double weightRange);
+
 //-----------------------------------------------------------------
 //                          TOSTRING
 //-----------------------------------------------------------------
@@ -104,7 +108,7 @@ void _freeParameters(struct parameters *params);
 void _addNodeFunction(struct parameters *params, char const *functionNames);
 
 void _addCustomNodeFunction(struct parameters *params,
-		double (*function)(const int numInputs, const double *inputs),
+		double (*function)(const int numInputs, const double *inputs, const double *weights),
 		char const *functionName, int maxNumInputs);
 
 void _clearFunctionSet(struct parameters *params);

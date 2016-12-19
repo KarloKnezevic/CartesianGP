@@ -23,6 +23,8 @@ struct node {
 	int maxArity;
 
 	int actArity;
+
+	double *weights;
 };
 
 //-----------------------------------------------------------------
@@ -30,7 +32,7 @@ struct node {
 //-----------------------------------------------------------------
 
 struct node *_initialiseNode(int numInputs, int numNodes, int arity,
-		int numFunctions, double recurrentConnectionProbability,
+		int numFunctions, double connectionWeightRange, double recurrentConnectionProbability,
 		int nodePosition);
 
 //-----------------------------------------------------------------

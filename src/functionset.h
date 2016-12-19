@@ -24,7 +24,7 @@ struct functionSet {
 	int maxNumInputs[FUNCTIONSETSIZE];
 
 	double (*functions[FUNCTIONSETSIZE])(const int numInputs,
-			const double *inputs);
+			const double *inputs, const double *connectionWeights);
 
 	struct matrix (*mFunctions[FUNCTIONSETSIZE])(const int numInputs,
 				struct matrix *inputs);

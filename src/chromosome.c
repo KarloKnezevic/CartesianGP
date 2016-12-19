@@ -43,6 +43,7 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 	for (i = 0; i < params->numNodes; i++) {
 		chromo->nodes[i] = _initialiseNode(params->numInputs, params->numNodes,
 				params->arity, params->funcSet->numFunctions,
+				params->connectionWeightRange,
 				params->recurrentConnectionProbability, i);
 	}
 
@@ -66,7 +67,8 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 
 	_setChromosomeActiveNodes(chromo);
 
-	chromo->nodeInputsHold = (struct matrix**) malloc(params->arity * sizeof(struct matrix*));
+	chromo->nodeInputsHold = (struct matrix**) malloc(
+			params->arity * sizeof(struct matrix*));
 
 	for (i = 0; i < params->arity; i++) {
 		chromo->nodeInputsHold[i] = NULL;
@@ -101,7 +103,7 @@ struct chromosome *_initialiseChromosomeFromChromosome(
 	for (i = 0; i < chromo->numNodes; i++) {
 		chromoNew->nodes[i] = _initialiseNode(chromo->numInputs,
 				chromo->numNodes, chromo->arity, chromo->funcSet->numFunctions,
-				0, i);
+				0, 0, i);
 		_copyNode(chromoNew->nodes[i], chromo->nodes[i]);
 	}
 
@@ -303,7 +305,7 @@ void _resetChromosome(struct chromosome *chromo) {
 //                            TOSTRING
 //-----------------------------------------------------------------
 
-void _printChromosome(struct chromosome *chromo) {
+void _printChromosome(struct chromosome *chromo, int weights) {
 	int i, j;
 
 	if (chromo == NULL) {
@@ -324,8 +326,12 @@ void _printChromosome(struct chromosome *chromo) {
 				chromo->funcSet->functionNames[chromo->nodes[i]->function]);
 
 		for (j = 0; j < _getChromosomeNodeArity(chromo, i); j++) {
-
-			printf("%d ", chromo->nodes[i]->inputs[j]);
+			if (weights == 1) {
+				printf("%d,%+.1f\t", chromo->nodes[i]->inputs[j],
+						chromo->nodes[i]->weights[j]);
+			} else {
+				printf("%d ", chromo->nodes[i]->inputs[j]);
+			}
 
 		}
 
@@ -486,7 +492,7 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 		//calculate output of active function -> call delegate method
 //		chromo->nodes[currentActiveNode]->output =
 //				chromo->funcSet->functions[currentActiveNodeFunction](nodeArity,
-//						chromo->nodeInputsHold);
+//						chromo->nodeInputsHold, , chromo->nodes[currentActiveNode]->weights);
 		//TODO: KALKULACIJA FUNKCIJA!!!
 
 		_checkMatrixForNaN(chromo->nodes[currentActiveNode]->output, 0);
@@ -522,6 +528,10 @@ int _getRandomFunction(int numFunctions) {
 	}
 
 	return _randInt(numFunctions);
+}
+
+double _getRandomConnection(double weightRange) {
+	return (_randDecimal() * 2 * weightRange) - weightRange;
 }
 
 int _getRandomNodeInput(int numChromoInputs, int numNodes, int nodePosition,
@@ -687,6 +697,8 @@ int _compareChromosomes(struct chromosome *chromoA, struct chromosome *chromoB) 
 			}
 		}
 	}
+
+	//todo: weights
 
 	for (i = 0; i < chromoA->numOutputs; i++) {
 		if (chromoA->outputNodes[i] != chromoB->outputNodes[i]) {

@@ -32,6 +32,14 @@ void probabilisticMutation(struct parameters *params, struct chromosome *chromo)
 						chromo->numInputs, chromo->numNodes, i,
 						params->recurrentConnectionProbability);
 			}
+
+			//mutate the connection node
+			if (_randDecimal() <= params->mutationRate) {
+
+
+				chromo->nodes[i]->weights[j] = _getRandomConnection(
+						params->connectionWeightRange);
+			}
 		}
 
 	}

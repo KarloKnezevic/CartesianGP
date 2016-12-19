@@ -98,7 +98,10 @@ void _resetChromosome(struct chromosome *chromo);
 //                            TOSTRING
 //-----------------------------------------------------------------
 
-void _printChromosome(struct chromosome *chromo);
+
+
+
+void _printChromosome(struct chromosome *chromo, int weights);
 
 //-----------------------------------------------------------------
 //                          DESTRUCT
@@ -125,6 +128,8 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs);
 //-----------------------------------------------------------------
 
 int _getRandomFunction(int numFunctions);
+
+double _getRandomConnection(double weightRange);
 
 int _getRandomNodeInput(int numChromoInputs, int numNodes, int nodePosition,
 		double recurrentConnectionProbability);

@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
 //	chromo = initialiseChromosomeFromFile("data/chromosome.txt");
 
-	printChromosome(chromo);
+	printChromosome(chromo, 1);
 
 	saveChromosome(chromo, "data/copychromosome.txt");
 

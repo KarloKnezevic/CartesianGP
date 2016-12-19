@@ -107,7 +107,7 @@ struct chromosome* _loadChromosomeFromFile(char const *file) {
 
 		for (j = 0; j < arity; j++) {
 			line = fgets(buffer, sizeof(buffer), fp);
-			sscanf(line, "%d", &chromo->nodes[i]->inputs[j]);
+			sscanf(line, "%d,%lf", &chromo->nodes[i]->inputs[j], &chromo->nodes[i]->weights[j]);
 		}
 	}
 
@@ -233,7 +233,7 @@ void _saveChromosome(struct chromosome *chromo, char const *fileName) {
 		fprintf(fp, "%d\n", chromo->nodes[i]->function);
 
 		for (j = 0; j < chromo->arity; j++) {
-			fprintf(fp, "%d\n", chromo->nodes[i]->inputs[j]);
+			fprintf(fp, "%d,%f\n", chromo->nodes[i]->inputs[j], chromo->nodes[i]->weights[j]);
 		}
 
 	}

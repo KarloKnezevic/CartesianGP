@@ -35,6 +35,7 @@ struct parameters *_initialiseParameters(const int numInputs,
 	params->evolutionaryStrategy = EVOLUTIONARYSTRATEGY;
 	params->mutationRate = MUTATIONRATE;
 	params->recurrentConnectionProbability = RECCURENTCONNECTIONPROBABILITY;
+	params->connectionWeightRange = CONNECTIONWEIGHTRANGE;
 	params->shortcutConnections = SHORTCUTCONNECTIONS;
 	params->targetFitness = TARGETFITNESS;
 	params->updateFrequency = UPDATEFREQUENCY;
@@ -178,7 +179,6 @@ void _setTargetFitness(struct parameters *params, double targetFitness) {
 }
 
 void _setUpdateFrequency(struct parameters *params, int updateFrequency) {
-
 	if (updateFrequency < 0) {
 		printf(
 				"Warning: update frequency of %d is invalid. Update frequency must be >= 0. Update frequency is left unchanged as %d.\n",
@@ -189,7 +189,6 @@ void _setUpdateFrequency(struct parameters *params, int updateFrequency) {
 }
 
 void _setShortcutConnections(struct parameters *params, int shortcutConnections) {
-
 	if (shortcutConnections == 0 || shortcutConnections == 1) {
 		params->shortcutConnections = shortcutConnections;
 	} else {
@@ -197,6 +196,10 @@ void _setShortcutConnections(struct parameters *params, int shortcutConnections)
 				"\nWarning: shortcut connection '%d' is invalid. The shortcut connections takes values 0 or 1. The shortcut connection has been left unchanged as '%d'.\n",
 				shortcutConnections, params->shortcutConnections);
 	}
+}
+
+void _setConnectionWeightRange(struct parameters *params, double weightRange) {
+	params->connectionWeightRange = weightRange;
 }
 
 //-----------------------------------------------------------------
@@ -218,6 +221,7 @@ void _printParameters(struct parameters *params) {
 	printf("Nodes:\t\t\t\t\t%d\n", params->numNodes);
 	printf("Outputs:\t\t\t\t%d\n", params->numOutputs);
 	printf("Node Arity:\t\t\t\t%d\n", params->arity);
+	printf("Connection weights range:\t\t+/- %f\n", params->connectionWeightRange);
 	printf("Mutation Type:\t\t\t\t%s\n", params->mutationTypeName);
 	printf("Mutation rate:\t\t\t\t%f\n", params->mutationRate);
 	printf("Recurrent Connection Probability:\t%f\n",
@@ -281,7 +285,7 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 }
 
 void _addCustomNodeFunction(struct parameters *params,
-		double (*function)(const int numInputs, const double *inputs),
+		double (*function)(const int numInputs, const double *inputs, const double *weights),
 		char const *functionName, int maxNumInputs) {
 	if (params->funcSet->numFunctions >= FUNCTIONSETSIZE) {
 		printf(
