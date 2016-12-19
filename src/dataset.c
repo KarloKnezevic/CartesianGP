@@ -9,6 +9,7 @@
 #include "dataset.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "stream/stream.h"
 
 //-----------------------------------------------------------------
 //                          CONSTRUCTOR
@@ -44,6 +45,10 @@ struct dataSet *_initialiseDataSetFromArrays(int numInputs, int numOutputs,
 	}
 
 	return data;
+}
+
+struct dataSet *_initialiseDataSetFromFile(char const *file) {
+	return _loadDataSetFromFile(file);
 }
 
 //-----------------------------------------------------------------

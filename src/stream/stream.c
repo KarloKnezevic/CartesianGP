@@ -127,6 +127,76 @@ struct chromosome* _loadChromosomeFromFile(char const *file) {
 	return chromo;
 }
 
+/**
+ * THIS FILE SHOULD BE CHANGED ACCORDING TO INPUT DATA.
+ *
+ * CONSIDER CHANGING DATASET OBJECT.
+ */
+struct dataSet *_loadDataSetFromFile(char const *file) {
+	int i;
+	struct dataSet *data;
+	FILE *fp;
+	char *line, *record;
+	char buffer[1024];
+	int lineNum = -1;
+	int col;
+
+	fp = fopen(file, "r");
+
+	if (fp == NULL) {
+		printf("Error: file '%s' cannot be found.\nTerminating.\n", file);
+		exit(0);
+	}
+
+	data = (struct dataSet*) malloc(sizeof(struct dataSet));
+
+	while ((line = fgets(buffer, sizeof(buffer), fp)) != NULL) {
+
+		//1st line is metadata: #inputs,#outputs,#samples
+		if (lineNum == -1) {
+
+			sscanf(line, "%d,%d,%d", &(data->numInputs), &(data->numOutputs),
+					&(data->numSamples));
+
+			data->inputData = (double**) malloc(
+					data->numSamples * sizeof(double*));
+			data->outputData = (double**) malloc(
+					data->numSamples * sizeof(double*));
+
+			for (i = 0; i < data->numSamples; i++) {
+				data->inputData[i] = (double*) malloc(
+						data->numInputs * sizeof(double));
+				data->outputData[i] = (double*) malloc(
+						data->numOutputs * sizeof(double));
+			}
+		} else {
+
+			//first value
+			record = strtok(line, " ,\n");
+			col = 0;
+
+			//until the end of line
+			while (record != NULL) {
+				if (col < data->numInputs) {
+					data->inputData[lineNum][col] = atof(record);
+				} else {
+					data->outputData[lineNum][col - data->numInputs] = atof(
+							record);
+				}
+
+				record = strtok(NULL, " ,\n");
+				col++;
+			}
+		}
+
+		lineNum++;
+	}
+
+	fclose(fp);
+
+	return data;
+}
+
 //-----------------------------------------------------------------
 //                          WRITERS
 //-----------------------------------------------------------------
@@ -168,6 +238,40 @@ void _saveChromosome(struct chromosome *chromo, char const *fileName) {
 
 	for (i = 0; i < chromo->numOutputs; i++) {
 		fprintf(fp, "%d,", chromo->outputNodes[i]);
+	}
+
+	fflush(fp);
+
+	fclose(fp);
+}
+
+void _saveDataSet(struct dataSet *data, char const *fileName) {
+	int i, j;
+	FILE *fp;
+
+	fp = fopen(fileName, "w");
+
+	if (fp == NULL) {
+		printf("Warning: cannot save data set to %s. Data set was not saved.\n",
+				fileName);
+		return;
+	}
+
+	fprintf(fp, "%d,", data->numInputs);
+	fprintf(fp, "%d,", data->numOutputs);
+	fprintf(fp, "%d,", data->numSamples);
+	fprintf(fp, "\n");
+
+	for (i = 0; i < data->numSamples; i++) {
+		for (j = 0; j < data->numInputs; j++) {
+			fprintf(fp, "%f,", data->inputData[i][j]);
+		}
+
+		for (j = 0; j < data->numOutputs; j++) {
+			fprintf(fp, "%f,", data->outputData[i][j]);
+		}
+
+		fprintf(fp, "\n");
 	}
 
 	fflush(fp);

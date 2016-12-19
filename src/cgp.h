@@ -337,13 +337,13 @@ struct dataSet *initialiseDataSetFromArrays(
  * @param file
  * @return
  */
-//--struct dataSet *initialiseDataSetFromFile(char const *file);
+struct dataSet *initialiseDataSetFromFile(char const *file);
 
 void freeDataSet(struct dataSet *data);
 
 void printDataSet(struct dataSet *data);
 
-//--void saveDataSet(struct dataSet *data, char const *fileName);
+void saveDataSet(struct dataSet *data, char const *fileName);
 
 int getNumDataSetInputs(struct dataSet *data);
 

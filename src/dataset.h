@@ -33,6 +33,8 @@ struct dataSet *_initialiseDataSetFromArrays(
         double *outputs
 );
 
+struct dataSet *_initialiseDataSetFromFile(char const *file);
+
 //-----------------------------------------------------------------
 //                            TOSTRING
 //-----------------------------------------------------------------

@@ -72,6 +72,10 @@ struct dataSet *initialiseDataSetFromArrays(int numInputs, int numOutputs,
 			inputs, outputs);
 }
 
+struct dataSet *initialiseDataSetFromFile(char const *file) {
+	return _initialiseDataSetFromFile(file);
+}
+
 //-----------------------------------------------------------------
 //                          DESTROY
 //-----------------------------------------------------------------
@@ -114,6 +118,10 @@ void printDataSet(struct dataSet *data) {
 
 void saveChromosome(struct chromosome *chromo, char const *fileName) {
 	_saveChromosome(chromo, fileName);
+}
+
+void saveDataSet(struct dataSet *data, char const *fileName) {
+	_saveDataSet(data, fileName);
 }
 
 //-----------------------------------------------------------------

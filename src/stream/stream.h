@@ -17,12 +17,16 @@
 
 struct chromosome* _loadChromosomeFromFile(char const *file);
 
+struct dataSet *_loadDataSetFromFile(char const *file);
+
 
 //-----------------------------------------------------------------
 //                          WRITERS
 //-----------------------------------------------------------------
 
 void _saveChromosome(struct chromosome *chromo, char const *fileName);
+
+void _saveDataSet(struct dataSet *data, char const *fileName);
 
 
 #endif /* STREAM_H_ */
