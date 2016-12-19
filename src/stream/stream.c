@@ -278,3 +278,40 @@ void _saveDataSet(struct dataSet *data, char const *fileName) {
 
 	fclose(fp);
 }
+
+void _saveResults(struct results *rels, char const *fileName) {
+	FILE *fp;
+	int i;
+
+	struct chromosome *chromoTemp;
+
+	if (rels == NULL) {
+		printf(
+				"Warning: cannot save uninitialised results structure. Results not saved.\n");
+		return;
+	}
+
+	fp = fopen(fileName, "w");
+
+	if (fp == NULL) {
+		printf(
+				"Warning: cannot open '%s' and so cannot save results to that file. Results not saved.\n",
+				fileName);
+		return;
+	}
+
+	fprintf(fp, "Run,Fitness,Generations,Active Nodes\n");
+
+	for (i = 0; i < rels->numRuns; i++) {
+		chromoTemp = _getChromosome(rels, i);
+
+		fprintf(fp, "%d,%f,%d,%d\n", i, chromoTemp->fitness,
+				chromoTemp->generation, chromoTemp->numActiveNodes);
+
+		_freeChromosome(chromoTemp);
+	}
+
+	fflush(fp);
+
+	fclose(fp);
+}

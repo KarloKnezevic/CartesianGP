@@ -10,6 +10,7 @@
 #define STREAM_H_
 
 #include "../chromosome.h"
+#include "../results.h"
 
 //-----------------------------------------------------------------
 //                          READERS
@@ -27,6 +28,8 @@ struct dataSet *_loadDataSetFromFile(char const *file);
 void _saveChromosome(struct chromosome *chromo, char const *fileName);
 
 void _saveDataSet(struct dataSet *data, char const *fileName);
+
+void _saveResults(struct results *rels, char const *fileName);
 
 
 #endif /* STREAM_H_ */

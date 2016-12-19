@@ -376,7 +376,7 @@ double getDataSetSampleOutput(struct dataSet *data, int sample, int output);
 
 void freeResults(struct results *rels);
 
-//--void saveResults(struct results *rels, char const *fileName);
+void saveResults(struct results *rels, char const *fileName);
 
 /**
  * Copy of the best chromosome found on the given run.

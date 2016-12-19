@@ -124,6 +124,10 @@ void saveDataSet(struct dataSet *data, char const *fileName) {
 	_saveDataSet(data, fileName);
 }
 
+void saveResults(struct results *rels, char const *fileName) {
+	_saveResults(rels, fileName);
+}
+
 //-----------------------------------------------------------------
 //                          COPY
 //-----------------------------------------------------------------
