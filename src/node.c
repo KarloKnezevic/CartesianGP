@@ -32,7 +32,7 @@ struct node *_initialiseNode(int numInputs, int numNodes, int arity,
 				recurrentConnectionProbability);
 	}
 
-	n->output = 0;
+	n->output = _initialiseMatrixFromScalar(0);
 	n->maxArity = arity;
 
 	return n;
@@ -48,6 +48,7 @@ void _freeNode(struct node *n) {
 		return;
 	}
 
+	_freeMatrix(n->output);
 	free(n->inputs);
 	free(n);
 }

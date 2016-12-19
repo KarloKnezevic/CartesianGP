@@ -9,6 +9,8 @@
 #ifndef NODE_H_
 #define NODE_H_
 
+#include "math/lialg.h"
+
 struct node {
 	int function;
 
@@ -16,7 +18,7 @@ struct node {
 
 	int active;
 
-	double output;
+	struct matrix *output;
 
 	int maxArity;
 

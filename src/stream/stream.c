@@ -13,6 +13,7 @@
 
 #include "../parameters.h"
 #include "../functions/functions.h"
+#include "../math/lialg.h"
 
 //-----------------------------------------------------------------
 //                          READERS
@@ -158,14 +159,14 @@ struct dataSet *_loadDataSetFromFile(char const *file) {
 			sscanf(line, "%d,%d,%d", &(data->numInputs), &(data->numOutputs),
 					&(data->numSamples));
 
-			data->inputData = (double**) malloc(
-					data->numSamples * sizeof(double*));
+			data->inputData = (struct matrix ***) malloc(
+					data->numSamples * sizeof(struct matrix*));
 			data->outputData = (double**) malloc(
 					data->numSamples * sizeof(double*));
 
 			for (i = 0; i < data->numSamples; i++) {
-				data->inputData[i] = (double*) malloc(
-						data->numInputs * sizeof(double));
+				data->inputData[i] = (struct matrix **) malloc(
+						data->numInputs * sizeof(struct matrix*));
 				data->outputData[i] = (double*) malloc(
 						data->numOutputs * sizeof(double));
 			}
@@ -178,7 +179,8 @@ struct dataSet *_loadDataSetFromFile(char const *file) {
 			//until the end of line
 			while (record != NULL) {
 				if (col < data->numInputs) {
-					data->inputData[lineNum][col] = atof(record);
+					data->inputData[lineNum][col] = _initialiseMatrixFromScalar(
+							atof(record));
 				} else {
 					data->outputData[lineNum][col - data->numInputs] = atof(
 							record);
@@ -264,7 +266,7 @@ void _saveDataSet(struct dataSet *data, char const *fileName) {
 
 	for (i = 0; i < data->numSamples; i++) {
 		for (j = 0; j < data->numInputs; j++) {
-			fprintf(fp, "%f,", data->inputData[i][j]);
+			fprintf(fp, "%f,", _getMatrixAsScalar(data->inputData[i][j]));
 		}
 
 		for (j = 0; j < data->numOutputs; j++) {

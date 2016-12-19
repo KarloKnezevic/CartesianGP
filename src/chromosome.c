@@ -37,8 +37,8 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 			params->numNodes * sizeof(struct node*));
 	chromo->outputNodes = (int*) malloc(params->numOutputs * sizeof(int));
 	chromo->activeNodes = (int*) malloc(params->numNodes * sizeof(int));
-	chromo->outputValues = (double*) malloc(
-			params->numOutputs * sizeof(double));
+	chromo->outputValues = (struct matrix **) malloc(
+			params->numOutputs * sizeof(struct matrix*));
 
 	for (i = 0; i < params->numNodes; i++) {
 		chromo->nodes[i] = _initialiseNode(params->numInputs, params->numNodes,
@@ -66,7 +66,11 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 
 	_setChromosomeActiveNodes(chromo);
 
-	chromo->nodeInputsHold = (double*) malloc(params->arity * sizeof(double));
+	chromo->nodeInputsHold = (struct matrix**) malloc(params->arity * sizeof(struct matrix*));
+
+	for (i = 0; i < params->arity; i++) {
+		chromo->nodeInputsHold[i] = NULL;
+	}
 
 	return chromo;
 }
@@ -91,8 +95,8 @@ struct chromosome *_initialiseChromosomeFromChromosome(
 
 	chromoNew->activeNodes = (int*) malloc(chromo->numNodes * sizeof(int));
 
-	chromoNew->outputValues = (double*) malloc(
-			chromo->numOutputs * sizeof(double));
+	chromoNew->outputValues = (struct matrix**) malloc(
+			chromo->numOutputs * sizeof(struct matrix*));
 
 	for (i = 0; i < chromo->numNodes; i++) {
 		chromoNew->nodes[i] = _initialiseNode(chromo->numInputs,
@@ -120,8 +124,8 @@ struct chromosome *_initialiseChromosomeFromChromosome(
 
 	_setChromosomeActiveNodes(chromoNew);
 
-	chromoNew->nodeInputsHold = (double*) malloc(
-			chromo->arity * sizeof(double));
+	chromoNew->nodeInputsHold = (struct matrix **) malloc(
+			chromo->arity * sizeof(struct matrix *));
 
 	return chromoNew;
 }
@@ -174,7 +178,7 @@ int _getNumChromosomeActiveNodes(struct chromosome *chromo) {
 	return chromo->numActiveNodes;
 }
 
-double _getChromosomeNodeValue(struct chromosome *chromo, int node) {
+struct matrix *_getChromosomeNodeValue(struct chromosome *chromo, int node) {
 	if (node < 0 || node > chromo->numNodes) {
 		printf(
 				"Error: node less than or greater than the number of nodes  in chromosome. Called from getChromosomeNodeValue.\n");
@@ -194,7 +198,7 @@ int _isNodeActive(struct chromosome *chromo, int node) {
 	return chromo->nodes[node]->active;
 }
 
-double _getChromosomeOutput(struct chromosome *chromo, int output) {
+struct matrix *_getChromosomeOutput(struct chromosome *chromo, int output) {
 	if (output < 0 || output > chromo->numOutputs) {
 		printf(
 				"Error: output less than or greater than the number of chromosome outputs. Called from getChromosomeOutput.\n");
@@ -291,7 +295,7 @@ void _resetChromosome(struct chromosome *chromo) {
 	int i;
 
 	for (i = 0; i < chromo->numNodes; i++) {
-		chromo->nodes[i]->output = 0;
+		chromo->nodes[i]->output = _initialiseMatrixFromScalar(0);
 	}
 }
 
@@ -355,6 +359,10 @@ void _freeChromosome(struct chromosome *chromo) {
 
 	for (i = 0; i < chromo->numNodes; i++) {
 		_freeNode(chromo->nodes[i]);
+	}
+
+	for (i = 0; i < chromo->arity; i++) {
+		_freeMatrix(chromo->nodeInputsHold[i]);
 	}
 
 	free(chromo->nodeInputsHold);
@@ -431,7 +439,7 @@ void _removeInactiveNodes(struct chromosome *chromo) {
 //                           EXECUTOR
 //-----------------------------------------------------------------
 
-void _executeChromosome(struct chromosome *chromo, const double *inputs) {
+void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 	int i, j;
 	int nodeInputLocation;
 	int currentActiveNode;
@@ -476,22 +484,14 @@ void _executeChromosome(struct chromosome *chromo, const double *inputs) {
 		currentActiveNodeFunction = chromo->nodes[currentActiveNode]->function;
 
 		//calculate output of active function -> call delegate method
-		chromo->nodes[currentActiveNode]->output =
-				chromo->funcSet->functions[currentActiveNodeFunction](nodeArity,
-						chromo->nodeInputsHold);
+//		chromo->nodes[currentActiveNode]->output =
+//				chromo->funcSet->functions[currentActiveNodeFunction](nodeArity,
+//						chromo->nodeInputsHold);
+		//TODO: KALKULACIJA FUNKCIJA!!!
 
-		//deal with NaN -> if NaN, then 0
-		if (isnan(chromo->nodes[currentActiveNode]->output) != 0) {
-			chromo->nodes[currentActiveNode]->output = 0;
-		} else if (isinf(chromo->nodes[currentActiveNode]->output) != 0) {
-			//deal with Inf and -Inf
+		_checkMatrixForNaN(chromo->nodes[currentActiveNode]->output, 0);
 
-			if (chromo->nodes[currentActiveNode]->output > 0) {
-				chromo->nodes[currentActiveNode]->output = DBL_MAX;
-			} else {
-				chromo->nodes[currentActiveNode]->output = DBL_MIN;
-			}
-		}
+		_checkMatrixForInf(chromo->nodes[currentActiveNode]->output);
 	}
 
 	//set chromosome output

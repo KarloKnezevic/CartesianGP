@@ -29,13 +29,41 @@ struct matrix *_initialiseMatrix(int rows, int cols);
 struct matrix *_initialiseMatrixFromArray(int rows, int cols, double *array);
 
 //-----------------------------------------------------------------
+//                            SETTER
+//-----------------------------------------------------------------
+
+void _setSMatrixData(struct matrix *m, double val);
+
+void _setMatrixData(struct matrix *m, int i, int j, double val);
+
+//-----------------------------------------------------------------
+//                            GETTER
+//-----------------------------------------------------------------
+
+double _getMatrixAsScalar(struct matrix *m);
+
+//-----------------------------------------------------------------
 //                            TOSTRING
 //-----------------------------------------------------------------
 
 void _printMatrix(struct matrix *m);
 
+//-----------------------------------------------------------------
+//                          DESTRUCT
+//-----------------------------------------------------------------
 
+void _freeMatrix(struct matrix *m);
 
+//-----------------------------------------------------------------
+//                          UTILITY
+//-----------------------------------------------------------------
 
+void _checkMatrixForNaN(struct matrix *m, double val);
+
+void _checkMatrixForInf(struct matrix *m);
+
+void _copyMatrix(struct matrix *mDest, struct matrix *mSrc);
+
+struct matrix *_copyMatrixOf(struct matrix *m);
 
 #endif /* LIALG_H_ */

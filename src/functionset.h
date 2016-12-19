@@ -10,6 +10,7 @@
 #define FUNCTIONSET_H_
 
 #include "constants/constants.h"
+#include "math/lialg.h"
 
 struct parameters;
 
@@ -24,6 +25,9 @@ struct functionSet {
 
 	double (*functions[FUNCTIONSETSIZE])(const int numInputs,
 			const double *inputs);
+
+	struct matrix (*mFunctions[FUNCTIONSETSIZE])(const int numInputs,
+				struct matrix *inputs);
 };
 
 void _printFunctionSet(struct parameters *params);

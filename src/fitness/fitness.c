@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include "../math/lialg.h"
 
 double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 		struct dataSet *data) {
@@ -37,9 +38,10 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 		_executeChromosome(chromo, _getDataSetSampleInputs(data, i));
 
 		//for each output
+		//TODO:think about error!
 		for (j = 0; j < _getNumChromosomeOutputs(chromo); j++) {
 			error += fabs(
-					_getChromosomeOutput(chromo, j)
+					_getMatrixAsScalar(_getChromosomeOutput(chromo, j))
 							- _getDataSetSampleOutput(data, i, j));
 		}
 

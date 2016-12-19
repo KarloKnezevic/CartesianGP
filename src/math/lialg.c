@@ -8,7 +8,9 @@
 
 #include "lialg.h"
 #include <stdio.h>
-#include "stdlib.h"
+#include <stdlib.h>
+#include <math.h>
+#include <float.h>
 
 //-----------------------------------------------------------------
 //                          CONSTRUCTOR
@@ -51,7 +53,7 @@ struct matrix *_initialiseMatrix(int rows, int cols) {
 	m->cols = cols;
 
 	//rows
-	m->data = (double **) malloc(rows * sizeof(double));
+	m->data = (double **) malloc(rows * sizeof(double*));
 
 	//cols
 	for (i = 0; i < rows; i++) {
@@ -62,6 +64,38 @@ struct matrix *_initialiseMatrix(int rows, int cols) {
 	}
 
 	return m;
+}
+
+//-----------------------------------------------------------------
+//                            SETTER
+//-----------------------------------------------------------------
+
+void _setSMatrixData(struct matrix *m, double val) {
+	_setMatrixData(m, 0, 0, val);
+}
+
+void _setMatrixData(struct matrix *m, int i, int j, double val) {
+	if (NULL == m) {
+		printf("Error: matrix has not been initialised.\n");
+		exit(0);
+	}
+
+	m->data[i][j] = val;
+}
+
+//-----------------------------------------------------------------
+//                            GETTER
+//-----------------------------------------------------------------
+
+double _getMatrixAsScalar(struct matrix *m) {
+	if (NULL == m) {
+		printf("Error: matrix has not been initialised.\n");
+		return 0;
+	}
+
+	//return 1st element
+	//if matrix is not 1x1, consider what to return
+	return m->data[0][0];
 }
 
 //-----------------------------------------------------------------
@@ -88,9 +122,81 @@ void _printMatrix(struct matrix *m) {
 
 			printf("%.3lf", m->data[i][j]);
 		}
-		printf("|\n");
+		printf("|");
 	}
 
 	return;
+}
+
+//-----------------------------------------------------------------
+//                          DESTRUCT
+//-----------------------------------------------------------------
+
+void _freeMatrix(struct matrix *m) {
+	if (m == NULL) {
+		printf("Warning: double freeing of matrix prevented.\n");
+		return;
+	}
+
+	int i;
+	for (i = 0; i < m->rows; i++) {
+		free(m->data[i]);
+	}
+
+	free(m->data);
+	free(m);
+}
+
+//-----------------------------------------------------------------
+//                          ASSERT
+//-----------------------------------------------------------------
+
+void _checkMatrixForNaN(struct matrix *m, double val) {
+	if (m == NULL) {
+		printf("Error: matrix has not been initialised.\n");
+		return;
+	}
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			if (isnan(m->data[i][j]) != 0) {
+				m->data[i][j] = 0;
+			}
+		}
+	}
+}
+
+void _checkMatrixForInf(struct matrix *m) {
+	if (m == NULL) {
+		printf("Error: matrix has not been initialised.\n");
+		return;
+	}
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			if (isinf(m->data[i][j]) != 0) {
+				if (m->data[i][j] > 0) {
+					m->data[i][j] = DBL_MAX;
+				} else {
+					m->data[i][j] = DBL_MIN;
+				}
+
+			}
+		}
+	}
+}
+
+void _copyMatrix(struct matrix *mDest, struct matrix *mSrc) {
+	for (int i = 0; i < mSrc->rows; i++) {
+		for (int j = 0; j < mSrc->cols; j++) {
+			mDest->data[i][j] = mSrc->data[i][j];
+		}
+	}
+}
+
+struct matrix *_copyMatrixOf(struct matrix *m) {
+	struct matrix *copyOfM = _initialiseMatrix(m->rows, m->cols);
+	_copyMatrix(copyOfM, m);
+	return copyOfM;
 }
 

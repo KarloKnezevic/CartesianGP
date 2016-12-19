@@ -5,6 +5,8 @@
 #ifndef CGP_CGP_H
 #define CGP_CGP_H
 
+struct matrix;
+
 /**
  * General evolutionary parameters.
  */
@@ -217,7 +219,7 @@ void printChromosome(struct chromosome *chromo);
 
 //-----------------------------------------------------------------
 
-void executeChromosome(struct chromosome *chromo, const double *inputs);
+void executeChromosome(struct chromosome *chromo, struct matrix **inputs);
 
 //-----------------------------------------------------------------
 
@@ -227,7 +229,7 @@ void executeChromosome(struct chromosome *chromo, const double *inputs);
  * @param output
  * @return
  */
-double getChromosomeOutput(struct chromosome *chromo, int output);
+struct matrix *getChromosomeOutput(struct chromosome *chromo, int output);
 
 /**
  * Node is the index ot the node to be retrieved.
@@ -235,7 +237,7 @@ double getChromosomeOutput(struct chromosome *chromo, int output);
  * @param node
  * @return
  */
-double getChromosomeNodeValue(struct chromosome *chromo, int node);
+struct matrix *getChromosomeNodeValue(struct chromosome *chromo, int node);
 
 /**
  * Returns 1 or 0 as active or inactive.
@@ -357,7 +359,7 @@ int getNumDataSetSamples(struct dataSet *data);
  * @param sample
  * @return
  */
-double *getDataSetSampleInputs(struct dataSet *data, int sample);
+struct matrix **getDataSetSampleInputs(struct dataSet *data, int sample);
 
 /**
  * Returns input value for given sample index and input index.
@@ -366,7 +368,7 @@ double *getDataSetSampleInputs(struct dataSet *data, int sample);
  * @param input
  * @return
  */
-double getDataSetSampleInput(struct dataSet *data, int sample, int input);
+struct matrix *getDataSetSampleInput(struct dataSet *data, int sample, int input);
 
 double *getDataSetSampleOutputs(struct dataSet *data, int sample);
 

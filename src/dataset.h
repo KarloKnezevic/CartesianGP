@@ -9,6 +9,8 @@
 #ifndef DATASET_H_
 #define DATASET_H_
 
+#include "math/lialg.h"
+
 struct dataSet {
 	int numSamples;
 
@@ -16,7 +18,7 @@ struct dataSet {
 
 	int numOutputs;
 
-	double **inputData;
+	struct matrix ***inputData;
 
 	double **outputData;
 };
@@ -53,9 +55,9 @@ int _getNumDataSetSamples(struct dataSet *data);
 
 double _getDataSetSampleOutput(struct dataSet *data, int sample, int output);
 
-double *_getDataSetSampleInputs(struct dataSet *data, int sample);
+struct matrix **_getDataSetSampleInputs(struct dataSet *data, int sample);
 
-double _getDataSetSampleInput(struct dataSet *data, int sample, int input);
+struct matrix *_getDataSetSampleInput(struct dataSet *data, int sample, int input);
 
 double *_getDataSetSampleOutputs(struct dataSet *data, int sample);
 

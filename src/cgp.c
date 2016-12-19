@@ -170,7 +170,7 @@ void removeInactiveNodes(struct chromosome *chromo) {
 //                  		EXECUTOR
 //-----------------------------------------------------------------
 
-void executeChromosome(struct chromosome *chromo, const double *inputs) {
+void executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 	_executeChromosome(chromo, inputs);
 }
 
@@ -297,11 +297,11 @@ int getNumDataSetSamples(struct dataSet *data) {
 	return _getNumDataSetSamples(data);
 }
 
-double getChromosomeOutput(struct chromosome *chromo, int output) {
+struct matrix *getChromosomeOutput(struct chromosome *chromo, int output) {
 	return _getChromosomeOutput(chromo, output);
 }
 
-double getChromosomeNodeValue(struct chromosome *chromo, int node) {
+struct matrix *getChromosomeNodeValue(struct chromosome *chromo, int node) {
 	return _getChromosomeNodeValue(chromo, node);
 }
 
@@ -313,11 +313,11 @@ double getDataSetSampleOutput(struct dataSet *data, int sample, int output) {
 	return _getDataSetSampleOutput(data, sample, output);
 }
 
-double *getDataSetSampleInputs(struct dataSet *data, int sample) {
+struct matrix **getDataSetSampleInputs(struct dataSet *data, int sample) {
 	return _getDataSetSampleInputs(data, sample);
 }
 
-double getDataSetSampleInput(struct dataSet *data, int sample, int input) {
+struct matrix *getDataSetSampleInput(struct dataSet *data, int sample, int input) {
 	return _getDataSetSampleInput(data, sample, input);
 }
 

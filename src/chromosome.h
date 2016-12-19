@@ -12,6 +12,7 @@
 #include "node.h"
 #include "functionset.h"
 #include "dataset.h"
+#include "math/lialg.h"
 
 struct parameters;
 
@@ -32,11 +33,11 @@ struct chromosome {
 
 	double fitness;
 
-	double *outputValues;
+	struct matrix **outputValues;
 
 	struct functionSet *funcSet;
 
-	double *nodeInputsHold;
+	struct matrix **nodeInputsHold;
 
 	int generation;
 };
@@ -68,11 +69,11 @@ int _getNumChromosomeNodes(struct chromosome *chromo);
 
 int _getNumChromosomeActiveNodes(struct chromosome *chromo);
 
-double _getChromosomeNodeValue(struct chromosome *chromo, int node);
+struct matrix *_getChromosomeNodeValue(struct chromosome *chromo, int node);
 
 int _isNodeActive(struct chromosome *chromo, int node);
 
-double _getChromosomeOutput(struct chromosome *chromo, int output);
+struct matrix *_getChromosomeOutput(struct chromosome *chromo, int output);
 
 int _getNumChromosomeInputs(struct chromosome *chromo);
 
@@ -117,7 +118,7 @@ void _removeInactiveNodes(struct chromosome *chromo);
 //                           EXECUTOR
 //-----------------------------------------------------------------
 
-void _executeChromosome(struct chromosome *chromo, const double *inputs);
+void _executeChromosome(struct chromosome *chromo, struct matrix **inputs);
 
 //-----------------------------------------------------------------
 //                             UTILITY

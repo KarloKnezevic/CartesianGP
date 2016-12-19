@@ -26,17 +26,18 @@ struct dataSet *_initialiseDataSetFromArrays(int numInputs, int numOutputs,
 	data->numOutputs = numOutputs;
 	data->numSamples = numSamples;
 
-	data->inputData = (double**) malloc(data->numSamples * sizeof(double*));
+	data->inputData = (struct matrix***) malloc(data->numSamples * sizeof(struct matrix**));
 	data->outputData = (double**) malloc(data->numSamples * sizeof(double*));
 
 	for (i = 0; i < data->numSamples; i++) {
 
-		data->inputData[i] = (double*) malloc(data->numInputs * sizeof(double));
+		data->inputData[i] = (struct matrix**) malloc(
+				data->numInputs * sizeof(struct matrix*));
 		data->outputData[i] = (double*) malloc(
 				data->numOutputs * sizeof(double));
 
 		for (j = 0; j < data->numInputs; j++) {
-			data->inputData[i][j] = inputs[(i * data->numInputs) + j];
+			data->inputData[i][j] = _initialiseMatrixFromScalar(inputs[(i * data->numInputs) + j]);
 		}
 
 		for (j = 0; j < data->numOutputs; j++) {
@@ -66,7 +67,7 @@ void _printDataSet(struct dataSet *data) {
 	for (i = 0; i < data->numSamples; i++) {
 
 		for (j = 0; j < data->numInputs; j++) {
-			printf("%f ", data->inputData[i][j]);
+			_printMatrix(data->inputData[i][j]);
 		}
 
 		printf(" : ");
@@ -99,11 +100,11 @@ double _getDataSetSampleOutput(struct dataSet *data, int sample, int output) {
 	return data->outputData[sample][output];
 }
 
-double *_getDataSetSampleInputs(struct dataSet *data, int sample) {
+struct matrix **_getDataSetSampleInputs(struct dataSet *data, int sample) {
 	return data->inputData[sample];
 }
 
-double _getDataSetSampleInput(struct dataSet *data, int sample, int input) {
+struct matrix *_getDataSetSampleInput(struct dataSet *data, int sample, int input) {
 	return data->inputData[sample][input];
 }
 
@@ -116,15 +117,17 @@ double *_getDataSetSampleOutputs(struct dataSet *data, int sample) {
 //-----------------------------------------------------------------
 
 void _freeDataSet(struct dataSet *data) {
-	int i;
+	int i, j;
 
-	/* attempt to prevent user double freeing */
 	if (data == NULL) {
 		printf("Warning: double freeing of dataSet prevented.\n");
 		return;
 	}
 
 	for (i = 0; i < data->numSamples; i++) {
+		for (j = 0; j < data->numInputs; j++) {
+			_freeMatrix(data->inputData[i][j]);
+		}
 		free(data->inputData[i]);
 		free(data->outputData[i]);
 	}
