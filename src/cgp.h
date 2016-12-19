@@ -198,7 +198,7 @@ struct chromosome *initialiseChromosome(struct parameters *params);
  * @param file
  * @return
  */
-//--struct chromosome *initialiseChromosomeFromFile(const char *file);
+struct chromosome *initialiseChromosomeFromFile(const char *file);
 
 struct chromosome *initialiseChromosomeFromChromosome(
         struct chromosome *chromo

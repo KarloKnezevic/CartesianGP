@@ -50,6 +50,8 @@ struct chromosome *_initialiseChromosome(struct parameters *params);
 struct chromosome *_initialiseChromosomeFromChromosome(
 		struct chromosome *chromo);
 
+struct chromosome *_initialiseChromosomeFromFile(const char *file);
+
 //-----------------------------------------------------------------
 //                            GETTERS
 //-----------------------------------------------------------------

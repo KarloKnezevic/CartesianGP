@@ -62,6 +62,10 @@ struct chromosome *initialiseChromosomeFromChromosome(struct chromosome *chromo)
 	return _initialiseChromosomeFromChromosome(chromo);
 }
 
+struct chromosome *initialiseChromosomeFromFile(const char *file) {
+	return _initialiseChromosomeFromFile(file);
+}
+
 struct dataSet *initialiseDataSetFromArrays(int numInputs, int numOutputs,
 		int numSamples, double *inputs, double *outputs) {
 	return _initialiseDataSetFromArrays(numInputs, numOutputs, numSamples,

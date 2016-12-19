@@ -13,20 +13,22 @@ int main(int argc, char *argv[]) {
 	struct parameters *params = NULL;
 	struct chromosome *chromo = NULL;
 
-	int numInputs = 15;
-	int numNodes = 888;
-	int numOutputs = 10;
-	int nodeArity = 10;
+//	int numInputs = 3;
+//	int numNodes = 5;
+//	int numOutputs = 2;
+//	int nodeArity = 2;
+//
+//	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
+//
+//	addNodeFunction(params, "add,sub,mul");
+//
+//	chromo = initialiseChromosome(params);
 
-	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
-
-	addNodeFunction(params, "add,sub,mul,div,sin");
-
-	chromo = initialiseChromosome(params);
+	chromo = initialiseChromosomeFromFile("data/chromosome.txt");
 
 	printChromosome(chromo);
 
-	saveChromosome(chromo, "data/chromosome.txt");
+	saveChromosome(chromo, "data/copychromosome.txt");
 
 	freeChromosome(chromo);
 	freeParameters(params);

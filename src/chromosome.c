@@ -14,6 +14,7 @@
 #include <math.h>
 #include "util.h"
 #include "parameters.h"
+#include "stream/stream.h"
 
 void recursivelySetActiveNodes(struct chromosome *chromo, int nodeIndex);
 
@@ -123,6 +124,10 @@ struct chromosome *_initialiseChromosomeFromChromosome(
 			chromo->arity * sizeof(double));
 
 	return chromoNew;
+}
+
+struct chromosome *_initialiseChromosomeFromFile(const char *file) {
+	return _loadChromosomeFromFile(file);
 }
 
 //-----------------------------------------------------------------
