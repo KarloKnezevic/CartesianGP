@@ -105,8 +105,8 @@ double _getMatrixAsScalar(struct matrix *m) {
 void _printMatrix(struct matrix *m) {
 
 	if (NULL == m) {
-		printf(
-				"Error: matrix has not been initialised and cannot be printed.\n");
+//		printf(
+//				"Error: matrix has not been initialised and cannot be printed.\n");
 		return;
 	}
 
