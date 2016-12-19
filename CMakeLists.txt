@@ -17,6 +17,8 @@ set(SOURCE_FILES
     src/selection/selection.h
         src/stream/stream.c
         src/stream/stream.h
+        src/math/lialg.c
+        src/math/lialg.h
     src/cgp.c
     src/cgp.h
     src/chromosome.c
