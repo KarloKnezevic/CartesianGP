@@ -279,6 +279,9 @@ void _saveDataSet(struct dataSet *data, char const *fileName) {
 	fclose(fp);
 }
 
+/**
+ * CONSIDER CHANGING THIS METHOD ACCORDING TO NEEDS.
+ */
 void _saveResults(struct results *rels, char const *fileName) {
 	FILE *fp;
 	int i;
