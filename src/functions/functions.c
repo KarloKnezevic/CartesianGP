@@ -132,6 +132,140 @@ struct function *getFunction(char const *functionName) {
 }
 
 //-----------------------------------------------------------------
+//                       MIXED FUNCTIONS
+//-----------------------------------------------------------------
+
+struct matrix *_head(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_last(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_length(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_tail(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_diff(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_rotate(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_reverse(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_pushfront(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_set(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_sum(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_madd(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_msub(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mmul(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mdiv(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mabs(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_msqrt(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mpow(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mpowint(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_msin(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mtan(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mcos(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mtanh(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mexp(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mGT(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mLT(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+//-----------------------------------------------------------------
 //                          FUNCTIONS
 //-----------------------------------------------------------------
 

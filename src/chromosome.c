@@ -698,8 +698,6 @@ int _compareChromosomes(struct chromosome *chromoA, struct chromosome *chromoB) 
 		}
 	}
 
-	//todo: weights
-
 	for (i = 0; i < chromoA->numOutputs; i++) {
 		if (chromoA->outputNodes[i] != chromoB->outputNodes[i]) {
 			return 0;
