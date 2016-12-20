@@ -21,7 +21,7 @@ void _copyFunctionSet(struct functionSet *funcSetDest,
 	for (i = 0; i < funcSetDest->numFunctions; i++) {
 		strncpy(funcSetDest->functionNames[i], funcSetSrc->functionNames[i],
 		FUNCTIONNAMELENGTH);
-		funcSetDest->functions[i] = funcSetSrc->functions[i];
+		funcSetDest->mFunctions[i] = funcSetSrc->mFunctions[i];
 		funcSetDest->maxNumInputs[i] = funcSetSrc->maxNumInputs[i];
 	}
 }

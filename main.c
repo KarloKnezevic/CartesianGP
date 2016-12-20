@@ -26,11 +26,11 @@ int main(int argc, char *argv[]) {
 
 	chromo = initialiseChromosome(params);
 
-//	chromo = initialiseChromosomeFromFile("data/chromosome.txt");
+	chromo = initialiseChromosomeFromFile("data/chromosome.txt");
 
 	printChromosome(chromo, 1);
 
-	saveChromosome(chromo, "data/copychromosome.txt");
+//	saveChromosome(chromo, "data/chromosome.txt");
 
 	freeChromosome(chromo);
 	freeParameters(params);

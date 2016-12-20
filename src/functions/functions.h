@@ -10,14 +10,16 @@
 #define FUNCTIONS_H_
 
 #include "../constants/constants.h"
+#include "../math/lialg.h"
 
 //-----------------------------------------------------------------
 //                           FACTORY
 //-----------------------------------------------------------------
 
 struct function {
-	double (*function)(const int numInputs, const double *inputs,
-			const double *connectionWeights);
+	struct matrix *(*mFunction)(const int numInputs, struct matrix **matrices,
+				const double *connectionWeights);
+
 	int args;
 	char functionName[FUNCTIONNAMELENGTH];
 };
@@ -25,7 +27,7 @@ struct function {
 struct function *getFunction(char const *functionName);
 
 //-----------------------------------------------------------------
-//                          FUNCTIONS
+//                       SCALAR FUNCTIONS
 //-----------------------------------------------------------------
 
 double _add(const int numInputs, const double *inputs,

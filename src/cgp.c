@@ -145,8 +145,9 @@ void addNodeFunction(struct parameters *params, char const *functionNames) {
 }
 
 void addCustomNodeFunction(struct parameters *params,
-		double (*function)(const int numInputs, const double *inputs, const double *weights),
-		char const *functionName, int maxNumInputs) {
+		struct matrix *(*function)(const int numInputs, struct matrix **inputs,
+				const double *weights), char const *functionName,
+		int maxNumInputs) {
 	_addCustomNodeFunction(params, function, functionName, maxNumInputs);
 }
 
@@ -321,7 +322,8 @@ struct matrix **getDataSetSampleInputs(struct dataSet *data, int sample) {
 	return _getDataSetSampleInputs(data, sample);
 }
 
-struct matrix *getDataSetSampleInput(struct dataSet *data, int sample, int input) {
+struct matrix *getDataSetSampleInput(struct dataSet *data, int sample,
+		int input) {
 	return _getDataSetSampleInput(data, sample, input);
 }
 

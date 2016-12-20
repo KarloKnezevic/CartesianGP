@@ -13,6 +13,7 @@
 #include "chromosome.h"
 #include "functionset.h"
 #include "constants/constants.h"
+#include "math/lialg.h"
 
 struct parameters {
 	int mu;
@@ -108,7 +109,7 @@ void _freeParameters(struct parameters *params);
 void _addNodeFunction(struct parameters *params, char const *functionNames);
 
 void _addCustomNodeFunction(struct parameters *params,
-		double (*function)(const int numInputs, const double *inputs, const double *weights),
+		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights),
 		char const *functionName, int maxNumInputs);
 
 void _clearFunctionSet(struct parameters *params);

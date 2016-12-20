@@ -14,8 +14,6 @@
 
 struct parameters;
 
-
-
 struct functionSet {
 	int numFunctions;
 
@@ -23,18 +21,13 @@ struct functionSet {
 
 	int maxNumInputs[FUNCTIONSETSIZE];
 
-	double (*functions[FUNCTIONSETSIZE])(const int numInputs,
-			const double *inputs, const double *connectionWeights);
-
-	struct matrix (*mFunctions[FUNCTIONSETSIZE])(const int numInputs,
-				struct matrix *inputs);
+	struct matrix *(*mFunctions[FUNCTIONSETSIZE])(const int numInputs,
+			struct matrix **inputs, const double *connectionWeights);
 };
 
 void _printFunctionSet(struct parameters *params);
 
 void _copyFunctionSet(struct functionSet *funcSetDest,
 		struct functionSet *funcSetSrc);
-
-
 
 #endif /* FUNCTIONSET_H_ */

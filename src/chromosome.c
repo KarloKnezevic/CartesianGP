@@ -490,10 +490,10 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 		currentActiveNodeFunction = chromo->nodes[currentActiveNode]->function;
 
 		//calculate output of active function -> call delegate method
-//		chromo->nodes[currentActiveNode]->output =
-//				chromo->funcSet->functions[currentActiveNodeFunction](nodeArity,
-//						chromo->nodeInputsHold, , chromo->nodes[currentActiveNode]->weights);
-		//TODO: KALKULACIJA FUNKCIJA!!!
+		chromo->nodes[currentActiveNode]->output =
+				chromo->funcSet->mFunctions[currentActiveNodeFunction](
+						nodeArity, chromo->nodeInputsHold,
+						chromo->nodes[currentActiveNode]->weights);
 
 		_checkMatrixForNaN(chromo->nodes[currentActiveNode]->output, 0);
 

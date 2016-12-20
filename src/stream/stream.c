@@ -90,7 +90,7 @@ struct chromosome* _loadChromosomeFromFile(char const *file) {
 			_freeParameters(params);
 			exit(0);
 		} else {
-			_addCustomNodeFunction(params, object->function,
+			_addCustomNodeFunction(params, object->mFunction,
 					object->functionName, object->args);
 		}
 

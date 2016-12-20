@@ -29,12 +29,8 @@ struct results;
 
 //-----------------------------------------------------------------
 
-struct parameters *initialiseParameters(
-        const int numInputs,
-        const int numNodes,
-        const int numOutputs,
-        const int arity
-);
+struct parameters *initialiseParameters(const int numInputs, const int numNodes,
+		const int numOutputs, const int arity);
 
 void freeParameters(struct parameters *params);
 
@@ -57,16 +53,10 @@ void addNodeFunction(struct parameters *params, char const *functionNames);
  * @param functionName
  * @param maxNumInputs
  */
-void addCustomNodeFunction(
-        struct parameters *params,
-        double (*function)(
-                const int numInputs,
-                const double *inputs,
-				const double *weights
-        ),
-        char const *functionName,
-        int maxNumInputs
-);
+void addCustomNodeFunction(struct parameters *params,
+		struct matrix *(*function)(const int numInputs, struct matrix **inputs,
+				const double *weights), char const *functionName,
+		int maxNumInputs);
 
 void clearFunctionSet(struct parameters *params);
 
@@ -91,10 +81,8 @@ void setLambda(struct parameters *params, int lambda);
  * @param params
  * @param evolutionaryStrategy
  */
-void setEvolutionaryStrategy(
-        struct parameters *params,
-        char evolutionaryStrategy
-);
+void setEvolutionaryStrategy(struct parameters *params,
+		char evolutionaryStrategy);
 
 void setMutationRate(struct parameters *params, double mutationRate);
 
@@ -106,10 +94,8 @@ void setMutationRate(struct parameters *params, double mutationRate);
  * @param params
  * @param recurrentConnectionProbability
  */
-void setRecurrentConnectionProbability(
-        struct parameters *params,
-        double recurrentConnectionProbability
-);
+void setRecurrentConnectionProbability(struct parameters *params,
+		double recurrentConnectionProbability);
 
 /**
  * Shortcut Connections specifies whether an output can
@@ -130,41 +116,24 @@ void setConnectionWeightRange(struct parameters *params, double weightRange);
  * @param fitnessFunction
  * @param fitnessFunctionName
  */
-void setCustomFitnessFunction(
-        struct parameters *params,
-        double (*fitnessFunction)(
-                struct parameters *params,
-                struct chromosome *chromo,
-                struct dataSet *data
-        ),
-        char const *fitnessFunctionName
-);
+void setCustomFitnessFunction(struct parameters *params,
+		double (*fitnessFunction)(struct parameters *params,
+				struct chromosome *chromo, struct dataSet *data),
+		char const *fitnessFunctionName);
 
 //-----------------------------------------------------------------
 
-void setCustomSelectionScheme(
-        struct parameters *params,
-        void (*selectionScheme)(
-                struct parameters *params,
-                struct chromosome **parents,
-                struct chromosome **candidateChromos,
-                int numParents,
-                int numCandidateChromos
-        ),
-        char const *selectionSchemeName
-);
+void setCustomSelectionScheme(struct parameters *params,
+		void (*selectionScheme)(struct parameters *params,
+				struct chromosome **parents,
+				struct chromosome **candidateChromos, int numParents,
+				int numCandidateChromos), char const *selectionSchemeName);
 
-void setCustomReproductionScheme(
-        struct parameters *params,
-        void (*reproductionScheme)(
-                struct parameters *params,
-                struct chromosome **parents,
-                struct chromosome **children,
-                int numParents,
-                int numCandidateChromos
-        ),
-        char const *reproductionSchemeName
-);
+void setCustomReproductionScheme(struct parameters *params,
+		void (*reproductionScheme)(struct parameters *params,
+				struct chromosome **parents, struct chromosome **children,
+				int numParents, int numCandidateChromos),
+		char const *reproductionSchemeName);
 
 //-----------------------------------------------------------------
 
@@ -205,9 +174,7 @@ struct chromosome *initialiseChromosome(struct parameters *params);
  */
 struct chromosome *initialiseChromosomeFromFile(const char *file);
 
-struct chromosome *initialiseChromosomeFromChromosome(
-        struct chromosome *chromo
-);
+struct chromosome *initialiseChromosomeFromChromosome(struct chromosome *chromo);
 
 void freeChromosome(struct chromosome *chromo);
 
@@ -280,11 +247,8 @@ void removeInactiveNodes(struct chromosome *chromo);
  * @param chromo
  * @param data
  */
-void setChromosomeFitness(
-        struct parameters *params,
-        struct chromosome *chromo,
-        struct dataSet *data
-);
+void setChromosomeFitness(struct parameters *params, struct chromosome *chromo,
+		struct dataSet *data);
 
 /**
  * resets all of the chromosome nodes to output zero.
@@ -294,10 +258,7 @@ void resetChromosome(struct chromosome *chromo);
 
 //-----------------------------------------------------------------
 
-void copyChromosome(
-        struct chromosome *chromoDest,
-        struct chromosome *chromoSrc
-);
+void copyChromosome(struct chromosome *chromoDest, struct chromosome *chromoSrc);
 
 //-----------------------------------------------------------------
 
@@ -324,13 +285,8 @@ int getChromosomeGenerations(struct chromosome *chromo);
 
 //-----------------------------------------------------------------
 
-struct dataSet *initialiseDataSetFromArrays(
-        int numInputs,
-        int numOutputs,
-        int numSamples,
-        double *inputs,
-        double *outputs
-);
+struct dataSet *initialiseDataSetFromArrays(int numInputs, int numOutputs,
+		int numSamples, double *inputs, double *outputs);
 
 /**
  * First line: in, out, #samples
@@ -371,7 +327,8 @@ struct matrix **getDataSetSampleInputs(struct dataSet *data, int sample);
  * @param input
  * @return
  */
-struct matrix *getDataSetSampleInput(struct dataSet *data, int sample, int input);
+struct matrix *getDataSetSampleInput(struct dataSet *data, int sample,
+		int input);
 
 double *getDataSetSampleOutputs(struct dataSet *data, int sample);
 
@@ -423,11 +380,8 @@ double getAverageActiveNodes(struct results *rels);
  * @param numGens
  * @return
  */
-struct chromosome* runCGP(
-        struct parameters *params,
-        struct dataSet *data,
-        int numGens
-);
+struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
+		int numGens);
 
 /**
  * Returns result structure for each run.
@@ -437,12 +391,8 @@ struct chromosome* runCGP(
  * @param numRuns
  * @return
  */
-struct results* repeatCGP(
-        struct parameters *params,
-        struct dataSet *data,
-        int numGens,
-        int numRuns
-);
+struct results* repeatCGP(struct parameters *params, struct dataSet *data,
+		int numGens, int numRuns);
 
 void setRandomNumberSeed(unsigned int seed);
 

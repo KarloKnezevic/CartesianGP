@@ -270,7 +270,7 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 		object = getFunction(pch);
 
 		if (NULL != object) {
-			_addCustomNodeFunction(params, object->function,
+			_addCustomNodeFunction(params, object->mFunction,
 					object->functionName, object->args);
 		}
 
@@ -285,7 +285,7 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 }
 
 void _addCustomNodeFunction(struct parameters *params,
-		double (*function)(const int numInputs, const double *inputs, const double *weights),
+		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights),
 		char const *functionName, int maxNumInputs) {
 	if (params->funcSet->numFunctions >= FUNCTIONSETSIZE) {
 		printf(
@@ -302,7 +302,7 @@ void _addCustomNodeFunction(struct parameters *params,
 	params->funcSet->maxNumInputs[params->funcSet->numFunctions] = maxNumInputs;
 
 	/* add the given function to the function set */
-	params->funcSet->functions[params->funcSet->numFunctions] = function;
+	params->funcSet->mFunctions[params->funcSet->numFunctions] = function;
 
 	params->funcSet->numFunctions++;
 }

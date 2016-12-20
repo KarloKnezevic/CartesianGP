@@ -20,13 +20,28 @@ double sumWeigtedInputs(const int numInputs, const double *inputs,
 //                           FACTORY
 //-----------------------------------------------------------------
 
-struct function *_init(const char *functionName,
+struct function *_initScalarToMatrix(const char *functionName,
 		double (*function)(const int numInputs, const double *inputs,
 				const double *connectionWeights), int args) {
+
 	struct function *object = (struct function*) malloc(
 			sizeof(struct function));
 
-	object->function = function;
+//	object->function = function;
+	object->args = args;
+	strncpy(object->functionName, functionName, FUNCTIONNAMELENGTH);
+
+	return object;
+}
+
+struct function *_init(const char *functionName,
+		struct matrix *(*function)(const int numInputs, struct matrix **inputs,
+				const double *connectionWeights), int args) {
+
+	struct function *object = (struct function*) malloc(
+			sizeof(struct function));
+
+	object->mFunction = function;
 	object->args = args;
 	strncpy(object->functionName, functionName, FUNCTIONNAMELENGTH);
 
@@ -35,77 +50,77 @@ struct function *_init(const char *functionName,
 
 struct function *getFunction(char const *functionName) {
 	if (strncmp(functionName, "add", FUNCTIONNAMELENGTH) == 0) {
-		return _init("add", _add, -1);
+		return _initScalarToMatrix("add", _add, -1);
 	} else if (strncmp(functionName, "sub", FUNCTIONNAMELENGTH) == 0) {
-		return _init("sub", _sub, -1);
+		return _initScalarToMatrix("sub", _sub, -1);
 	} else if (strncmp(functionName, "mul", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mul", _mul, -1);
+		return _initScalarToMatrix("mul", _mul, -1);
 	} else if (strncmp(functionName, "div", FUNCTIONNAMELENGTH) == 0) {
-		return _init("div", _divide, -1);
+		return _initScalarToMatrix("div", _divide, -1);
 	} else if (strncmp(functionName, "abs", FUNCTIONNAMELENGTH) == 0) {
-		return _init("abs", _absolute, 1);
+		return _initScalarToMatrix("abs", _absolute, 1);
 	} else if (strncmp(functionName, "sqrt", FUNCTIONNAMELENGTH) == 0) {
-		return _init("sqrt", _squareRoot, 1);
+		return _initScalarToMatrix("sqrt", _squareRoot, 1);
 	} else if (strncmp(functionName, "sq", FUNCTIONNAMELENGTH) == 0) {
-		return _init("sq", _square, 1);
+		return _initScalarToMatrix("sq", _square, 1);
 	} else if (strncmp(functionName, "cube", FUNCTIONNAMELENGTH) == 0) {
-		return _init("cube", _cube, 1);
+		return _initScalarToMatrix("cube", _cube, 1);
 	} else if (strncmp(functionName, "pow", FUNCTIONNAMELENGTH) == 0) {
-		return _init("pow", _power, 2);
+		return _initScalarToMatrix("pow", _power, 2);
 	} else if (strncmp(functionName, "exp", FUNCTIONNAMELENGTH) == 0) {
-		return _init("exp", _exponential, 1);
+		return _initScalarToMatrix("exp", _exponential, 1);
 	} else if (strncmp(functionName, "sin", FUNCTIONNAMELENGTH) == 0) {
-		return _init("sin", _sine, 1);
+		return _initScalarToMatrix("sin", _sine, 1);
 	} else if (strncmp(functionName, "cos", FUNCTIONNAMELENGTH) == 0) {
-		return _init("cos", _cosine, 1);
+		return _initScalarToMatrix("cos", _cosine, 1);
 	} else if (strncmp(functionName, "tan", FUNCTIONNAMELENGTH) == 0) {
-		return _init("tan", _tangent, 1);
+		return _initScalarToMatrix("tan", _tangent, 1);
 	}
 
 	// Boolean logic gates
 
 	else if (strncmp(functionName, "and", FUNCTIONNAMELENGTH) == 0) {
-		return _init("and", _and, -1);
+		return _initScalarToMatrix("and", _and, -1);
 	} else if (strncmp(functionName, "nand", FUNCTIONNAMELENGTH) == 0) {
-		return _init("nand", _nand, -1);
+		return _initScalarToMatrix("nand", _nand, -1);
 	} else if (strncmp(functionName, "or", FUNCTIONNAMELENGTH) == 0) {
-		return _init("or", _or, -1);
+		return _initScalarToMatrix("or", _or, -1);
 	} else if (strncmp(functionName, "nor", FUNCTIONNAMELENGTH) == 0) {
-		return _init("nor", _nor, -1);
+		return _initScalarToMatrix("nor", _nor, -1);
 	} else if (strncmp(functionName, "xor", FUNCTIONNAMELENGTH) == 0) {
-		return _init("xor", _xor, -1);
+		return _initScalarToMatrix("xor", _xor, -1);
 	} else if (strncmp(functionName, "xnor", FUNCTIONNAMELENGTH) == 0) {
-		return _init("xnor", _xnor, -1);
+		return _initScalarToMatrix("xnor", _xnor, -1);
 	} else if (strncmp(functionName, "not", FUNCTIONNAMELENGTH) == 0) {
-		return _init("not", _not, 1);
+		return _initScalarToMatrix("not", _not, 1);
 	}
 
 	// Neuron functions
 
 	else if (strncmp(functionName, "sig", FUNCTIONNAMELENGTH) == 0) {
-		return _init("sig", _sigmoid, -1);
+		return _initScalarToMatrix("sig", _sigmoid, -1);
 	} else if (strncmp(functionName, "gauss", FUNCTIONNAMELENGTH) == 0) {
-		return _init("gauss", _gaussian, -1);
+		return _initScalarToMatrix("gauss", _gaussian, -1);
 	} else if (strncmp(functionName, "step", FUNCTIONNAMELENGTH) == 0) {
-		return _init("step", _step, -1);
+		return _initScalarToMatrix("step", _step, -1);
 	} else if (strncmp(functionName, "softsign", FUNCTIONNAMELENGTH) == 0) {
-		return _init("soft", _softsign, -1);
+		return _initScalarToMatrix("soft", _softsign, -1);
 	} else if (strncmp(functionName, "tanh", FUNCTIONNAMELENGTH) == 0) {
-		return _init("tanh", _hyperbolicTangent, -1);
+		return _initScalarToMatrix("tanh", _hyperbolicTangent, -1);
 	}
 
 	// other
 
 	else if (strncmp(functionName, "rand", FUNCTIONNAMELENGTH) == 0) {
-		return _init("rand", _randFloat, 0);
+		return _initScalarToMatrix("rand", _randFloat, 0);
 	} else if (strncmp(functionName, "1", FUNCTIONNAMELENGTH) == 0) {
-		return _init("1", _constOne, 0);
+		return _initScalarToMatrix("1", _constOne, 0);
 	} else if (strncmp(functionName, "0", FUNCTIONNAMELENGTH) == 0) {
-		return _init("0", _constZero, 0);
+		return _initScalarToMatrix("0", _constZero, 0);
 	} else if (strncmp(functionName, "pi", FUNCTIONNAMELENGTH) == 0) {
-		return _init("pi", _constPI, 0);
+		return _initScalarToMatrix("pi", _constPI, 0);
 	} else if (strncmp(functionName, "wire", FUNCTIONNAMELENGTH) == 0) {
-		return _init("wire", _wire, 1);
+		return _initScalarToMatrix("wire", _wire, 1);
 	}
 
 	else {
