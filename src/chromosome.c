@@ -67,12 +67,9 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 
 	_setChromosomeActiveNodes(chromo);
 
-	chromo->nodeInputsHold = (struct matrix**) malloc(
-			params->arity * sizeof(struct matrix*));
-
-	for (i = 0; i < params->arity; i++) {
-		chromo->nodeInputsHold[i] = NULL;
-	}
+	//init to 0 with calloc
+	chromo->nodeInputsHold = (struct matrix**) calloc(
+				params->arity, sizeof(struct matrix*));
 
 	return chromo;
 }

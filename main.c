@@ -22,15 +22,15 @@ int main(int argc, char *argv[]) {
 
 	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
 
-	addNodeFunction(params, "add,sub");
+	addNodeFunction(params, "head,last");
 
 	chromo = initialiseChromosome(params);
 
-	chromo = initialiseChromosomeFromFile("data/chromosome.txt");
+//	chromo = initialiseChromosomeFromFile("data/chromosome.txt");
 
 	printChromosome(chromo, 1);
 
-//	saveChromosome(chromo, "data/chromosome.txt");
+	saveChromosome(chromo, "data/chromosome.txt");
 
 	freeChromosome(chromo);
 	freeParameters(params);
