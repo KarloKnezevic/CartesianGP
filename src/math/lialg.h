@@ -58,7 +58,7 @@ void _freeMatrix(struct matrix *m);
 //                          MATH
 //-----------------------------------------------------------------
 
-struct matrix* _mulWithScalar(double scalar);
+struct matrix* _mulWithScalar(struct matrix *m, double scalar);
 
 //-----------------------------------------------------------------
 //                          UTILITY

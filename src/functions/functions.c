@@ -144,7 +144,7 @@ struct matrix *_tail(const int numInputs, struct matrix **matrices,
 		return _initialiseMatrixFromScalar(0);
 	}
 
-	return _initialiseMatrixFromArray(1, m->cols-1, m->data[0][1]);
+	return _initialiseMatrixFromArray(1, m->cols-1, &(m->data[0][1]));
 }
 
 struct matrix *_diff(const int numInputs, struct matrix **matrices,
@@ -152,8 +152,10 @@ struct matrix *_diff(const int numInputs, struct matrix **matrices,
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
-		return
+		return _copyMatrixOf(m);
 	}
+
+	return NULL;
 }
 
 struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
