@@ -54,6 +54,9 @@ struct matrix *_rotate(const int numInputs, struct matrix **matrices,
 struct matrix *_reverse(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights);
 
+struct matrix *_pushback(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights);
+
 struct matrix *_pushfront(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights);
 

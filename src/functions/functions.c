@@ -55,6 +55,8 @@ struct function *getFunction(char const *functionName) {
 		return _init("rotate", _rotate, 1);
 	} else if (strncmp(functionName, "reverse", FUNCTIONNAMELENGTH) == 0) {
 		return _init("reverse", _reverse, 1);
+	} else if (strncmp(functionName, "pushback", FUNCTIONNAMELENGTH) == 0) {
+		return _init("pushback", _pushback, 2);
 	} else if (strncmp(functionName, "pushfront", FUNCTIONNAMELENGTH) == 0) {
 		return _init("pushfront", _pushfront, 2);
 	} else if (strncmp(functionName, "set", FUNCTIONNAMELENGTH) == 0) {
@@ -126,7 +128,7 @@ struct matrix *_last(const int numInputs, struct matrix **matrices,
 		return _copyMatrixOf(m);
 	}
 
-	return _initialiseMatrixFromScalar(m->data[0][m->cols-1]);
+	return _initialiseMatrixFromScalar(m->data[0][m->cols - 1]);
 }
 
 struct matrix *_length(const int numInputs, struct matrix **matrices,
@@ -144,7 +146,7 @@ struct matrix *_tail(const int numInputs, struct matrix **matrices,
 		return _initialiseMatrixFromScalar(0);
 	}
 
-	return _initialiseMatrixFromArray(1, m->cols-1, &(m->data[0][1]));
+	return _initialiseMatrixFromArray(1, m->cols - 1, &(m->data[0][1]));
 }
 
 struct matrix *_diff(const int numInputs, struct matrix **matrices,
@@ -152,23 +154,80 @@ struct matrix *_diff(const int numInputs, struct matrix **matrices,
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
-		return _copyMatrixOf(m);
+		return _mulWithScalar(_copyMatrixOf(m), -1);
 	}
 
-	return NULL;
+	struct matrix *m_ = _copyMatrixOf(m);
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			m_->data[i][j] = m->data[i][j] - m->data[i][(j + 1) % m->cols];
+		}
+	}
+
+	return m_;
 }
 
 struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	struct matrix *m = matrices[0];
+
+	if (m->cols == 1) {
+		return _copyMatrixOf(m);
+	}
+
+	struct matrix *m_ = _copyMatrixOf(m);
+
+	for (int i = 0; i < m->rows; i++) {
+		double sum = 0;
+		for (int j = 0; j < m->cols; j++) {
+			sum += m->data[i][j];
+		}
+		m_->data[i][0] = (double) sum / m->cols;
+	}
+
+	return m_;
 }
 
 struct matrix *_rotate(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	struct matrix *m = matrices[0];
+
+	if (m->cols == 1) {
+		return _copyMatrixOf(m);
+	}
+
+	struct matrix *m_ = _copyMatrixOf(m);
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			m_->data[i][j] = m->data[i][(j + 1) % m->cols];
+		}
+	}
+
+	return m_;
 }
 
 struct matrix *_reverse(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	struct matrix *m = matrices[0];
+
+	if (m->cols == 1) {
+		return _copyMatrixOf(m);
+	}
+
+	struct matrix *m_ = _copyMatrixOf(m);
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			m_->data[i][j] = m->data[i][m->cols - 1 - j];
+		}
+	}
+
+	return m_;
+}
+
+struct matrix *_pushback(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
 	return NULL;
 }
