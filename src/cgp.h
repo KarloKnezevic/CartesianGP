@@ -5,6 +5,8 @@
 #ifndef CGP_CGP_H
 #define CGP_CGP_H
 
+#include "constants/constants.h"
+
 struct matrix;
 
 /**

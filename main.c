@@ -15,10 +15,10 @@ int main(int argc, char *argv[]) {
 	struct parameters *params = NULL;
 	struct chromosome *chromo = NULL;
 
-	int numInputs = 3;
-	int numNodes = 5;
-	int numOutputs = 2;
-	int nodeArity = 2;
+	int numInputs = NUM_INPUT;
+	int numNodes = NUM_NODES;
+	int numOutputs = NUM_OUTPUT;
+	int nodeArity = NODE_ARITY;
 
 	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
 
@@ -30,16 +30,28 @@ int main(int argc, char *argv[]) {
 
 	printChromosome(chromo, 1);
 
-	saveChromosome(chromo, "data/chromosome.txt");
+	double inputs[NUM_SAMPLES][NUM_INPUT];
+	double outputs[NUM_SAMPLES][NUM_OUTPUT];
+
+	setRandomNumberSeed(time(NULL));
+
+	for (int i = 0; i < NUM_SAMPLES; i++) {
+		double random = rand() % 10;
+		inputs[i][0] = random;
+		outputs[i][0] = inputs[i][0] >= 5 ? 1 : 0;
+	}
+
+	struct dataSet *data = initialiseDataSetFromArrays(numInputs, numOutputs,
+	NUM_SAMPLES, inputs[0], outputs[0]);
+
+	executeChromosome(chromo, getDataSetSampleInputs(data, 0));
+
+	printDataSet(data);
+
+//	saveChromosome(chromo, "data/chromosome.txt");
 
 	freeChromosome(chromo);
 	freeParameters(params);
-
-//	double d[] = {1,2,3,4};
-//	struct matrix *m = _initialiseMatrixFromArray(1,4, d);
-//
-//	_printMatrix(m);
-
 
 	return 0;
 }

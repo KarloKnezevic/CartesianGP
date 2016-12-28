@@ -10,6 +10,8 @@
 #define MAIN_H_
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "src/cgp.h"
 
 #endif /* MAIN_H_ */
