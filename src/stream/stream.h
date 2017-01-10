@@ -20,6 +20,10 @@ struct chromosome* _loadChromosomeFromFile(char const *file);
 
 struct dataSet *_loadDataSetFromFile(char const *file);
 
+/**
+ * param = train, test
+ */
+struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param);
 
 //-----------------------------------------------------------------
 //                          WRITERS

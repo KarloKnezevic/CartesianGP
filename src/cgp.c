@@ -76,6 +76,10 @@ struct dataSet *initialiseDataSetFromFile(char const *file) {
 	return _initialiseDataSetFromFile(file);
 }
 
+struct dataSet *initialiseMLDataSetFromFile(char const *file, char const *param) {
+	return _initialiseMLDataSetFromFile(file, param);
+}
+
 //-----------------------------------------------------------------
 //                          DESTROY
 //-----------------------------------------------------------------

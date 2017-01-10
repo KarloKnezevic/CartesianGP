@@ -302,6 +302,8 @@ struct dataSet *initialiseDataSetFromArrays(int numInputs, int numOutputs,
  */
 struct dataSet *initialiseDataSetFromFile(char const *file);
 
+struct dataSet *initialiseMLDataSetFromFile(char const *file, char const *param);
+
 void freeDataSet(struct dataSet *data);
 
 void printDataSet(struct dataSet *data);

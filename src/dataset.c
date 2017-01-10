@@ -52,6 +52,10 @@ struct dataSet *_initialiseDataSetFromFile(char const *file) {
 	return _loadDataSetFromFile(file);
 }
 
+struct dataSet *_initialiseMLDataSetFromFile(char const *file, char const *type) {
+	return _loadMLDataSetFromFile(file, type);
+}
+
 //-----------------------------------------------------------------
 //                            TOSTRING
 //-----------------------------------------------------------------

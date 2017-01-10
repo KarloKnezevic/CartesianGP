@@ -107,7 +107,8 @@ struct chromosome* _loadChromosomeFromFile(char const *file) {
 
 		for (j = 0; j < arity; j++) {
 			line = fgets(buffer, sizeof(buffer), fp);
-			sscanf(line, "%d,%lf", &chromo->nodes[i]->inputs[j], &chromo->nodes[i]->weights[j]);
+			sscanf(line, "%d,%lf", &chromo->nodes[i]->inputs[j],
+					&chromo->nodes[i]->weights[j]);
 		}
 	}
 
@@ -199,6 +200,133 @@ struct dataSet *_loadDataSetFromFile(char const *file) {
 	return data;
 }
 
+struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
+	int i;
+	struct dataSet *data;
+	FILE *fp;
+	char *line, *record;
+	char buffer[1024];
+	int col;
+
+	fp = fopen(file, "r");
+
+	if (fp == NULL) {
+		printf("Error: file '%s' cannot be found.\nTerminating.\n", file);
+		exit(0);
+	}
+
+	data = (struct dataSet*) malloc(sizeof(struct dataSet));
+
+	int training = 0;
+	int validation = 0;
+	int test = 0;
+
+	int lineNum = -1;
+	int readFrom = -1;
+
+	while ((line = fgets(buffer, sizeof(buffer), fp)) != NULL) {
+
+		//config params
+		if (lineNum == -1) {
+
+			sscanf(line, "in=%d", &(data->numInputs));
+
+			line = fgets(buffer, sizeof(buffer), fp);
+
+			sscanf(line, "out=%d", &(data->numOutputs));
+
+			line = fgets(buffer, sizeof(buffer), fp);
+
+			sscanf(line, "training_examples=%d", &training);
+
+			line = fgets(buffer, sizeof(buffer), fp);
+
+			sscanf(line, "validation_examples=%d", &validation);
+
+			line = fgets(buffer, sizeof(buffer), fp);
+
+			sscanf(line, "test_examples=%d", &test);
+
+			if (strncmp(param, "train", FUNCTIONNAMELENGTH) == 0) {
+				data->numSamples = training;
+				readFrom = 0;
+			} else if (strncmp(param, "test", FUNCTIONNAMELENGTH) == 0) {
+				data->numSamples = test;
+				readFrom = training;
+			} else {
+				printf(
+						"Error: Parameter '%s' is not known data was not loaded.\n",
+						param);
+				exit(-1);
+			}
+
+			data->inputData = (struct matrix ***) malloc(
+					data->numSamples * sizeof(struct matrix*));
+			data->outputData = (double**) malloc(
+					data->numSamples * sizeof(double*));
+
+			for (i = 0; i < data->numSamples; i++) {
+				data->inputData[i] = (struct matrix **) malloc(
+						data->numInputs * sizeof(struct matrix*));
+				data->outputData[i] = (double*) malloc(
+						data->numOutputs * sizeof(double));
+			}
+		} else {
+
+			//skip some data
+			if (lineNum < readFrom) {
+				lineNum++;
+				continue;
+			}
+
+			//first value
+			record = strtok(line, " ,\n");
+			col = 0;
+
+			//until the end of line
+			int class = -1;
+			int isFirst = 1;
+			while (record != NULL) {
+				if (col < data->numInputs) {
+					data->inputData[lineNum-readFrom][col] = _initialiseMatrixFromScalar(
+							atof(record));
+				} else {
+					class = atoi(record);
+
+					//if not binary class
+					if (1 == isFirst && 0 != class) {
+						break;
+					}
+
+					isFirst = 0;
+
+					data->outputData[lineNum-readFrom][col - data->numInputs] = atoi(
+							record);
+				}
+
+				record = strtok(NULL, " ,\n");
+				col++;
+			}
+
+			if (class != 0) {
+				for (int i = 0; i < data->numOutputs; i++) {
+					data->outputData[lineNum-readFrom][i] = (class - 1) == i ? 1 : 0;
+				}
+			}
+		}
+
+		if (lineNum - readFrom == data->numSamples-1) {
+			break;
+		}
+
+		lineNum++;
+	}
+
+	fclose(fp);
+
+	return data;
+}
+
 //-----------------------------------------------------------------
 //                          WRITERS
 //-----------------------------------------------------------------
@@ -233,7 +361,8 @@ void _saveChromosome(struct chromosome *chromo, char const *fileName) {
 		fprintf(fp, "%d\n", chromo->nodes[i]->function);
 
 		for (j = 0; j < chromo->arity; j++) {
-			fprintf(fp, "%d,%f\n", chromo->nodes[i]->inputs[j], chromo->nodes[i]->weights[j]);
+			fprintf(fp, "%d,%f\n", chromo->nodes[i]->inputs[j],
+					chromo->nodes[i]->weights[j]);
 		}
 
 	}

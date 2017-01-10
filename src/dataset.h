@@ -37,6 +37,8 @@ struct dataSet *_initialiseDataSetFromArrays(
 
 struct dataSet *_initialiseDataSetFromFile(char const *file);
 
+struct dataSet *_initialiseMLDataSetFromFile(char const *file, char const *type);
+
 //-----------------------------------------------------------------
 //                            TOSTRING
 //-----------------------------------------------------------------
