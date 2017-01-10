@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include "src/cgp.h"
+#include "src/math/lialg.h"
+#include "src/dataset.h"
 
 #endif /* MAIN_H_ */
