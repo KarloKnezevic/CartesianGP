@@ -46,6 +46,8 @@ int main(int argc, char *argv[]) {
 
 	executeChromosome(chromo, getDataSetSampleInputs(data, 0));
 
+
+
 	printDataSet(data);
 
 //	saveChromosome(chromo, "data/chromosome.txt");

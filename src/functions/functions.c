@@ -229,22 +229,72 @@ struct matrix *_reverse(const int numInputs, struct matrix **matrices,
 
 struct matrix *_pushback(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	struct matrix *_m = _initialiseMatrix(1,
+			matrices[0]->cols + matrices[1]->cols);
+	int i = 0;
+	for (; i < matrices[0]->cols; i++) {
+		_m->data[0][i] = matrices[0]->data[0][i];
+	}
+
+	for (int j = 0; j < matrices[1]->cols; j++, i++) {
+		_m->data[0][i] = matrices[1]->data[0][j];
+	}
+
+	return _m;
 }
 
 struct matrix *_pushfront(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	struct matrix *_m = _initialiseMatrix(1,
+			matrices[0]->cols + matrices[1]->cols);
+	int i = 0;
+	for (; i < matrices[1]->cols; i++) {
+		_m->data[0][i] = matrices[1]->data[0][i];
+	}
+
+	for (int j = 0; j < matrices[0]->cols; j++, i++) {
+		_m->data[0][i] = matrices[0]->data[0][j];
+	}
+
+	return _m;
 }
 
 struct matrix *_set(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	int index = -1;
+	if (matrices[0]->rows == 1 && matrices[0]->cols == 1) {
+		index = 0;
+	} else if (matrices[1]->rows == 1 && matrices[1]->cols == 1) {
+		index = 1;
+	}
+
+	//no scalar values
+	if (-1 == index) {
+		//return random matrix
+		return matrices[rand() % 2];
+	}
+
+	//if other scalar too
+	if (matrices[1 - index]->rows == 1 && matrices[1 - index]->cols == 1) {
+		return _pushback(numInputs, matrices, connectionWeights);
+	}
+
+	struct matrix *_m = _initialiseMatrix(matrices[1-index]->rows, matrices[1-index]->cols);
+	for (int i = 0; i < _m->cols; i++) {
+		_m->data[0][i] = matrices[index]->data[0][0];
+	}
+
+	return _m;
 }
 
 struct matrix *_sum(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	double sum = 0.0;
+	for (int i = 0; i < matrices[0]->cols; i++) {
+		sum += matrices[0]->data[0][i];
+	}
+
+	return _initialiseMatrixFromScalar(sum);
 }
 
 struct matrix *_madd(const int numInputs, struct matrix **matrices,
