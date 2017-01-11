@@ -16,5 +16,6 @@
 #include "src/cgp.h"
 #include "src/math/lialg.h"
 #include "src/dataset.h"
+#include "src/functions/functions.h"
 
 #endif /* MAIN_H_ */

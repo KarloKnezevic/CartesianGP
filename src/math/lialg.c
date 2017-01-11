@@ -135,7 +135,7 @@ void _printMatrix(struct matrix *m) {
 
 void _freeMatrix(struct matrix *m) {
 	if (m == NULL) {
-		printf("Warning: double freeing of matrix prevented.\n");
+		//printf("Warning: double freeing of matrix prevented.\n");
 		return;
 	}
 
@@ -153,7 +153,9 @@ void _freeMatrix(struct matrix *m) {
 //-----------------------------------------------------------------
 
 double _zerro_div(double a, double b) {
-	if (abs(b) < EPSILON) {
+	if (abs(b) < EPSILON && abs(a) < EPSILON) {
+		return 1;
+	} else if (abs(b) < EPSILON) {
 		return a > 0 ? DBL_MAX : DBL_MIN;
 	}
 
@@ -490,7 +492,7 @@ struct matrix* _standard_deviation(struct matrix *m1, const double *factors) {
 	double stdev = 0.0;
 	double avg = _m->data[0][0];
 	for (int i = 0; i < m1->cols; i++) {
-		stdev += (m1->data[0][0] - avg)*(m1->data[0][0] - avg);
+		stdev += (m1->data[0][0] - avg) * (m1->data[0][0] - avg);
 	}
 
 	stdev /= m1->cols;

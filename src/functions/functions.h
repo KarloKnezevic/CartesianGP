@@ -26,6 +26,8 @@ struct function {
 
 struct function *getFunction(char const *functionName);
 
+char *getAllF();
+
 //-----------------------------------------------------------------
 //                       MIXED FUNCTIONS
 //-----------------------------------------------------------------
