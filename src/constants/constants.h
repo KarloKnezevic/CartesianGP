@@ -50,7 +50,7 @@
 #define SHORTCUTCONNECTIONS				1
 #define TARGETFITNESS					0
 #define POPULATIONSIZE					10
-#define MAXGEN							10000
+#define MAXGEN							1000
 
 //-----------------------------------------------------------------
 //                             PRINT

@@ -16,6 +16,10 @@
 #include "parameters.h"
 #include "stream/stream.h"
 
+#include "../CLan/memory.h"
+#define malloc(X) my_malloc( X, __FILE__, __LINE__, __FUNCTION__)
+#define free(X) my_free( X, __FILE__, __LINE__, __FUNCTION__)
+
 void recursivelySetActiveNodes(struct chromosome *chromo, int nodeIndex);
 
 //-----------------------------------------------------------------
@@ -485,6 +489,9 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 
 		//get active function
 		currentActiveNodeFunction = chromo->nodes[currentActiveNode]->function;
+
+		//free previous result
+		_freeMatrix(chromo->nodes[currentActiveNode]->output);
 
 		//calculate output of active function -> call delegate method
 		chromo->nodes[currentActiveNode]->output =

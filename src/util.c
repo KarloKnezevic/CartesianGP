@@ -13,6 +13,10 @@
 #include <math.h>
 #include "constants/constants.h"
 
+#include "../CLan/memory.h"
+#define malloc(X) my_malloc( X, __FILE__, __LINE__, __FUNCTION__)
+#define free(X) my_free( X, __FILE__, __LINE__, __FUNCTION__)
+
 //-----------------------------------------------------------------
 //                            RANDOM
 //-----------------------------------------------------------------

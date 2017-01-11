@@ -12,6 +12,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../CLan/memory.h"
+#define malloc(X) my_malloc( X, __FILE__, __LINE__, __FUNCTION__)
+#define free(X) my_free( X, __FILE__, __LINE__, __FUNCTION__)
+
 void mutateRandomParent(struct parameters *params, struct chromosome **parents,
 		struct chromosome **children, int numParents, int numChildren) {
 	int i;
