@@ -308,6 +308,8 @@ void freeDataSet(struct dataSet *data);
 
 void printDataSet(struct dataSet *data);
 
+void printMatrix(struct matrix *m);
+
 void saveDataSet(struct dataSet *data, char const *fileName);
 
 int getNumDataSetInputs(struct dataSet *data);

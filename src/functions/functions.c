@@ -76,9 +76,9 @@ struct function *getFunction(char const *functionName) {
 	} else if (strncmp(functionName, "mdiv", FUNCTIONNAMELENGTH) == 0) {
 		return _init("mdiv", _mdiv, 2);
 	} else if (strncmp(functionName, "mabs", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mabs", _mabs, 2);
+		return _init("mabs", _mabs, 1);
 	} else if (strncmp(functionName, "msqrt", FUNCTIONNAMELENGTH) == 0) {
-		return _init("msqrt", _msqrt, 2);
+		return _init("msqrt", _msqrt, 1);
 	} else if (strncmp(functionName, "mpow", FUNCTIONNAMELENGTH) == 0) {
 		return _init("mpow", _mpow, 2);
 	} else if (strncmp(functionName, "mpowint", FUNCTIONNAMELENGTH) == 0) {
@@ -279,7 +279,8 @@ struct matrix *_set(const int numInputs, struct matrix **matrices,
 		return _pushback(numInputs, matrices, connectionWeights);
 	}
 
-	struct matrix *_m = _initialiseMatrix(matrices[1-index]->rows, matrices[1-index]->cols);
+	struct matrix *_m = _initialiseMatrix(matrices[1 - index]->rows,
+			matrices[1 - index]->cols);
 	for (int i = 0; i < _m->cols; i++) {
 		_m->data[0][i] = matrices[index]->data[0][0];
 	}
@@ -289,52 +290,47 @@ struct matrix *_set(const int numInputs, struct matrix **matrices,
 
 struct matrix *_sum(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	double sum = 0.0;
-	for (int i = 0; i < matrices[0]->cols; i++) {
-		sum += matrices[0]->data[0][i];
-	}
-
-	return _initialiseMatrixFromScalar(sum);
+	return _sumElements(matrices[0], connectionWeights);
 }
 
 struct matrix *_madd(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _add(matrices[0], matrices[1], connectionWeights);
 }
 
 struct matrix *_msub(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _sub(matrices[0], matrices[1], connectionWeights);
 }
 
 struct matrix *_mmul(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _mul(matrices[0], matrices[1], connectionWeights);
 }
 
 struct matrix *_mdiv(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _div(matrices[0], matrices[1], connectionWeights);
 }
 
 struct matrix *_mabs(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _abs(matrices[0], connectionWeights);
 }
 
 struct matrix *_msqrt(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _sqrt(matrices[0], connectionWeights);
 }
 
 struct matrix *_mpow(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _pow(matrices[0], matrices[1], connectionWeights);
 }
 
 struct matrix *_mpowint(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _powInt(matrices[0], matrices[1], connectionWeights);
 }
 
 struct matrix *_msin(const int numInputs, struct matrix **matrices,

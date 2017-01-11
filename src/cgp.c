@@ -116,6 +116,10 @@ void printDataSet(struct dataSet *data) {
 	_printDataSet(data);
 }
 
+void printMatrix(struct matrix *m) {
+	_printMatrix(m);
+}
+
 //-----------------------------------------------------------------
 //                          SAVER
 //-----------------------------------------------------------------

@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
 	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
 
-	addNodeFunction(params, "head,last");
+	addNodeFunction(params, "madd,msub,mmul,mdiv");
 
 	chromo = initialiseChromosome(params);
 
@@ -34,6 +34,13 @@ int main(int argc, char *argv[]) {
 	printDataSet(data);
 
 	saveChromosome(chromo, "data/chromosome.txt");
+
+	printf("Chromosome outputs:\n");
+	for (int i = 0; i < numOutputs; i++) {
+		printf("%d -> ", i);
+		printMatrix(getChromosomeOutput(chromo, i));
+		printf("\n");
+	}
 
 	freeChromosome(chromo);
 	freeParameters(params);

@@ -151,6 +151,14 @@ void _freeMatrix(struct matrix *m) {
 //                          MATH
 //-----------------------------------------------------------------
 
+double _zerro_div(double a, double b) {
+	if (abs(b) < 1e-9) {
+		return a > 0 ? DBL_MAX : DBL_MIN;
+	}
+
+	return a / b;
+}
+
 struct matrix* _mulWithScalar(struct matrix *m, double scalar) {
 	for (int i = 0; i < m->rows; i++) {
 		for (int j = 0; j < m->cols; j++) {
@@ -161,9 +169,236 @@ struct matrix* _mulWithScalar(struct matrix *m, double scalar) {
 	return m;
 }
 
+struct matrix* _sumElements(struct matrix *m1, const double *factors) {
+	double sum = 0.0;
+	for (int i = 0; i < m1->cols; i++) {
+		sum += m1->data[0][i];
+	}
+
+	return _initialiseMatrixFromScalar(sum);
+}
+
+struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors) {
+	mtype t_m1 = _getMatrixType(m1);
+	mtype t_m2 = _getMatrixType(m2);
+
+	struct matrix *_m;
+
+	if (SCALAR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromScalar(m1->data[0][0] + m2->data[0][0]);
+	} else if (SCALAR == t_m1 && VECTOR == t_m2) {
+		_m = _initialiseMatrixFromArray(m2->rows, m2->cols, m2->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] += m1->data[0][0];
+		}
+	} else if (VECTOR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromArray(m1->rows, m1->cols, m1->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] += m2->data[0][0];
+		}
+	} else {
+		struct matrix *first = m1->cols > m2->cols ? m1 : m2;
+		struct matrix *second = first == m1 ? m2 : m1;
+
+		_m = _initialiseMatrixFromArray(first->rows, first->cols,
+				first->data[0]);
+		for (int i = 0; i < second->cols; i++) {
+			_m->data[0][i] += second->data[0][i];
+		}
+	}
+
+	return _m;
+}
+
+struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors) {
+	mtype t_m1 = _getMatrixType(m1);
+	mtype t_m2 = _getMatrixType(m2);
+
+	struct matrix *_m;
+
+	if (SCALAR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromScalar(m1->data[0][0] - m2->data[0][0]);
+	} else if (SCALAR == t_m1 && VECTOR == t_m2) {
+		_m = _initialiseMatrixFromArray(m2->rows, m2->cols, m2->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] -= m1->data[0][0];
+		}
+	} else if (VECTOR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromArray(m1->rows, m1->cols, m1->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] -= m2->data[0][0];
+		}
+	} else {
+		struct matrix *first = m1->cols > m2->cols ? m1 : m2;
+		struct matrix *second = first == m1 ? m2 : m1;
+
+		_m = _initialiseMatrixFromArray(first->rows, first->cols,
+				first->data[0]);
+		for (int i = 0; i < second->cols; i++) {
+			_m->data[0][i] -= second->data[0][i];
+		}
+	}
+
+	return _m;
+}
+
+struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors) {
+	mtype t_m1 = _getMatrixType(m1);
+	mtype t_m2 = _getMatrixType(m2);
+
+	struct matrix *_m;
+
+	if (SCALAR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromScalar(
+				_zerro_div(m1->data[0][0], m2->data[0][0]));
+	} else if (SCALAR == t_m1 && VECTOR == t_m2) {
+		_m = _initialiseMatrixFromArray(m2->rows, m2->cols, m2->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] = _zerro_div(_m->data[0][i], m1->data[0][0]);
+		}
+	} else if (VECTOR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromArray(m1->rows, m1->cols, m1->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] = _zerro_div(_m->data[0][i], m2->data[0][0]);
+		}
+	} else {
+		struct matrix *first = m1->cols > m2->cols ? m1 : m2;
+		struct matrix *second = first == m1 ? m2 : m1;
+
+		struct matrix *h = _initialiseMatrixFromArray(first->rows, first->cols,
+				first->data[0]);
+		int i = 0;
+		for (i = 0; i < second->cols; i++) {
+			h->data[0][i] = _zerro_div(h->data[0][i], second->data[0][i]);
+		}
+
+		//invert non divided values
+		for (; i < h->cols; i++) {
+			h->data[0][i] = _zerro_div(1.0, h->data[0][i]);
+		}
+
+		_m = _sumElements(h, factors);
+		_freeMatrix(h);
+
+	}
+
+	return _m;
+}
+
+struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors) {
+	mtype t_m1 = _getMatrixType(m1);
+	mtype t_m2 = _getMatrixType(m2);
+
+	struct matrix *_m;
+
+	if (SCALAR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromScalar(m1->data[0][0] * m2->data[0][0]);
+	} else if (SCALAR == t_m1 && VECTOR == t_m2) {
+		_m = _initialiseMatrixFromArray(m2->rows, m2->cols, m2->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] *= m1->data[0][0];
+		}
+	} else if (VECTOR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromArray(m1->rows, m1->cols, m1->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] *= m2->data[0][0];
+		}
+	} else {
+		struct matrix *first = m1->cols > m2->cols ? m1 : m2;
+		struct matrix *second = first == m1 ? m2 : m1;
+
+		struct matrix *h = _initialiseMatrixFromArray(first->rows, first->cols,
+				first->data[0]);
+		for (int i = 0; i < second->cols; i++) {
+			h->data[0][i] *= second->data[0][i];
+		}
+
+		_m = _sumElements(h, factors);
+		_freeMatrix(h);
+
+	}
+
+	return _m;
+}
+
+struct matrix* _abs(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _mul(m1, m1, factors);
+	//this is 1x1, but for safety
+	for (int i = 0; i < _m->cols; i++) {
+		_m->data[0][i] = sqrt(_m->data[0][i]);
+	}
+
+	return _m;
+}
+
+struct matrix* _sqrt(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _initialiseMatrixFromArray(m1->rows, m1->cols,
+			m1->data[0]);
+	for (int i = 0; i < m1->cols; i++) {
+		_m->data[0][i] = sqrt(fabs(_m->data[0][i]));
+	}
+
+	return _m;
+}
+
+struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors) {
+	mtype t_m1 = _getMatrixType(m1);
+	mtype t_m2 = _getMatrixType(m2);
+
+	struct matrix *_m;
+
+	if (SCALAR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromScalar(pow(m1->data[0][0], m2->data[0][0]));
+	} else if (SCALAR == t_m1 && VECTOR == t_m2) {
+		_m = _initialiseMatrixFromArray(m2->rows, m2->cols, m2->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] = pow(_m->data[0][i], m1->data[0][0]);
+		}
+	} else if (VECTOR == t_m1 && SCALAR == t_m2) {
+		_m = _initialiseMatrixFromArray(m1->rows, m1->cols, m1->data[0]);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] = pow(_m->data[0][i], m2->data[0][0]);
+		}
+	} else {
+		struct matrix *first = m1->cols > m2->cols ? m1 : m2;
+		struct matrix *second = first == m1 ? m2 : m1;
+
+		_m = _initialiseMatrixFromArray(first->rows, first->cols,
+				first->data[0]);
+		second = _abs(second, factors);
+		for (int i = 0; i < _m->cols; i++) {
+			_m->data[0][i] = pow(_m->data[0][i], second->data[0][i]);
+		}
+
+		_freeMatrix(second);
+	}
+
+	return _m;
+}
+
+struct matrix* _powInt(struct matrix *m1, struct matrix *m2,
+		const double *factors) {
+	return _pow(m1, m2, factors);
+}
+
 //-----------------------------------------------------------------
 //                          ASSERT
 //-----------------------------------------------------------------
+
+mtype _getMatrixType(struct matrix *m) {
+	if (NULL == m) {
+		return NONE;
+	} else if (m->cols == 1 && m->rows == 1) {
+		return SCALAR;
+	} else if (m->rows == 1 && m->cols > 1) {
+		return VECTOR;
+	} else if (m->rows > 1 && m->cols > 1) {
+		//because of algorithms
+		return MATRIX;
+	}
+
+	return NONE;
+}
 
 void _checkMatrixForNaN(struct matrix *m, double val) {
 	if (m == NULL) {

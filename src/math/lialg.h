@@ -9,6 +9,8 @@
 #ifndef LIALG_H_
 #define LIALG_H_
 
+typedef enum {NONE, SCALAR, VECTOR, MATRIX} mtype;
+
 struct matrix {
 	int rows;
 	int cols;
@@ -58,11 +60,33 @@ void _freeMatrix(struct matrix *m);
 //                          MATH
 //-----------------------------------------------------------------
 
+double _zerro_div(double a, double b);
+
 struct matrix* _mulWithScalar(struct matrix *m, double scalar);
+
+struct matrix* _sumElements(struct matrix *m1, const double *factors);
+
+struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors);
+
+struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors);
+
+struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors);
+
+struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors);
+
+struct matrix* _abs(struct matrix *m1, const double *factors);
+
+struct matrix* _sqrt(struct matrix *m1, const double *factors);
+
+struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors);
+
+struct matrix* _powInt(struct matrix *m1, struct matrix *m2, const double *factors);
 
 //-----------------------------------------------------------------
 //                          UTILITY
 //-----------------------------------------------------------------
+
+mtype _getMatrixType(struct matrix *m);
 
 void _checkMatrixForNaN(struct matrix *m, double val);
 
