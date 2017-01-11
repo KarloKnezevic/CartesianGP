@@ -99,6 +99,20 @@ struct function *getFunction(char const *functionName) {
 		return _init("mLT", _mLT, 2);
 	}
 
+	//STATISTICAL
+
+	else if (strncmp(functionName, "stedv", FUNCTIONNAMELENGTH) == 0) {
+		return _init("stedv", _stdev, 1);
+	} else if (strncmp(functionName, "skew", FUNCTIONNAMELENGTH) == 0) {
+		return _init("skew", _skew, 1);
+	} else if (strncmp(functionName, "kurtosis", FUNCTIONNAMELENGTH) == 0) {
+		return _init("kurtosis", _kurtosis, 1);
+	} else if (strncmp(functionName, "mean", FUNCTIONNAMELENGTH) == 0) {
+		return _init("mean", _mean, 1);
+	} else if (strncmp(functionName, "median", FUNCTIONNAMELENGTH) == 0) {
+		return _init("median", _median, 1);
+	}
+
 	else {
 		printf("Warning: function '%s' is not known and was not added.\n",
 				functionName);
@@ -335,35 +349,60 @@ struct matrix *_mpowint(const int numInputs, struct matrix **matrices,
 
 struct matrix *_msin(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _sin(matrices[0], connectionWeights);
 }
 
 struct matrix *_mtan(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _tan(matrices[0], connectionWeights);
 }
 
 struct matrix *_mcos(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _cos(matrices[0], connectionWeights);
 }
 
 struct matrix *_mtanh(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _tanh(matrices[0], connectionWeights);
 }
 
 struct matrix *_mexp(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _exp(matrices[0], connectionWeights);
 }
 
 struct matrix *_mGT(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _gt(matrices[0], matrices[1], connectionWeights);
 }
 
 struct matrix *_mLT(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return _lt(matrices[0], matrices[1], connectionWeights);
+}
+
+struct matrix *_stdev(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_skew(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_kurtosis(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_mean(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights) {
+	return NULL;
+}
+
+struct matrix *_median(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
 	return NULL;
 }

@@ -82,6 +82,20 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors)
 
 struct matrix* _powInt(struct matrix *m1, struct matrix *m2, const double *factors);
 
+struct matrix* _sin(struct matrix *m1, const double *factors);
+
+struct matrix* _tan(struct matrix *m1, const double *factors);
+
+struct matrix* _cos(struct matrix *m1, const double *factors);
+
+struct matrix* _tanh(struct matrix *m1, const double *factors);
+
+struct matrix* _exp(struct matrix *m1, const double *factors);
+
+struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors);
+
+struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors);
+
 //-----------------------------------------------------------------
 //                          UTILITY
 //-----------------------------------------------------------------

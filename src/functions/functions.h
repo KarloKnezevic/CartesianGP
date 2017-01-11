@@ -110,5 +110,20 @@ struct matrix *_mGT(const int numInputs, struct matrix **matrices,
 struct matrix *_mLT(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights);
 
+struct matrix *_stdev(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights);
+
+struct matrix *_skew(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights);
+
+struct matrix *_kurtosis(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights);
+
+struct matrix *_mean(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights);
+
+struct matrix *_median(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights);
+
 
 #endif /* FUNCTIONS_H_ */

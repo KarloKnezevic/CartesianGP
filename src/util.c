@@ -11,8 +11,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
-
-#define epsilon 1e-10
+#include "constants/constants.h"
 
 //-----------------------------------------------------------------
 //                            RANDOM
@@ -47,7 +46,7 @@ int _randInt(int n) {
 int compare(const void * a, const void * b) {
 	double diff = *(double *) a - *(double *) b;
 
-	if (fabs(diff) < epsilon) {
+	if (fabs(diff) < EPSILON) {
 		return 0;
 	}
 

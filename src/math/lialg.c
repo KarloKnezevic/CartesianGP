@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
+#include "../constants/constants.h"
 
 //-----------------------------------------------------------------
 //                          CONSTRUCTOR
@@ -152,7 +153,7 @@ void _freeMatrix(struct matrix *m) {
 //-----------------------------------------------------------------
 
 double _zerro_div(double a, double b) {
-	if (abs(b) < 1e-9) {
+	if (abs(b) < EPSILON) {
 		return a > 0 ? DBL_MAX : DBL_MIN;
 	}
 
@@ -379,6 +380,94 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors)
 struct matrix* _powInt(struct matrix *m1, struct matrix *m2,
 		const double *factors) {
 	return _pow(m1, m2, factors);
+}
+
+struct matrix* _sin(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _copyMatrixOf(m1);
+	for (int i = 0; i < _m->cols; i++) {
+		_m->data[0][i] = sin(_m->data[0][i]);
+	}
+
+	return _m;
+}
+
+struct matrix* _tan(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _copyMatrixOf(m1);
+	for (int i = 0; i < _m->cols; i++) {
+		//singularities problem
+		double _cos = cos(_m->data[0][i]);
+		if (fabs(_cos) < EPSILON) {
+			double _sin = sin(_m->data[0][i]);
+			_m->data[0][i] = (_sin * _cos) > 0 ? DBL_MAX : DBL_MIN;
+		} else {
+			_m->data[0][i] = tan(_m->data[0][i]);
+		}
+
+	}
+
+	return _m;
+}
+
+struct matrix* _cos(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _copyMatrixOf(m1);
+	for (int i = 0; i < _m->cols; i++) {
+		_m->data[0][i] = cos(_m->data[0][i]);
+	}
+
+	return _m;
+}
+
+struct matrix* _tanh(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _copyMatrixOf(m1);
+	for (int i = 0; i < _m->cols; i++) {
+		//singularities problem
+		if (fabs(_m->data[0][i]) > EPSILON) {
+			//if too large
+			if (fabs(_m->data[0][i]) > log(DBL_MAX)) {
+				_m->data[0][i] = _m->data[0][i] > 0 ? 1 : -1;
+			} else {
+				_m->data[0][i] = tanh(_m->data[0][i]);
+			}
+		} else {
+			_m->data[0][i] = tanh(_m->data[0][i]);
+		}
+
+	}
+
+	return _m;
+}
+
+struct matrix* _exp(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _copyMatrixOf(m1);
+	for (int i = 0; i < _m->cols; i++) {
+
+		if (fabs(_m->data[0][i]) > log(DBL_MAX)) {
+			_m->data[0][i] = _m->data[0][i] > 0 ? DBL_MAX : DBL_MIN;
+		} else {
+			_m->data[0][i] = exp(_m->data[0][i]);
+		}
+
+	}
+
+	return _m;
+}
+
+struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors) {
+	mtype t_m1 = _getMatrixType(m1);
+	mtype t_m2 = _getMatrixType(m2);
+
+	double x1 =
+			t_m1 == SCALAR ? m1->data[0][0] : (_abs(m1, factors))->data[0][0];
+	double x2 =
+			t_m2 == SCALAR ? m2->data[0][0] : (_abs(m2, factors))->data[0][0];
+
+	int res = x1 > x2 ? 1 : (x1 < x2 ? -1 : 0);
+
+	return _initialiseMatrixFromScalar(res);
+}
+
+struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors) {
+	return _gt(m2, m1, factors);
 }
 
 //-----------------------------------------------------------------
