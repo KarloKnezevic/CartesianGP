@@ -384,7 +384,7 @@ struct matrix *_mLT(const int numInputs, struct matrix **matrices,
 
 struct matrix *_stdev(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _standard_deviation(matrices[0], connectionWeights);
 }
 
 struct matrix *_skew(const int numInputs, struct matrix **matrices,
@@ -399,7 +399,7 @@ struct matrix *_kurtosis(const int numInputs, struct matrix **matrices,
 
 struct matrix *_mean(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights) {
-	return NULL;
+	return _arithmetic_mean(matrices[0], connectionWeights);
 }
 
 struct matrix *_median(const int numInputs, struct matrix **matrices,

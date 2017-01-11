@@ -97,6 +97,16 @@ struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors);
 struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors);
 
 //-----------------------------------------------------------------
+//                          STAT
+//-----------------------------------------------------------------
+
+struct matrix* _arithmetic_mean(struct matrix *m1, const double *factors);
+
+struct matrix* _med(struct matrix *m1, const double *factors);
+
+struct matrix* _standard_deviation(struct matrix *m1, const double *factors);
+
+//-----------------------------------------------------------------
 //                          UTILITY
 //-----------------------------------------------------------------
 

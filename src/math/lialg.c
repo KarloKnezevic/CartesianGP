@@ -471,6 +471,36 @@ struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors) 
 }
 
 //-----------------------------------------------------------------
+//                          STAT
+//-----------------------------------------------------------------
+
+struct matrix* _arithmetic_mean(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _sumElements(m1, factors);
+	_m->data[0][0] /= m1->cols;
+
+	return _m;
+}
+
+struct matrix* _med(struct matrix *m1, const double *factors) {
+	return NULL;
+}
+
+struct matrix* _standard_deviation(struct matrix *m1, const double *factors) {
+	struct matrix *_m = _arithmetic_mean(m1, factors);
+	double stdev = 0.0;
+	double avg = _m->data[0][0];
+	for (int i = 0; i < m1->cols; i++) {
+		stdev += (m1->data[0][0] - avg)*(m1->data[0][0] - avg);
+	}
+
+	stdev /= m1->cols;
+	stdev = sqrt(stdev);
+	_m->data[0][0] = stdev;
+
+	return _m;
+}
+
+//-----------------------------------------------------------------
 //                          ASSERT
 //-----------------------------------------------------------------
 
