@@ -14,6 +14,8 @@
 
 void probabilisticMutation(struct parameters *params, struct chromosome *chromo);
 
+//ADD MORE MUTATIONS
+
 //-----------------------------------------------------------------
 //                          FACTORY
 //-----------------------------------------------------------------

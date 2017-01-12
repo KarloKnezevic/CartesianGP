@@ -13,11 +13,11 @@
 #include <string.h>
 #include "../math/lialg.h"
 
-double supervisedLearning(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data) {
-	int i, j;
-	double error = 0;
+//-----------------------------------------------------------------
+//                          ERROR
+//-----------------------------------------------------------------
 
+void validate(struct chromosome *chromo, struct dataSet *data) {
 	if (_getNumChromosomeInputs(chromo) != _getNumDataSetInputs(data)) {
 		printf(
 				"Error: the number of chromosome inputs must match the number of inputs specified in the dataSet.\n");
@@ -31,23 +31,84 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 		printf("Terminating.\n");
 		exit(0);
 	}
+}
+
+//-----------------------------------------------------------------
+//                  Matthews correlation coefficient
+//-----------------------------------------------------------------
+
+double MatthewsCorrelationCoefficient(struct parameters *params,
+		struct matrix *confusionMatrix) {
+	return -1;
+}
+
+//-----------------------------------------------------------------
+//                  Softmax function
+//-----------------------------------------------------------------
+
+/**
+ * Returns values from 0 to K-1
+ */
+int softmax(struct parameters *params, struct chromosome *chromo) {
+	return -1;
+}
+
+//-----------------------------------------------------------------
+//                  Supervised learning
+//-----------------------------------------------------------------
+
+double supervisedLearning(struct parameters *params, struct chromosome *chromo,
+		struct dataSet *data) {
+	int i, j;
+
+	validate(chromo, data);
+
+	/**
+	 * Create confusion matrix.
+	 * Confusion matrix has dimension K x K, where K is number of classes.
+	 */
+	struct matrix *confusionMatrix = _initialiseMatrix(params->numOutputs,
+			params->numOutputs);
 
 	//for each data
 	for (i = 0; i < _getNumDataSetSamples(data); i++) {
 
 		_executeChromosome(chromo, _getDataSetSampleInputs(data, i));
 
-		//for each output
-		//TODO:think about error!
-		for (j = 0; j < _getNumChromosomeOutputs(chromo); j++) {
-			error += fabs(
-					_getMatrixAsScalar(_getChromosomeOutput(chromo, j))
-							- _getDataSetSampleOutput(data, i, j));
+		int predictedClass = softmax(params, chromo);
+
+		int trueClass = -1;
+		//if there is K classes, is is used binary notation, and right class is denoted by 1
+		for (j = 0; j < params->numOutputs; j++) {
+			if (abs(1.0 - _getDataSetSampleOutput(data, i, j)) <= EPSILON) {
+				trueClass = j;
+				break;
+			}
 		}
+
+		if (trueClass == -1) {
+			printf("ERROR: Dataset has non classified data. Terminating...\n");
+			exit(0);
+		}
+
+		//add data to confusion matrix [TRUE CLASS][PREDICTED CLASS]
+		confusionMatrix->data[trueClass][predictedClass] =
+				confusionMatrix->data[trueClass][predictedClass] + 1;
 
 	}
 
-	return error;
+	/**
+	 * Calculate Matthews correlation coefficient
+	 */
+	double MCC = MatthewsCorrelationCoefficient(params, confusionMatrix);
+
+	//free resources
+	_freeMatrix(confusionMatrix);
+
+	/**
+	 * Return fitness as 1 - ABS( MCC )
+	 */
+	return 1 - fabs(MCC);
 }
 
 //-----------------------------------------------------------------
