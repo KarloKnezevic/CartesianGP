@@ -57,14 +57,52 @@ double MatthewsCorrelationCoefficient(struct parameters *params,
 		}
 	}
 
-	//double denominator 1
+	double denominator1 = 0.0;
+	for (int k = 0; k < bound; k++) {
+		double sum1 = 0.0;
+		for (int l = 0; l < bound; l++) {
+			sum1 += CC(k, l);
+		}
 
-	//double denominator 2
+		double sum2 = 0.0;
+		for (int _k = 0; _k < bound; _k++) {
+			if (_k != k) {
+				for (int l = 0; l < bound; l++) {
+					sum2 += CC(_k, l);
+				}
+			}
+		}
 
-	//return numerator / (sqrt(denominator 1) * sqrt(denominator 2))
+		denominator1 += sum1 * sum2;
+	}
 
-	return -1;
+	double denominator2 = 0.0;
+	for (int k = 0; k < bound; k++) {
+		double sum1 = 0.0;
+		for (int l = 0; l < bound; l++) {
+			sum1 += CC(l, k);
+		}
 
+		double sum2 = 0.0;
+		for (int _k = 0; _k < bound; _k++) {
+			if (_k != k) {
+				for (int l = 0; l < bound; l++) {
+					sum2 += CC(l, _k);
+				}
+			}
+		}
+
+		denominator2 += sum1 * sum2;
+	}
+
+	if (denominator1 < EPSILON || denominator2 < EPSILON) {
+		//no better then random classification
+		return 0;
+	}
+
+	double MCC = numerator / (sqrt(denominator1) * sqrt(denominator2));
+
+	return MCC;
 }
 
 //-----------------------------------------------------------------
