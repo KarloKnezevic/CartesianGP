@@ -490,9 +490,6 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 		//get active function
 		currentActiveNodeFunction = chromo->nodes[currentActiveNode]->function;
 
-		//free previous result
-		_freeMatrix(chromo->nodes[currentActiveNode]->output);
-
 		//calculate output of active function -> call delegate method
 		chromo->nodes[currentActiveNode]->output =
 				chromo->funcSet->mFunctions[currentActiveNodeFunction](
