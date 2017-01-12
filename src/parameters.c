@@ -278,6 +278,9 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 					object->functionName, object->args);
 		}
 
+		//remove allocated object
+		free(object);
+
 		//DOC: Subsequent calls to get additional tokens from the same string
 		//are indicated by passing a null pointer as the newstring argument
 		pch = strtok(NULL, ", ");

@@ -43,6 +43,9 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 	chromo->activeNodes = (int*) malloc(params->numNodes * sizeof(int));
 	chromo->outputValues = (struct matrix **) malloc(
 			params->numOutputs * sizeof(struct matrix*));
+	for (i = 0; i < params->numOutputs; i++) {
+		chromo->outputValues[i] = NULL;
+	}
 
 	for (i = 0; i < params->numNodes; i++) {
 		chromo->nodes[i] = _initialiseNode(params->numInputs, params->numNodes,
@@ -71,9 +74,12 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 
 	_setChromosomeActiveNodes(chromo);
 
-	//init to 0 with calloc
-	chromo->nodeInputsHold = (struct matrix**) calloc(
-				params->arity, sizeof(struct matrix*));
+	//init to NULL
+	chromo->nodeInputsHold = (struct matrix**) malloc(
+			params->arity * sizeof(struct matrix*));
+	for (i = 0; i < params->arity; i++) {
+		chromo->nodeInputsHold[i] = NULL;
+	}
 
 	return chromo;
 }
@@ -286,11 +292,7 @@ void _setChromosomeFitness(struct parameters *params, struct chromosome *chromo,
 	double fitness;
 
 	_setChromosomeActiveNodes(chromo);
-
-	_resetChromosome(chromo);
-
 	fitness = params->fitnessFunction(params, chromo, data);
-
 	chromo->fitness = fitness;
 }
 
@@ -298,7 +300,18 @@ void _resetChromosome(struct chromosome *chromo) {
 	int i;
 
 	for (i = 0; i < chromo->numNodes; i++) {
+		_freeMatrix(chromo->nodes[i]->output);
 		chromo->nodes[i]->output = _initialiseMatrixFromScalar(0);
+	}
+
+	for (i = 0; i < chromo->numOutputs; i++) {
+		_freeMatrix(chromo->outputValues[i]);
+		chromo->outputValues[i] = NULL;
+	}
+
+	for (i = 0; i < chromo->arity; i++) {
+		_freeMatrix(chromo->nodeInputsHold[i]);
+		chromo->nodeInputsHold[i] = NULL;
 	}
 }
 
@@ -366,6 +379,11 @@ void _freeChromosome(struct chromosome *chromo) {
 
 	for (i = 0; i < chromo->numNodes; i++) {
 		_freeNode(chromo->nodes[i]);
+	}
+
+	for (i = 0; i < chromo->numOutputs; i++) {
+		_freeMatrix(chromo->outputValues[i]);
+		chromo->outputValues[i] = NULL;
 	}
 
 	for (i = 0; i < chromo->arity; i++) {
@@ -453,6 +471,8 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 	int currentActiveNodeFunction;
 	int nodeArity;
 
+	_resetChromosome(chromo);
+
 	const int numInputs = chromo->numInputs;
 	const int numActiveNodes = chromo->numActiveNodes;
 	const int numOutputs = chromo->numOutputs;
@@ -479,16 +499,27 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 
 			//INPUT NODES
 			if (nodeInputLocation < numInputs) {
-				chromo->nodeInputsHold[j] = inputs[nodeInputLocation];
+				if (chromo->nodeInputsHold[j] != NULL) {
+					_freeMatrix(chromo->nodeInputsHold[j]);
+				}
+
+				chromo->nodeInputsHold[j] = _copyMatrixOf(
+						inputs[nodeInputLocation]);
 			} else {
+				if (chromo->nodeInputsHold[j] != NULL) {
+					_freeMatrix(chromo->nodeInputsHold[j]);
+				}
 				//INTERNAL NODE
-				chromo->nodeInputsHold[j] = chromo->nodes[nodeInputLocation
-						- numInputs]->output;
+				chromo->nodeInputsHold[j] = _copyMatrixOf(
+						chromo->nodes[nodeInputLocation - numInputs]->output);
 			}
 		}
 
 		//get active function
 		currentActiveNodeFunction = chromo->nodes[currentActiveNode]->function;
+
+		//release previous solution
+		_freeMatrix(chromo->nodes[currentActiveNode]->output);
 
 		//calculate output of active function -> call delegate method
 		chromo->nodes[currentActiveNode]->output =
@@ -506,11 +537,18 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 
 		//output node is connected to input node
 		if (chromo->outputNodes[i] < numInputs) {
-			chromo->outputValues[i] = inputs[chromo->outputNodes[i]];
+			if (chromo->outputValues[i] != NULL) {
+				_freeMatrix(chromo->outputValues[i]);
+			}
+			chromo->outputValues[i] = _copyMatrixOf(
+					inputs[chromo->outputNodes[i]]);
 		} else {
+			if (chromo->outputValues[i] != NULL) {
+				_freeMatrix(chromo->outputValues[i]);
+			}
 			//scaled because inner indexes are shifted in chromosome -> inputs not coded
-			chromo->outputValues[i] = chromo->nodes[chromo->outputNodes[i]
-					- numInputs]->output;
+			chromo->outputValues[i] = _copyMatrixOf(
+					chromo->nodes[chromo->outputNodes[i] - numInputs]->output);
 		}
 
 	}

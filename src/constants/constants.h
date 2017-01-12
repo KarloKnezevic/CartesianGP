@@ -49,8 +49,8 @@
 #define CONNECTIONWEIGHTRANGE			1
 #define SHORTCUTCONNECTIONS				1
 #define TARGETFITNESS					0
-#define POPULATIONSIZE					10
-#define MAXGEN							1000
+#define POPULATIONSIZE					20
+#define MAXGEN							10
 
 //-----------------------------------------------------------------
 //                             PRINT

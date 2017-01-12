@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 	struct chromosome *population[POPULATIONSIZE];
 	struct chromosome *fittestChromosome = NULL;
 	struct dataSet *trainingData = initialiseMLDataSetFromFile(
-			"data/data_2.arff", "train");
+			"data/data_2.arff", "test");
 
 	int numInputs = trainingData->numInputs;
 	int numNodes = trainingData->numInputs;
