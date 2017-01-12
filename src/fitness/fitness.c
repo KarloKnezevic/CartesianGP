@@ -13,6 +13,8 @@
 #include <string.h>
 #include "../math/lialg.h"
 
+#define SCALAR(X) _getMatrixAsScalar(X)
+
 //-----------------------------------------------------------------
 //                          ERROR
 //-----------------------------------------------------------------
@@ -37,9 +39,32 @@ void validate(struct chromosome *chromo, struct dataSet *data) {
 //                  Matthews correlation coefficient
 //-----------------------------------------------------------------
 
+#define CC(__x__, __y__) (confusionMatrix->data[__x__][__y__])
+
 double MatthewsCorrelationCoefficient(struct parameters *params,
 		struct matrix *confusionMatrix) {
+
+	int bound = confusionMatrix->cols;
+
+	double numerator = 0.0;
+	for (int k = 0; k < bound; k++) {
+		for (int l = 0; l < bound; l++) {
+			for (int m = 0; m < bound; m++) {
+
+				numerator += (CC(k,k) * CC(l, m)) - (CC(k,l) * CC(m, k));
+
+			}
+		}
+	}
+
+	//double denominator 1
+
+	//double denominator 2
+
+	//return numerator / (sqrt(denominator 1) * sqrt(denominator 2))
+
 	return -1;
+
 }
 
 //-----------------------------------------------------------------
@@ -48,9 +73,28 @@ double MatthewsCorrelationCoefficient(struct parameters *params,
 
 /**
  * Returns values from 0 to K-1
+ *
+ * In case of error, -1 returned
  */
 int softmax(struct parameters *params, struct chromosome *chromo) {
-	return -1;
+	//return index of max output value
+
+	//error state
+	if (chromo->numOutputs < 1) {
+		return -1;
+	}
+
+	int maxIndex = 0;
+	double max = SCALAR(_getChromosomeOutput(chromo, maxIndex));
+
+	for (int i = 1; i < _getNumChromosomeOutputs(chromo); i++) {
+		if (SCALAR(_getChromosomeOutput(chromo, i)) > max) {
+			max = SCALAR(_getChromosomeOutput(chromo, i));
+			maxIndex = i;
+		}
+	}
+
+	return maxIndex;
 }
 
 //-----------------------------------------------------------------
@@ -86,7 +130,7 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 			}
 		}
 
-		if (trueClass == -1) {
+		if (trueClass == -1 || predictedClass == -1) {
 			printf("ERROR: Dataset has non classified data. Terminating...\n");
 			exit(0);
 		}
