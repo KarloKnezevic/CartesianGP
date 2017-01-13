@@ -231,6 +231,11 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 			sscanf(line, "in=%d", &(data->numInputs));
 
+			/**
+			 * MT-CGP has one virtual input: vector of all atributes
+			 */
+			data->numInputs++;
+
 			line = fgets(buffer, sizeof(buffer), fp);
 
 			sscanf(line, "out=%d", &(data->numOutputs));
@@ -286,10 +291,20 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 			//until the end of line
 			int class = -1;
 			int isFirst = 1;
+			struct matrix *attributeVector = _initialiseMatrix(1, data->numInputs-1);
 			while (record != NULL) {
-				if (col < data->numInputs) {
+				if (col < data->numInputs-1) {
 					data->inputData[lineNum-readFrom][col] = _initialiseMatrixFromScalar(
 							atof(record));
+
+					attributeVector->data[0][col] = atof(record);
+
+					//add vector
+					if (col == data->numInputs - 2) {
+						//++col
+						data->inputData[lineNum-readFrom][++col] = attributeVector;
+					}
+
 				} else {
 					class = atoi(record);
 
