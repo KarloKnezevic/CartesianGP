@@ -14,7 +14,13 @@
 
 void probabilisticMutation(struct parameters *params, struct chromosome *chromo);
 
-//ADD MORE MUTATIONS
+void probabilisticMutationOnlyActive(struct parameters *params, struct chromosome *chromo);
+
+void singleMutation(struct parameters *params, struct chromosome *chromo);
+
+void pointMutation(struct parameters *params, struct chromosome *chromo);
+
+void pointMutationWeights(struct parameters *params, struct chromosome *chromo);
 
 //-----------------------------------------------------------------
 //                          FACTORY

@@ -565,7 +565,14 @@ int _getRandomFunction(int numFunctions) {
 	return _randInt(numFunctions);
 }
 
+/**
+ * If weight range set to negative value, all weights are constant and set to 1
+ */
 double _getRandomConnection(double weightRange) {
+	if (weightRange < 0) {
+		return 1;
+	}
+
 	return (_randDecimal() * 2 * weightRange) - weightRange;
 }
 
