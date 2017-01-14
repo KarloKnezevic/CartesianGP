@@ -122,10 +122,12 @@ struct function *getFunction(char const *functionName) {
 }
 
 char *getAllF() {
-	return "set";
 	//return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,pushfront,set,sum";
 	//return "madd,msub,mmul,mdiv,mabs,msqrt,mpow,msin,mcos,mtanh,mtan,mexp,mGT,mLT";
 	//return "stedv,mean";
+	return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,"
+			"pushfront,set,sum,madd,msub,mmul,mdiv,mabs,msqrt,mpow,msin,"
+			"mcos,mtanh,mtan,mexp,mGT,mLT,stedv,mean";
 }
 
 //-----------------------------------------------------------------
