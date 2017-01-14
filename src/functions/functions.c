@@ -122,8 +122,9 @@ struct function *getFunction(char const *functionName) {
 }
 
 char *getAllF() {
+	return "set";
 	//return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,pushfront,set,sum";
-	return "madd,msub,mmul,mdiv,mabs,msqrt,mpow,msin,mcos,mtanh,mtan,mexp,mGT,mLT";
+	//return "madd,msub,mmul,mdiv,mabs,msqrt,mpow,msin,mcos,mtanh,mtan,mexp,mGT,mLT";
 	//return "stedv,mean";
 }
 
@@ -291,7 +292,7 @@ struct matrix *_set(const int numInputs, struct matrix **matrices,
 	//no scalar values
 	if (-1 == index) {
 		//return random matrix
-		return matrices[rand() % 2];
+		return _copyMatrixOf(matrices[rand() % 2]);
 	}
 
 	//if other scalar too
