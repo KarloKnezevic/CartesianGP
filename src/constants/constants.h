@@ -44,14 +44,14 @@
 #define MU								1
 #define LAMBDA							4
 #define EVOLUTIONARYSTRATEGY			'+'
-#define MUTATIONRATE					0.1
+#define MUTATIONRATE					0.15
 #define RECCURENTCONNECTIONPROBABILITY	0.00
 #define CONNECTIONWEIGHTRANGE			0
-#define AMPLITUDERANGE					2	//if 0, 1 is set
+#define AMPLITUDERANGE					1	//if 0, 1 is set
 #define SHORTCUTCONNECTIONS				0
 #define TARGETFITNESS					0
-#define POPULATIONSIZE					20
-#define MAXGEN							1000
+#define POPULATIONSIZE					20 //only used when override cga
+#define MAXGEN							10000
 
 //-----------------------------------------------------------------
 //                             PRINT

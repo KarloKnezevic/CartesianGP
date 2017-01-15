@@ -84,6 +84,12 @@ void probabilisticMutationOnlyActive(struct parameters *params,
 					chromo->funcSet->numFunctions);
 		}
 
+		//mutatate amplitude
+		if (_randDecimal() <= params->mutationRate) {
+			chromo->nodes[activeNode]->amplitude = _getRandomAmplitude(
+					params->amplitudeRange);
+		}
+
 		//for every input to each chromosome
 		for (j = 0; j < params->arity; j++) {
 
