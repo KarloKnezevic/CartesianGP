@@ -67,42 +67,42 @@ struct function *getFunction(char const *functionName) {
 
 	// MATH
 
-	else if (strncmp(functionName, "madd", FUNCTIONNAMELENGTH) == 0) {
-		return _init("madd", _madd, 2);
-	} else if (strncmp(functionName, "msub", FUNCTIONNAMELENGTH) == 0) {
-		return _init("msub", _msub, 2);
-	} else if (strncmp(functionName, "mmul", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mmul", _mmul, 2);
-	} else if (strncmp(functionName, "mdiv", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mdiv", _mdiv, 2);
-	} else if (strncmp(functionName, "mabs", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mabs", _mabs, 1);
-	} else if (strncmp(functionName, "msqrt", FUNCTIONNAMELENGTH) == 0) {
-		return _init("msqrt", _msqrt, 1);
-	} else if (strncmp(functionName, "mpow", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mpow", _mpow, 2);
-	} else if (strncmp(functionName, "mpowint", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mpowint", _mpowint, 2);
-	} else if (strncmp(functionName, "msin", FUNCTIONNAMELENGTH) == 0) {
-		return _init("msin", _msin, 1);
-	} else if (strncmp(functionName, "mcos", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mcos", _mcos, 1);
-	} else if (strncmp(functionName, "mtanh", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mtanh", _mtanh, 1);
-	} else if (strncmp(functionName, "mtan", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mtan", _mtan, 1);
-	} else if (strncmp(functionName, "mexp", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mexp", _mexp, 1);
-	} else if (strncmp(functionName, "mGT", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mGT", _mGT, 2);
-	} else if (strncmp(functionName, "mLT", FUNCTIONNAMELENGTH) == 0) {
-		return _init("mLT", _mLT, 2);
+	else if (strncmp(functionName, "add", FUNCTIONNAMELENGTH) == 0) {
+		return _init("add", _madd, 2);
+	} else if (strncmp(functionName, "sub", FUNCTIONNAMELENGTH) == 0) {
+		return _init("sub", _msub, 2);
+	} else if (strncmp(functionName, "mul", FUNCTIONNAMELENGTH) == 0) {
+		return _init("mul", _mmul, 2);
+	} else if (strncmp(functionName, "div", FUNCTIONNAMELENGTH) == 0) {
+		return _init("div", _mdiv, 2);
+	} else if (strncmp(functionName, "abs", FUNCTIONNAMELENGTH) == 0) {
+		return _init("abs", _mabs, 1);
+	} else if (strncmp(functionName, "sqrt", FUNCTIONNAMELENGTH) == 0) {
+		return _init("sqrt", _msqrt, 1);
+	} else if (strncmp(functionName, "pow", FUNCTIONNAMELENGTH) == 0) {
+		return _init("pow", _mpow, 2);
+	} else if (strncmp(functionName, "powint", FUNCTIONNAMELENGTH) == 0) {
+		return _init("powint", _mpowint, 2);
+	} else if (strncmp(functionName, "sin", FUNCTIONNAMELENGTH) == 0) {
+		return _init("sin", _msin, 1);
+	} else if (strncmp(functionName, "cos", FUNCTIONNAMELENGTH) == 0) {
+		return _init("cos", _mcos, 1);
+	} else if (strncmp(functionName, "tanh", FUNCTIONNAMELENGTH) == 0) {
+		return _init("tanh", _mtanh, 1);
+	} else if (strncmp(functionName, "tan", FUNCTIONNAMELENGTH) == 0) {
+		return _init("tan", _mtan, 1);
+	} else if (strncmp(functionName, "exp", FUNCTIONNAMELENGTH) == 0) {
+		return _init("exp", _mexp, 1);
+	} else if (strncmp(functionName, "GT", FUNCTIONNAMELENGTH) == 0) {
+		return _init("GT", _mGT, 2);
+	} else if (strncmp(functionName, "LT", FUNCTIONNAMELENGTH) == 0) {
+		return _init("LT", _mLT, 2);
 	}
 
 	//STATISTICAL
 
-	else if (strncmp(functionName, "stedv", FUNCTIONNAMELENGTH) == 0) {
-		return _init("stedv", _stdev, 1);
+	else if (strncmp(functionName, "stdev", FUNCTIONNAMELENGTH) == 0) {
+		return _init("stdev", _stdev, 1);
 	} else if (strncmp(functionName, "skew", FUNCTIONNAMELENGTH) == 0) {
 		return _init("skew", _skew, 1);
 	} else if (strncmp(functionName, "kurtosis", FUNCTIONNAMELENGTH) == 0) {
@@ -123,11 +123,11 @@ struct function *getFunction(char const *functionName) {
 
 char *getAllF() {
 	//return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,pushfront,set,sum";
-	//return "madd,msub,mmul,mdiv,mabs,msqrt,mpow,msin,mcos,mtanh,mtan,mexp,mGT,mLT";
-	//return "stedv,mean";
+	//return "add,sub,mul,div,abs,sqrt,pow,sin,cos,tanh,tan,exp,GT,LT";
+	//return "stdev,mean";
 	return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,"
-			"pushfront,set,sum,madd,msub,mmul,mdiv,mabs,msqrt,mpow,msin,"
-			"mcos,mtanh,mtan,mexp,mGT,mLT,stedv,mean";
+			"pushfront,set,sum,add,sub,mul,div,abs,sqrt,pow,sin,"
+			"cos,tanh,tan,exp,GT,LT,stdev,mean";
 }
 
 //-----------------------------------------------------------------

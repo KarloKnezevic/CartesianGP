@@ -189,6 +189,15 @@ void freeChromosome(struct chromosome *chromo);
  */
 void printChromosome(struct chromosome *chromo, int weights);
 
+/**
+ * Print chromosome phenotype in human readable format.
+ * Only final output function printed.
+ * If filename is NULL, chromosome printed to console.
+ * @param chromo
+ * @param fileName
+ */
+void printPretty(struct chromosome *chromo, char const *fileName);
+
 //-----------------------------------------------------------------
 
 void executeChromosome(struct chromosome *chromo, struct matrix **inputs);

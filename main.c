@@ -75,6 +75,8 @@ int main(int argc, char *argv[]) {
 //		freeChromosome(population[i]);
 //	}
 
+	printPretty(fittestChromosome, NULL);
+
 	freeChromosome(fittestChromosome);
 	freeDataSet(trainingData);
 	freeParameters(params);

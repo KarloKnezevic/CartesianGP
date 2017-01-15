@@ -291,18 +291,20 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 			//until the end of line
 			int class = -1;
 			int isFirst = 1;
-			struct matrix *attributeVector = _initialiseMatrix(1, data->numInputs-1);
+			struct matrix *attributeVector = _initialiseMatrix(1,
+					data->numInputs - 1);
 			while (record != NULL) {
-				if (col < data->numInputs-1) {
-					data->inputData[lineNum-readFrom][col] = _initialiseMatrixFromScalar(
-							atof(record));
+				if (col < data->numInputs - 1) {
+					data->inputData[lineNum - readFrom][col] =
+							_initialiseMatrixFromScalar(atof(record));
 
 					attributeVector->data[0][col] = atof(record);
 
 					//add vector
 					if (col == data->numInputs - 2) {
 						//++col
-						data->inputData[lineNum-readFrom][++col] = attributeVector;
+						data->inputData[lineNum - readFrom][++col] =
+								attributeVector;
 					}
 
 				} else {
@@ -315,8 +317,8 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 					isFirst = 0;
 
-					data->outputData[lineNum-readFrom][col - data->numInputs] = atoi(
-							record);
+					data->outputData[lineNum - readFrom][col - data->numInputs] =
+							atoi(record);
 				}
 
 				record = strtok(NULL, " ,\n");
@@ -325,12 +327,13 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 			if (class != 0) {
 				for (int i = 0; i < data->numOutputs; i++) {
-					data->outputData[lineNum-readFrom][i] = (class - 1) == i ? 1 : 0;
+					data->outputData[lineNum - readFrom][i] =
+							(class - 1) == i ? 1 : 0;
 				}
 			}
 		}
 
-		if (lineNum - readFrom == data->numSamples-1) {
+		if (lineNum - readFrom == data->numSamples - 1) {
 			break;
 		}
 
@@ -389,6 +392,282 @@ void _saveChromosome(struct chromosome *chromo, char const *fileName) {
 	fflush(fp);
 
 	fclose(fp);
+}
+
+void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
+		FILE *fp) {
+
+	int i;
+
+	if (index < chromo->numInputs) {
+		fprintf(fp, "x_%d", index);
+		return;
+	}
+
+	//ADD
+	if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "add", FUNCTIONNAMELENGTH)
+			== 0) {
+
+		fprintf(fp, "(");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+
+		for (i = 1;
+				i < _getChromosomeNodeArity(chromo, index - chromo->numInputs);
+				i++) {
+
+			fprintf(fp, " + ");
+
+			_savePrettyChromosomeRecursive(chromo,
+					chromo->nodes[index - chromo->numInputs]->inputs[i], fp);
+		}
+
+		fprintf(fp, ")");
+	}
+
+	//SUB
+	else if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "sub", FUNCTIONNAMELENGTH)
+			== 0) {
+
+		fprintf(fp, "(");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+
+		for (i = 1;
+				i < _getChromosomeNodeArity(chromo, index - chromo->numInputs);
+				i++) {
+
+			fprintf(fp, " - ");
+
+			_savePrettyChromosomeRecursive(chromo,
+					chromo->nodes[index - chromo->numInputs]->inputs[i], fp);
+		}
+
+		fprintf(fp, ")");
+	}
+
+	//MUL
+	else if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "mul", FUNCTIONNAMELENGTH)
+			== 0) {
+
+		fprintf(fp, "(");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+
+		for (i = 1;
+				i < _getChromosomeNodeArity(chromo, index - chromo->numInputs);
+				i++) {
+
+			fprintf(fp, " * ");
+
+			_savePrettyChromosomeRecursive(chromo,
+					chromo->nodes[index - chromo->numInputs]->inputs[i], fp);
+		}
+
+		fprintf(fp, ")");
+	}
+
+	//DIV
+	else if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "div", FUNCTIONNAMELENGTH)
+			== 0) {
+
+		if (_getChromosomeNodeArity(chromo, index - chromo->numInputs) == 1) {
+			_savePrettyChromosomeRecursive(chromo,
+					chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+		} else {
+
+			for (i = 0;
+					i
+							< _getChromosomeNodeArity(chromo,
+									index - chromo->numInputs); i++) {
+
+				if (i + 1
+						< _getChromosomeNodeArity(chromo,
+								index - chromo->numInputs)) {
+					fprintf(fp, "(");
+					_savePrettyChromosomeRecursive(chromo,
+							chromo->nodes[index - chromo->numInputs]->inputs[i],
+							fp);
+					fprintf(fp, ") / (");
+				} else if (i + 1
+						== _getChromosomeNodeArity(chromo,
+								index - chromo->numInputs)
+						&& _getChromosomeNodeArity(chromo,
+								index - chromo->numInputs) > 2) {
+					_savePrettyChromosomeRecursive(chromo,
+							chromo->nodes[index - chromo->numInputs]->inputs[i],
+							fp);
+					fprintf(fp, ")");
+				} else {
+					_savePrettyChromosomeRecursive(chromo,
+							chromo->nodes[index - chromo->numInputs]->inputs[i],
+							fp);
+					fprintf(fp, ")");
+				}
+			}
+		}
+	}
+
+	//ABS
+	else if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "abs", FUNCTIONNAMELENGTH)
+			== 0) {
+
+		fprintf(fp, " |");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+
+		fprintf(fp, " |");
+
+	}
+
+	//POW
+	else if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "pow", FUNCTIONNAMELENGTH)
+			== 0) {
+
+		fprintf(fp, " (");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+
+		fprintf(fp, " )^(");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[1], fp);
+
+		fprintf(fp, " )");
+
+	}
+
+	//POWINT
+	else if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "powint",
+			FUNCTIONNAMELENGTH) == 0) {
+
+		fprintf(fp, " (");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+
+		fprintf(fp, " )^(");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[1], fp);
+
+		fprintf(fp, " )");
+
+	}
+
+	//EXP
+	else if (strncmp(
+			chromo->funcSet->functionNames[chromo->nodes[index
+					- chromo->numInputs]->function], "exp", FUNCTIONNAMELENGTH)
+			== 0) {
+
+		fprintf(fp, " e^(");
+
+		_savePrettyChromosomeRecursive(chromo,
+				chromo->nodes[index - chromo->numInputs]->inputs[0], fp);
+
+		fprintf(fp, ")");
+
+	}
+
+	//ALL OTHER
+	else {
+
+		fprintf(fp, "%s(",
+				chromo->funcSet->functionNames[chromo->nodes[index
+						- chromo->numInputs]->function]);
+
+		for (i = 0;
+				i < _getChromosomeNodeArity(chromo, index - chromo->numInputs);
+				i++) {
+
+			_savePrettyChromosomeRecursive(chromo,
+					chromo->nodes[index - chromo->numInputs]->inputs[i], fp);
+
+			if (i
+					< _getChromosomeNodeArity(chromo, index - chromo->numInputs)
+							- 1)
+				fprintf(fp, ", ");
+		}
+
+		fprintf(fp, ")");
+	}
+}
+
+#define MAX_F_VAR	3
+void _savePrettyChromosome(struct chromosome *chromo, char const *fileName) {
+	int output;
+	int i;
+	FILE *fp;
+
+	//print to console if filename is null
+	fp = NULL == fileName ? stdout : fopen(fileName, "w");
+
+	//document header
+	fprintf(fp, "-------------------------------------------\n");
+
+	//for all outputs
+	for (output = 0; output < chromo->numOutputs; output++) {
+
+		// function inputs
+		if (chromo->numInputs == 0) {
+			fprintf(fp, "f()=");
+		} else {
+
+			fprintf(fp, "f_%d(x_0", output);
+
+			i = chromo->numInputs > MAX_F_VAR ? chromo->numInputs - 1 : 1;
+
+			for (; i < chromo->numInputs; i++) {
+				if (chromo->numInputs > MAX_F_VAR) {
+					fprintf(fp, ",...,x_%d", i);
+				} else {
+					fprintf(fp, ",x_%d", i);
+				}
+			}
+
+			fprintf(fp, ")=");
+		}
+
+		_savePrettyChromosomeRecursive(chromo, chromo->outputNodes[output], fp);
+		fprintf(fp, "\n-------------------------------------------\n");
+	}
+
+	fprintf(fp, "h(C|x_i) = argmax_y MAX(y_0");
+
+	output = chromo->numInputs > MAX_F_VAR ? chromo->numOutputs - 1 : 1;
+	for (; output < chromo->numOutputs; output++) {
+		if (chromo->numOutputs > MAX_F_VAR) {
+			fprintf(fp, ",...,y_%d", output);
+		} else {
+			fprintf(fp, ",y_%d", output);
+		}
+	}
+
+	fprintf(fp, ")\n");
+
+	fflush(fp);
+	fclose(fp);
+
 }
 
 void _saveDataSet(struct dataSet *data, char const *fileName) {

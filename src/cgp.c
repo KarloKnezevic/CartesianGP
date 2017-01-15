@@ -108,6 +108,10 @@ void printChromosome(struct chromosome *chromo, int weights) {
 	_printChromosome(chromo, weights);
 }
 
+void printPretty(struct chromosome *chromo, char const *fileName) {
+	_savePrettyChromosome(chromo, fileName);
+}
+
 void printParameters(struct parameters *params) {
 	_printParameters(params);
 }

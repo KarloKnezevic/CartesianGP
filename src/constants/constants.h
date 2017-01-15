@@ -44,13 +44,13 @@
 #define MU								1
 #define LAMBDA							4
 #define EVOLUTIONARYSTRATEGY			'+'
-#define MUTATIONRATE					0.05
+#define MUTATIONRATE					0.1
 #define RECCURENTCONNECTIONPROBABILITY	0.00
 #define CONNECTIONWEIGHTRANGE			1		// if negative, all weights set to 1
-#define SHORTCUTCONNECTIONS				1
+#define SHORTCUTCONNECTIONS				0
 #define TARGETFITNESS					0
 #define POPULATIONSIZE					20
-#define MAXGEN							100000
+#define MAXGEN							10000
 
 //-----------------------------------------------------------------
 //                             PRINT
