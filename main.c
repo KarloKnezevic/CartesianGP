@@ -13,18 +13,17 @@ int main(int argc, char *argv[]) {
 	struct chromosome *fittestChromosome = NULL;
 
 	struct dataSet *trainingData = initialiseMLDataSetFromFile(
-			"data/data_2.arff", "test");
+			"../data/data_2.arff", "test");
 
 	int numInputs = trainingData->numInputs;
-	int numNodes = trainingData->numInputs;
+	int numNodes = NUM_NODES;
 	int numOutputs = trainingData->numOutputs;
 	int nodeArity = NODE_ARITY;
 
 	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
 
 	addNodeFunction(params, getAllF());
-	setMutationType(params, "probabilisticActive");
-	setMutationRate(params, 0.1);
+	//setMutationType(params, "probabilisticActive");
 
 	//CGP
 	fittestChromosome = runCGP(params, trainingData, MAXGEN);

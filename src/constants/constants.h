@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------
 #define NUM_INPUT						1
 #define NUM_OUTPUT						1
-#define NUM_NODES						10
+#define NUM_NODES						200
 #define NODE_ARITY						2
 #define NUM_SAMPLES						5
 
@@ -44,11 +44,11 @@
 #define MU								1
 #define LAMBDA							4
 #define EVOLUTIONARYSTRATEGY			'+'
-#define MUTATIONRATE					0.15
+#define MUTATIONRATE					0.2
 #define RECCURENTCONNECTIONPROBABILITY	0.00
 #define CONNECTIONWEIGHTRANGE			0
-#define AMPLITUDERANGE					1	//if 0, 1 is set
-#define SHORTCUTCONNECTIONS				0
+#define AMPLITUDERANGE					1.1	//if 0, 1 is set
+#define SHORTCUTCONNECTIONS				1
 #define TARGETFITNESS					0
 #define POPULATIONSIZE					20 //only used when override cga
 #define MAXGEN							10000

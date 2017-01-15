@@ -14,3 +14,4 @@ Release/*
 #data
 data/*
 /Debug/
+/Release/

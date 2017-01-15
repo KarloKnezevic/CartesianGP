@@ -122,9 +122,9 @@ struct function *getFunction(char const *functionName) {
 }
 
 char *getAllF() {
-	//return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,pushfront,set,sum";
-	//return "add,sub,mul,div,abs,sqrt,pow,sin,cos,tanh,tan,exp,GT,LT";
-	//return "stdev,mean";
+//	return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,pushfront,set,sum";
+//	return "add,sub,mul,div,abs,sqrt,pow,sin,cos,tanh,tan,exp,GT,LT";
+//	return "stdev,mean";
 	return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,"
 			"pushfront,set,sum,add,sub,mul,div,abs,sqrt,pow,sin,"
 			"cos,tanh,tan,exp,GT,LT,stdev,mean";
