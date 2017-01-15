@@ -172,7 +172,8 @@ struct matrix* _mulWithScalar(struct matrix *m, double scalar) {
 	return m;
 }
 
-struct matrix* _sumElements(struct matrix *m1, const double *factors) {
+struct matrix* _sumElements(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	double sum = 0.0;
 	for (int i = 0; i < m1->cols; i++) {
 		sum += m1->data[0][i];
@@ -181,7 +182,8 @@ struct matrix* _sumElements(struct matrix *m1, const double *factors) {
 	return _initialiseMatrixFromScalar(sum);
 }
 
-struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors) {
+struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude) {
 	mtype t_m1 = _getMatrixType(m1);
 	mtype t_m2 = _getMatrixType(m2);
 
@@ -213,7 +215,8 @@ struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors)
 	return _m;
 }
 
-struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors) {
+struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude) {
 	mtype t_m1 = _getMatrixType(m1);
 	mtype t_m2 = _getMatrixType(m2);
 
@@ -245,7 +248,8 @@ struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors)
 	return _m;
 }
 
-struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors) {
+struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude) {
 	mtype t_m1 = _getMatrixType(m1);
 	mtype t_m2 = _getMatrixType(m2);
 
@@ -280,7 +284,7 @@ struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors)
 			h->data[0][i] = _zerro_div(1.0, h->data[0][i]);
 		}
 
-		_m = _sumElements(h, factors);
+		_m = _sumElements(h, factors, amplitude);
 		_freeMatrix(h);
 
 	}
@@ -288,7 +292,8 @@ struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors)
 	return _m;
 }
 
-struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors) {
+struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude) {
 	mtype t_m1 = _getMatrixType(m1);
 	mtype t_m2 = _getMatrixType(m2);
 
@@ -316,7 +321,7 @@ struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors)
 			h->data[0][i] *= second->data[0][i];
 		}
 
-		_m = _sumElements(h, factors);
+		_m = _sumElements(h, factors, amplitude);
 		_freeMatrix(h);
 
 	}
@@ -324,8 +329,9 @@ struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors)
 	return _m;
 }
 
-struct matrix* _abs(struct matrix *m1, const double *factors) {
-	struct matrix *_m = _mul(m1, m1, factors);
+struct matrix* _abs(struct matrix *m1, const double *factors,
+		const double amplitude) {
+	struct matrix *_m = _mul(m1, m1, factors, amplitude);
 	//this is 1x1, but for safety
 	for (int i = 0; i < _m->cols; i++) {
 		_m->data[0][i] = sqrt(_m->data[0][i]);
@@ -334,7 +340,8 @@ struct matrix* _abs(struct matrix *m1, const double *factors) {
 	return _m;
 }
 
-struct matrix* _sqrt(struct matrix *m1, const double *factors) {
+struct matrix* _sqrt(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	struct matrix *_m = _initialiseMatrixFromArray(m1->rows, m1->cols,
 			m1->data[0]);
 	for (int i = 0; i < m1->cols; i++) {
@@ -344,7 +351,8 @@ struct matrix* _sqrt(struct matrix *m1, const double *factors) {
 	return _m;
 }
 
-struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors) {
+struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude) {
 	mtype t_m1 = _getMatrixType(m1);
 	mtype t_m2 = _getMatrixType(m2);
 
@@ -368,7 +376,7 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors)
 
 		_m = _initialiseMatrixFromArray(first->rows, first->cols,
 				first->data[0]);
-		second = _abs(second, factors);
+		second = _abs(second, factors, amplitude);
 		for (int i = 0; i < _m->cols; i++) {
 			_m->data[0][i] = pow(_m->data[0][i], second->data[0][i]);
 		}
@@ -380,11 +388,12 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors)
 }
 
 struct matrix* _powInt(struct matrix *m1, struct matrix *m2,
-		const double *factors) {
-	return _pow(m1, m2, factors);
+		const double *factors, const double amplitude) {
+	return _pow(m1, m2, factors, amplitude);
 }
 
-struct matrix* _sin(struct matrix *m1, const double *factors) {
+struct matrix* _sin(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	struct matrix *_m = _copyMatrixOf(m1);
 	for (int i = 0; i < _m->cols; i++) {
 		_m->data[0][i] = sin(_m->data[0][i]);
@@ -393,7 +402,8 @@ struct matrix* _sin(struct matrix *m1, const double *factors) {
 	return _m;
 }
 
-struct matrix* _tan(struct matrix *m1, const double *factors) {
+struct matrix* _tan(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	struct matrix *_m = _copyMatrixOf(m1);
 	for (int i = 0; i < _m->cols; i++) {
 		//singularities problem
@@ -410,7 +420,8 @@ struct matrix* _tan(struct matrix *m1, const double *factors) {
 	return _m;
 }
 
-struct matrix* _cos(struct matrix *m1, const double *factors) {
+struct matrix* _cos(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	struct matrix *_m = _copyMatrixOf(m1);
 	for (int i = 0; i < _m->cols; i++) {
 		_m->data[0][i] = cos(_m->data[0][i]);
@@ -419,7 +430,8 @@ struct matrix* _cos(struct matrix *m1, const double *factors) {
 	return _m;
 }
 
-struct matrix* _tanh(struct matrix *m1, const double *factors) {
+struct matrix* _tanh(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	struct matrix *_m = _copyMatrixOf(m1);
 	for (int i = 0; i < _m->cols; i++) {
 		//singularities problem
@@ -439,7 +451,8 @@ struct matrix* _tanh(struct matrix *m1, const double *factors) {
 	return _m;
 }
 
-struct matrix* _exp(struct matrix *m1, const double *factors) {
+struct matrix* _exp(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	struct matrix *_m = _copyMatrixOf(m1);
 	for (int i = 0; i < _m->cols; i++) {
 
@@ -454,41 +467,46 @@ struct matrix* _exp(struct matrix *m1, const double *factors) {
 	return _m;
 }
 
-struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors) {
+struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude) {
 	mtype t_m1 = _getMatrixType(m1);
 	mtype t_m2 = _getMatrixType(m2);
 
 	double x1 =
-			t_m1 == SCALAR ? m1->data[0][0] : (_abs(m1, factors))->data[0][0];
+			t_m1 == SCALAR ? m1->data[0][0] : (_abs(m1, factors, amplitude))->data[0][0];
 	double x2 =
-			t_m2 == SCALAR ? m2->data[0][0] : (_abs(m2, factors))->data[0][0];
+			t_m2 == SCALAR ? m2->data[0][0] : (_abs(m2, factors, amplitude))->data[0][0];
 
 	int res = x1 > x2 ? 1 : (x1 < x2 ? -1 : 0);
 
 	return _initialiseMatrixFromScalar(res);
 }
 
-struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors) {
-	return _gt(m2, m1, factors);
+struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude) {
+	return _gt(m2, m1, factors, amplitude);
 }
 
 //-----------------------------------------------------------------
 //                          STAT
 //-----------------------------------------------------------------
 
-struct matrix* _arithmetic_mean(struct matrix *m1, const double *factors) {
-	struct matrix *_m = _sumElements(m1, factors);
+struct matrix* _arithmetic_mean(struct matrix *m1, const double *factors,
+		const double amplitude) {
+	struct matrix *_m = _sumElements(m1, factors, amplitude);
 	_m->data[0][0] /= m1->cols;
 
 	return _m;
 }
 
-struct matrix* _med(struct matrix *m1, const double *factors) {
+struct matrix* _med(struct matrix *m1, const double *factors,
+		const double amplitude) {
 	return NULL;
 }
 
-struct matrix* _standard_deviation(struct matrix *m1, const double *factors) {
-	struct matrix *_m = _arithmetic_mean(m1, factors);
+struct matrix* _standard_deviation(struct matrix *m1, const double *factors,
+		const double amplitude) {
+	struct matrix *_m = _arithmetic_mean(m1, factors, amplitude);
 	double stdev = 0.0;
 	double avg = _m->data[0][0];
 	for (int i = 0; i < m1->cols; i++) {

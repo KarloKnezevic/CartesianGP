@@ -521,7 +521,8 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 		chromo->nodes[currentActiveNode]->output =
 				chromo->funcSet->mFunctions[currentActiveNodeFunction](
 						nodeArity, chromo->nodeInputsHold,
-						chromo->nodes[currentActiveNode]->weights);
+						chromo->nodes[currentActiveNode]->weights,
+						chromo->nodes[currentActiveNode]->amplitude);
 
 		_checkMatrixForNaN(chromo->nodes[currentActiveNode]->output, 0);
 
@@ -564,7 +565,6 @@ int _getRandomFunction(int numFunctions) {
 
 	return _randInt(numFunctions);
 }
-
 
 double _getRandomConnection(double weightRange) {
 	return (_randDecimal() * 2 * weightRange) - weightRange;

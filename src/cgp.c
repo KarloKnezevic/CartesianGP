@@ -158,7 +158,7 @@ void addNodeFunction(struct parameters *params, char const *functionNames) {
 
 void addCustomNodeFunction(struct parameters *params,
 		struct matrix *(*function)(const int numInputs, struct matrix **inputs,
-				const double *weights), char const *functionName,
+				const double *weights, const double amplitude), char const *functionName,
 		int maxNumInputs) {
 	_addCustomNodeFunction(params, function, functionName, maxNumInputs);
 }

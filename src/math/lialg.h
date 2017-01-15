@@ -9,7 +9,9 @@
 #ifndef LIALG_H_
 #define LIALG_H_
 
-typedef enum {NONE, SCALAR, VECTOR, MATRIX} mtype;
+typedef enum {
+	NONE, SCALAR, VECTOR, MATRIX
+} mtype;
 
 struct matrix {
 	int rows;
@@ -64,47 +66,66 @@ double _zerro_div(double a, double b);
 
 struct matrix* _mulWithScalar(struct matrix *m, double scalar);
 
-struct matrix* _sumElements(struct matrix *m1, const double *factors);
+struct matrix* _sumElements(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
 
-struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
 
-struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
 
-struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
 
-struct matrix* _abs(struct matrix *m1, const double *factors);
+struct matrix* _abs(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _sqrt(struct matrix *m1, const double *factors);
+struct matrix* _sqrt(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
 
-struct matrix* _powInt(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _powInt(struct matrix *m1, struct matrix *m2,
+		const double *factors, const double amplitude);
 
-struct matrix* _sin(struct matrix *m1, const double *factors);
+struct matrix* _sin(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _tan(struct matrix *m1, const double *factors);
+struct matrix* _tan(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _cos(struct matrix *m1, const double *factors);
+struct matrix* _cos(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _tanh(struct matrix *m1, const double *factors);
+struct matrix* _tanh(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _exp(struct matrix *m1, const double *factors);
+struct matrix* _exp(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
 
-struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors);
+struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
 
 //-----------------------------------------------------------------
 //                          STAT
 //-----------------------------------------------------------------
 
-struct matrix* _arithmetic_mean(struct matrix *m1, const double *factors);
+struct matrix* _arithmetic_mean(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _med(struct matrix *m1, const double *factors);
+struct matrix* _med(struct matrix *m1, const double *factors,
+		const double amplitude);
 
-struct matrix* _standard_deviation(struct matrix *m1, const double *factors);
+struct matrix* _standard_deviation(struct matrix *m1, const double *factors,
+		const double amplitude);
 
 //-----------------------------------------------------------------
 //                          UTILITY

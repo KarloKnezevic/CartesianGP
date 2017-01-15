@@ -289,7 +289,7 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 }
 
 void _addCustomNodeFunction(struct parameters *params,
-		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights),
+		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights, const double amplitude),
 		char const *functionName, int maxNumInputs) {
 	if (params->funcSet->numFunctions >= FUNCTIONSETSIZE) {
 		printf(

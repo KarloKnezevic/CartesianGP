@@ -22,7 +22,7 @@ struct functionSet {
 	int maxNumInputs[FUNCTIONSETSIZE];
 
 	struct matrix *(*mFunctions[FUNCTIONSETSIZE])(const int numInputs,
-			struct matrix **inputs, const double *connectionWeights);
+			struct matrix **inputs, const double *connectionWeights, const double amplitude);
 };
 
 void _printFunctionSet(struct parameters *params);

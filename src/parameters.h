@@ -110,7 +110,7 @@ void _freeParameters(struct parameters *params);
 void _addNodeFunction(struct parameters *params, char const *functionNames);
 
 void _addCustomNodeFunction(struct parameters *params,
-		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights),
+		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights, const double amplitude),
 		char const *functionName, int maxNumInputs);
 
 void _clearFunctionSet(struct parameters *params);

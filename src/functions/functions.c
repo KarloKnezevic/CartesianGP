@@ -19,7 +19,7 @@
 
 struct function *_init(const char *functionName,
 		struct matrix *(*function)(const int numInputs, struct matrix **inputs,
-				const double *connectionWeights), int args) {
+				const double *connectionWeights, const double amplitude), int args) {
 
 	struct function *object = (struct function*) malloc(
 			sizeof(struct function));
@@ -135,7 +135,7 @@ char *getAllF() {
 //-----------------------------------------------------------------
 
 struct matrix *_head(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 
 	struct matrix *m = matrices[0];
 
@@ -143,7 +143,7 @@ struct matrix *_head(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_last(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 
 	struct matrix *m = matrices[0];
 
@@ -155,14 +155,14 @@ struct matrix *_last(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_length(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
 	return _initialiseMatrixFromScalar(m->cols);
 }
 
 struct matrix *_tail(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
@@ -173,7 +173,7 @@ struct matrix *_tail(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_diff(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
@@ -192,7 +192,7 @@ struct matrix *_diff(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
@@ -213,7 +213,7 @@ struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_rotate(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
@@ -232,7 +232,7 @@ struct matrix *_rotate(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_reverse(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
@@ -251,7 +251,7 @@ struct matrix *_reverse(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_pushback(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *_m = _initialiseMatrix(1,
 			matrices[0]->cols + matrices[1]->cols);
 	int i = 0;
@@ -267,7 +267,7 @@ struct matrix *_pushback(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_pushfront(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	struct matrix *_m = _initialiseMatrix(1,
 			matrices[0]->cols + matrices[1]->cols);
 	int i = 0;
@@ -283,7 +283,7 @@ struct matrix *_pushfront(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_set(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	int index = -1;
 	if (matrices[0]->rows == 1 && matrices[0]->cols == 1) {
 		index = 0;
@@ -299,7 +299,7 @@ struct matrix *_set(const int numInputs, struct matrix **matrices,
 
 	//if other scalar too
 	if (matrices[1 - index]->rows == 1 && matrices[1 - index]->cols == 1) {
-		return _pushback(numInputs, matrices, connectionWeights);
+		return _pushback(numInputs, matrices, connectionWeights, amplitude);
 	}
 
 	struct matrix *_m = _initialiseMatrix(matrices[1 - index]->rows,
@@ -312,107 +312,107 @@ struct matrix *_set(const int numInputs, struct matrix **matrices,
 }
 
 struct matrix *_sum(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _sumElements(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _sumElements(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_madd(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _add(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _add(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_msub(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _sub(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _sub(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_mmul(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _mul(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _mul(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_mdiv(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _div(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _div(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_mabs(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _abs(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _abs(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_msqrt(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _sqrt(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _sqrt(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_mpow(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _pow(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _pow(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_mpowint(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _powInt(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _powInt(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_msin(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _sin(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _sin(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_mtan(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _tan(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _tan(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_mcos(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _cos(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _cos(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_mtanh(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _tanh(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _tanh(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_mexp(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _exp(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _exp(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_mGT(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _gt(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _gt(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_mLT(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _lt(matrices[0], matrices[1], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _lt(matrices[0], matrices[1], connectionWeights, amplitude);
 }
 
 struct matrix *_stdev(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _standard_deviation(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _standard_deviation(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_skew(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	return NULL;
 }
 
 struct matrix *_kurtosis(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	return NULL;
 }
 
 struct matrix *_mean(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
-	return _arithmetic_mean(matrices[0], connectionWeights);
+		const double *connectionWeights, const double amplitude) {
+	return _arithmetic_mean(matrices[0], connectionWeights, amplitude);
 }
 
 struct matrix *_median(const int numInputs, struct matrix **matrices,
-		const double *connectionWeights) {
+		const double *connectionWeights, const double amplitude) {
 	return NULL;
 }
 
