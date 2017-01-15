@@ -47,11 +47,11 @@
 #define MUTATIONRATE					0.1
 #define RECCURENTCONNECTIONPROBABILITY	0.00
 #define CONNECTIONWEIGHTRANGE			0
-#define AMPLITUDERANGE					0	//if 0, 1 is set
+#define AMPLITUDERANGE					2	//if 0, 1 is set
 #define SHORTCUTCONNECTIONS				0
 #define TARGETFITNESS					0
 #define POPULATIONSIZE					20
-#define MAXGEN							10000
+#define MAXGEN							1000
 
 //-----------------------------------------------------------------
 //                             PRINT

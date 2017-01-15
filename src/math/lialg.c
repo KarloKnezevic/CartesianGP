@@ -179,6 +179,8 @@ struct matrix* _sumElements(struct matrix *m1, const double *factors,
 		sum += m1->data[0][i];
 	}
 
+	sum *= amplitude;
+
 	return _initialiseMatrixFromScalar(sum);
 }
 
@@ -212,6 +214,8 @@ struct matrix* _add(struct matrix *m1, struct matrix *m2, const double *factors,
 		}
 	}
 
+	_mulWithScalar(_m, amplitude);
+
 	return _m;
 }
 
@@ -244,6 +248,8 @@ struct matrix* _sub(struct matrix *m1, struct matrix *m2, const double *factors,
 			_m->data[0][i] -= second->data[0][i];
 		}
 	}
+
+	_mulWithScalar(_m, amplitude);
 
 	return _m;
 }
@@ -289,6 +295,8 @@ struct matrix* _div(struct matrix *m1, struct matrix *m2, const double *factors,
 
 	}
 
+	_mulWithScalar(_m, amplitude);
+
 	return _m;
 }
 
@@ -326,6 +334,8 @@ struct matrix* _mul(struct matrix *m1, struct matrix *m2, const double *factors,
 
 	}
 
+	_mulWithScalar(_m, amplitude);
+
 	return _m;
 }
 
@@ -337,6 +347,8 @@ struct matrix* _abs(struct matrix *m1, const double *factors,
 		_m->data[0][i] = sqrt(_m->data[0][i]);
 	}
 
+	_mulWithScalar(_m, amplitude);
+
 	return _m;
 }
 
@@ -347,6 +359,8 @@ struct matrix* _sqrt(struct matrix *m1, const double *factors,
 	for (int i = 0; i < m1->cols; i++) {
 		_m->data[0][i] = sqrt(fabs(_m->data[0][i]));
 	}
+
+	_mulWithScalar(_m, amplitude);
 
 	return _m;
 }
@@ -384,6 +398,8 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
 		_freeMatrix(second);
 	}
 
+	_mulWithScalar(_m, amplitude);
+
 	return _m;
 }
 
@@ -398,6 +414,8 @@ struct matrix* _sin(struct matrix *m1, const double *factors,
 	for (int i = 0; i < _m->cols; i++) {
 		_m->data[0][i] = sin(_m->data[0][i]);
 	}
+
+	_mulWithScalar(_m, amplitude);
 
 	return _m;
 }
@@ -417,6 +435,8 @@ struct matrix* _tan(struct matrix *m1, const double *factors,
 
 	}
 
+	_mulWithScalar(_m, amplitude);
+
 	return _m;
 }
 
@@ -426,6 +446,8 @@ struct matrix* _cos(struct matrix *m1, const double *factors,
 	for (int i = 0; i < _m->cols; i++) {
 		_m->data[0][i] = cos(_m->data[0][i]);
 	}
+
+	_mulWithScalar(_m, amplitude);
 
 	return _m;
 }
@@ -448,6 +470,8 @@ struct matrix* _tanh(struct matrix *m1, const double *factors,
 
 	}
 
+	_mulWithScalar(_m, amplitude);
+
 	return _m;
 }
 
@@ -463,6 +487,8 @@ struct matrix* _exp(struct matrix *m1, const double *factors,
 		}
 
 	}
+
+	_mulWithScalar(_m, amplitude);
 
 	return _m;
 }

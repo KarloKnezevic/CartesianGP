@@ -28,6 +28,12 @@ void probabilisticMutation(struct parameters *params, struct chromosome *chromo)
 					chromo->funcSet->numFunctions);
 		}
 
+		//mutatate amplitude
+		if (_randDecimal() <= params->mutationRate) {
+			chromo->nodes[i]->amplitude = _getRandomAmplitude(
+					params->amplitudeRange);
+		}
+
 		//for every input to each chromosome
 		for (j = 0; j < params->arity; j++) {
 
@@ -90,9 +96,8 @@ void probabilisticMutationOnlyActive(struct parameters *params,
 
 			//mutate the node connection weight
 			if (_randDecimal() <= params->mutationRate) {
-				chromo->nodes[activeNode]->weights[j] =
-						_getRandomConnection(
-								params->connectionWeightRange);
+				chromo->nodes[activeNode]->weights[j] = _getRandomConnection(
+						params->connectionWeightRange);
 			}
 		}
 	}
