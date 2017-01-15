@@ -25,6 +25,7 @@ struct parameters {
 	double recurrentConnectionProbability;
 
 	double connectionWeightRange;
+	double amplitudeRange;
 
 	int numInputs;
 	int numNodes;

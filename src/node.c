@@ -17,14 +17,14 @@
 //-----------------------------------------------------------------
 
 struct node *_initialiseNode(int numInputs, int numNodes, int arity,
-		int numFunctions, double connectionWeightRange, double recurrentConnectionProbability,
-		int nodePosition) {
+		int numFunctions, double connectionWeightRange, double amplitudeRange,
+		double recurrentConnectionProbability, int nodePosition) {
 	struct node *n;
 	int i;
 
 	n = (struct node*) malloc(sizeof(struct node));
 	n->inputs = (int*) malloc(arity * sizeof(int));
-	n->weights = (double*)malloc(arity * sizeof(double));
+	n->weights = (double*) malloc(arity * sizeof(double));
 	n->function = _getRandomFunction(numFunctions);
 	n->active = 1;
 
@@ -34,6 +34,7 @@ struct node *_initialiseNode(int numInputs, int numNodes, int arity,
 		n->weights[i] = _getRandomConnection(connectionWeightRange);
 	}
 
+	n->amplitude = _getRandomAmplitude(amplitudeRange);
 	n->output = _initialiseMatrixFromScalar(0);
 	n->maxArity = arity;
 

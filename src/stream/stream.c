@@ -592,7 +592,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//ALL OTHER
 	else {
 
-		fprintf(fp, "%s(",
+		fprintf(fp, "%.1f*%s(",
+				chromo->nodes[index - chromo->numInputs]->amplitude,
 				chromo->funcSet->functionNames[chromo->nodes[index
 						- chromo->numInputs]->function]);
 

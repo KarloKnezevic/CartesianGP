@@ -14,6 +14,8 @@
 struct node {
 	int function;
 
+	double amplitude;
+
 	int *inputs;
 
 	int active;
@@ -32,8 +34,8 @@ struct node {
 //-----------------------------------------------------------------
 
 struct node *_initialiseNode(int numInputs, int numNodes, int arity,
-		int numFunctions, double connectionWeightRange, double recurrentConnectionProbability,
-		int nodePosition);
+		int numFunctions, double connectionWeightRange, double amplitudeRange,
+		double recurrentConnectionProbability, int nodePosition);
 
 //-----------------------------------------------------------------
 //                          DESTRUCT

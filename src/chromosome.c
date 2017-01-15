@@ -46,7 +46,7 @@ struct chromosome *_initialiseChromosome(struct parameters *params) {
 	for (i = 0; i < params->numNodes; i++) {
 		chromo->nodes[i] = _initialiseNode(params->numInputs, params->numNodes,
 				params->arity, params->funcSet->numFunctions,
-				params->connectionWeightRange,
+				params->connectionWeightRange, params->amplitudeRange,
 				params->recurrentConnectionProbability, i);
 	}
 
@@ -106,7 +106,7 @@ struct chromosome *_initialiseChromosomeFromChromosome(
 	for (i = 0; i < chromo->numNodes; i++) {
 		chromoNew->nodes[i] = _initialiseNode(chromo->numInputs,
 				chromo->numNodes, chromo->arity, chromo->funcSet->numFunctions,
-				0, 0, i);
+				0, 0, 0, i);
 		_copyNode(chromoNew->nodes[i], chromo->nodes[i]);
 	}
 
@@ -565,15 +565,17 @@ int _getRandomFunction(int numFunctions) {
 	return _randInt(numFunctions);
 }
 
-/**
- * If weight range set to negative value, all weights are constant and set to 1
- */
+
 double _getRandomConnection(double weightRange) {
-	if (weightRange < 0) {
+	return (_randDecimal() * 2 * weightRange) - weightRange;
+}
+
+double _getRandomAmplitude(double amplitudeRange) {
+	if (fabs(amplitudeRange) < EPSILON) {
 		return 1;
 	}
 
-	return (_randDecimal() * 2 * weightRange) - weightRange;
+	return (_randDecimal() * 2 * amplitudeRange) - amplitudeRange;
 }
 
 int _getRandomNodeInput(int numChromoInputs, int numNodes, int nodePosition,

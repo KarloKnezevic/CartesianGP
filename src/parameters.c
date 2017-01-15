@@ -36,6 +36,7 @@ struct parameters *_initialiseParameters(const int numInputs,
 	params->mutationRate = MUTATIONRATE;
 	params->recurrentConnectionProbability = RECCURENTCONNECTIONPROBABILITY;
 	params->connectionWeightRange = CONNECTIONWEIGHTRANGE;
+	params->amplitudeRange = AMPLITUDERANGE;
 	params->shortcutConnections = SHORTCUTCONNECTIONS;
 	params->targetFitness = TARGETFITNESS;
 	params->updateFrequency = UPDATEFREQUENCY;

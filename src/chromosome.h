@@ -131,6 +131,8 @@ int _getRandomFunction(int numFunctions);
 
 double _getRandomConnection(double weightRange);
 
+double _getRandomAmplitude(double amplitudeRange);
+
 int _getRandomNodeInput(int numChromoInputs, int numNodes, int nodePosition,
 		double recurrentConnectionProbability);
 
