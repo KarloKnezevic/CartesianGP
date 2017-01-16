@@ -290,7 +290,6 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 			//until the end of line
 			int class = -1;
-			int isFirst = 1;
 			struct matrix *attributeVector = _initialiseMatrix(1,
 					data->numInputs - 1);
 			while (record != NULL) {
@@ -309,16 +308,24 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 				} else {
 					class = atoi(record);
+					int outputIndex = col - data->numInputs;
 
-					//if not binary class
-					if (1 == isFirst && 0 != class) {
+					//if is first and class not 0
+					if (0 == outputIndex && 0 != class) {
 						break;
 					}
 
-					isFirst = 0;
+					//possible decade class 0
+					if (outputIndex == 0) {
+						//by default, example is in 0th class
+						data->outputData[lineNum - readFrom][outputIndex] = 1;
+					} else {
+						int binary = atoi(record);
+						data->outputData[lineNum - readFrom][col
+								- data->numInputs] = binary;
+						data->outputData[lineNum - readFrom][0] -= binary;
+					}
 
-					data->outputData[lineNum - readFrom][col - data->numInputs] =
-							atoi(record);
 				}
 
 				record = strtok(NULL, " ,\n");
@@ -328,7 +335,7 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 			if (class != 0) {
 				for (int i = 0; i < data->numOutputs; i++) {
 					data->outputData[lineNum - readFrom][i] =
-							(class - 1) == i ? 1 : 0;
+							class == i ? 1 : 0;
 				}
 			}
 		}
@@ -677,7 +684,10 @@ void _savePrettyChromosome(struct chromosome *chromo, char const *fileName) {
 	fprintf(fp, "Fitness:\t%f", chromo->fitness);
 
 	fflush(fp);
-	fclose(fp);
+
+	if (NULL != fileName) {
+		fclose(fp);
+	}
 
 }
 

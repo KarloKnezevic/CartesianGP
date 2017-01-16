@@ -13,8 +13,15 @@ int main(int argc, char *argv[]) {
 	struct chromosome *fittestChromosome = NULL;
 	struct results *results = NULL;
 
+	//TRAIN and TEST data
+
 	struct dataSet *trainingData = initialiseMLDataSetFromFile(
-			"../data/data_2.arff", "test");
+			"data/data_2.arff", "train");
+
+	struct dataSet *testingData = initialiseMLDataSetFromFile(
+			"data/data_2.arff", "test");
+
+	//PARAM SETUP
 
 	int numInputs = trainingData->numInputs;
 	int numNodes = NUM_NODES;
@@ -23,17 +30,27 @@ int main(int argc, char *argv[]) {
 
 	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
 
+	//ADDITIONAL PARAM SETUP
+
 	addNodeFunction(params, getAllF());
 	//setMutationType(params, "probabilisticActive");
 
+	//CGP RUN
 	results = repeatCGP(params, trainingData, MAXGEN, MAXRUN);
 	fittestChromosome = getResultsBestChromosome(results);
 
+	//PRINT FITTEST
 	printPretty(fittestChromosome, NULL);
+
+	//TEST
+	printf("\nTesting...\n");
+	setChromosomeFitness(params, fittestChromosome, testingData);
+	printf("Test data fitness: %f\n", fittestChromosome->fitness);
 
 	freeChromosome(fittestChromosome);
 	freeResults(results);
 	freeDataSet(trainingData);
+	freeDataSet(testingData);
 	freeParameters(params);
 
 	return 0;

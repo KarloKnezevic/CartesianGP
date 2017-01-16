@@ -169,7 +169,9 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 		}
 
 		if (trueClass == -1 || predictedClass == -1) {
-			printf("ERROR: Dataset has non classified data. Terminating...\n");
+			printf("ERROR: Dataset has non classified data. "
+					"Predicted: %d True: %d Data index: %d Terminating...\n",
+					predictedClass, trueClass, i);
 			exit(0);
 		}
 

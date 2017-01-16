@@ -17,5 +17,6 @@
 #include "src/math/lialg.h"
 #include "src/dataset.h"
 #include "src/functions/functions.h"
+#include "src/chromosome.h"
 
 #endif /* MAIN_H_ */
