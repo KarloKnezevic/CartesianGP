@@ -51,12 +51,13 @@
 #define SHORTCUTCONNECTIONS				1
 #define TARGETFITNESS					0
 #define POPULATIONSIZE					20 //only used when override cga
-#define MAXGEN							10000
+#define MAXGEN							20
+#define MAXRUN							5
 
 //-----------------------------------------------------------------
 //                             PRINT
 //-----------------------------------------------------------------
 
-#define UPDATEFREQUENCY					1
+#define UPDATEFREQUENCY					5
 
 #endif /* CONSTANTS_H_ */

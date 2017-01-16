@@ -44,6 +44,8 @@ double _getMedianActiveNodes(struct results *rels);
 
 struct chromosome* _getChromosome(struct results *rels, int run);
 
+struct chromosome* _getResultsBestChromosome(struct results *rels);
+
 //-----------------------------------------------------------------
 //                          DESTRUCT
 //-----------------------------------------------------------------

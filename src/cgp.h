@@ -363,6 +363,8 @@ void saveResults(struct results *rels, char const *fileName);
  */
 struct chromosome* getChromosome(struct results *rels, int run);
 
+struct chromosome* getResultsBestChromosome(struct results *rels);
+
 int getNumChromosomes(struct results *rels);
 
 /**

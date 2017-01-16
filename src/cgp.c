@@ -158,8 +158,8 @@ void addNodeFunction(struct parameters *params, char const *functionNames) {
 
 void addCustomNodeFunction(struct parameters *params,
 		struct matrix *(*function)(const int numInputs, struct matrix **inputs,
-				const double *weights, const double amplitude), char const *functionName,
-		int maxNumInputs) {
+				const double *weights, const double amplitude),
+		char const *functionName, int maxNumInputs) {
 	_addCustomNodeFunction(params, function, functionName, maxNumInputs);
 }
 
@@ -367,6 +367,10 @@ struct chromosome* getChromosome(struct results *rels, int run) {
 	return _getChromosome(rels, run);
 }
 
+struct chromosome* getResultsBestChromosome(struct results *rels) {
+	return _getResultsBestChromosome(rels);
+}
+
 int getNumChromosomes(struct results *rels) {
 	return _getNumChromosomes(rels);
 }
@@ -482,7 +486,6 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 	for (gen = 0; gen < numGens; gen++) {
 
 		// set fitness of the children of the population
-		// todo: threads!
 		for (i = 0; i < params->lambda; i++) {
 			setChromosomeFitness(params, childrenChromos[i], data);
 		}
@@ -567,32 +570,35 @@ struct results* repeatCGP(struct parameters *params, struct dataSet *data,
 		int numGens, int numRuns) {
 	int i;
 	struct results *rels;
-	int updateFrequency = params->updateFrequency;
-
-	params->updateFrequency = 0;
 
 	rels = _initialiseResults(params, numRuns);
 
-	printf("Run\tFitness\t\tGenerations\tActive Nodes\n");
-
-	//todo: threads!
 	for (i = 0; i < numRuns; i++) {
+		printf("----Run %d----\n", i);
+
 		rels->bestChromosomes[i] = runCGP(params, data, numGens);
+
+		printf("Run\tFitness\t\tGenerations\tActive Nodes\n");
 
 		printf("%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
 				rels->bestChromosomes[i]->generation,
 				rels->bestChromosomes[i]->numActiveNodes);
 	}
 
+	printf("\n===RESULTS===\nRun\tFitness\t\tGenerations\tActive Nodes\n");
+
+	for (i = 0; i < numRuns; i++) {
+		printf("%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
+				rels->bestChromosomes[i]->generation,
+				rels->bestChromosomes[i]->numActiveNodes);
+	}
+
 	printf("----------------------------------------------------\n");
-	//todo
 	printf("MEAN\t%f\t%f\t%f\n", getAverageFitness(rels),
 			_getAverageGenerations(rels), getAverageActiveNodes(rels));
 	printf("MEDIAN\t%f\t%f\t%f\n", getMedianFitness(rels),
 			_getMedianGenerations(rels), _getMedianActiveNodes(rels));
 	printf("----------------------------------------------------\n\n");
-
-	params->updateFrequency = updateFrequency;
 
 	return rels;
 }

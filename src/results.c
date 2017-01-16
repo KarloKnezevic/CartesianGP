@@ -141,6 +141,25 @@ struct chromosome* _getChromosome(struct results *rels, int run) {
 	return chromo;
 }
 
+struct chromosome* _getResultsBestChromosome(struct results *rels) {
+	struct chromosome *chromo;
+
+	if (rels == NULL) {
+		printf(
+				"Error: cannot get best chromosome from uninitialised results.\nTerminating.\n");
+		exit(0);
+	}
+
+	chromo = rels->bestChromosomes[0];
+	for (int i = 1; i < rels->numRuns; i++) {
+		if (rels->bestChromosomes[i]->fitness < chromo->fitness) {
+			chromo = rels->bestChromosomes[i];
+		}
+	}
+
+	return _initialiseChromosomeFromChromosome(chromo);
+}
+
 //-----------------------------------------------------------------
 //                          DESTRUCT
 //-----------------------------------------------------------------

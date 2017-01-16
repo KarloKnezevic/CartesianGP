@@ -11,6 +11,7 @@
 int main(int argc, char *argv[]) {
 	struct parameters *params = NULL;
 	struct chromosome *fittestChromosome = NULL;
+	struct results *results = NULL;
 
 	struct dataSet *trainingData = initialiseMLDataSetFromFile(
 			"../data/data_2.arff", "test");
@@ -25,12 +26,13 @@ int main(int argc, char *argv[]) {
 	addNodeFunction(params, getAllF());
 	//setMutationType(params, "probabilisticActive");
 
-	//CGP
-	fittestChromosome = runCGP(params, trainingData, MAXGEN);
+	results = repeatCGP(params, trainingData, MAXGEN, MAXRUN);
+	fittestChromosome = getResultsBestChromosome(results);
 
 	printPretty(fittestChromosome, NULL);
 
 	freeChromosome(fittestChromosome);
+	freeResults(results);
 	freeDataSet(trainingData);
 	freeParameters(params);
 

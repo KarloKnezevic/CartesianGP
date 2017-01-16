@@ -674,6 +674,7 @@ void _savePrettyChromosome(struct chromosome *chromo, char const *fileName) {
 	}
 
 	fprintf(fp, ")\n");
+	fprintf(fp, "Fitness:\t%f", chromo->fitness);
 
 	fflush(fp);
 	fclose(fp);

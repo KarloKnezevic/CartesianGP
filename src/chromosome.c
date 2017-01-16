@@ -102,6 +102,9 @@ struct chromosome *_initialiseChromosomeFromChromosome(
 
 	chromoNew->outputValues = (struct matrix**) malloc(
 			chromo->numOutputs * sizeof(struct matrix*));
+	for (i = 0; i < chromo->numOutputs; i++) {
+		chromoNew->outputValues[i] = NULL;
+	}
 
 	for (i = 0; i < chromo->numNodes; i++) {
 		chromoNew->nodes[i] = _initialiseNode(chromo->numInputs,
@@ -131,6 +134,9 @@ struct chromosome *_initialiseChromosomeFromChromosome(
 
 	chromoNew->nodeInputsHold = (struct matrix **) malloc(
 			chromo->arity * sizeof(struct matrix *));
+	for (i = 0; i < chromo->arity; i++) {
+		chromoNew->nodeInputsHold[i] = NULL;
+	}
 
 	return chromoNew;
 }
