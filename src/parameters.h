@@ -64,6 +64,9 @@ struct parameters {
 struct parameters *_initialiseParameters(const int numInputs,
 		const int numNodes, const int numOutputs, const int arity);
 
+struct parameters *_initialiseParametersFromFile(char const *fileName,
+		struct dataSet *trainingData, struct dataSet *testingData);
+
 //-----------------------------------------------------------------
 //                          SETTERS
 //-----------------------------------------------------------------
@@ -110,7 +113,8 @@ void _freeParameters(struct parameters *params);
 void _addNodeFunction(struct parameters *params, char const *functionNames);
 
 void _addCustomNodeFunction(struct parameters *params,
-		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights, const double amplitude),
+		struct matrix* (*function)(const int numInputs, struct matrix **inputs,
+				const double *weights, const double amplitude),
 		char const *functionName, int maxNumInputs);
 
 void _clearFunctionSet(struct parameters *params);

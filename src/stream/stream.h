@@ -25,6 +25,9 @@ struct dataSet *_loadDataSetFromFile(char const *file);
  */
 struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param);
 
+void _loadParametersFromFile(struct parameters *params, char const *file,
+		struct dataSet *trainingData, struct dataSet *testingData);
+
 //-----------------------------------------------------------------
 //                          WRITERS
 //-----------------------------------------------------------------

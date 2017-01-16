@@ -10,10 +10,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "../parameters.h"
 #include "../functions/functions.h"
 #include "../math/lialg.h"
+#include "../mutation/mutation.h"
 
 //-----------------------------------------------------------------
 //                          READERS
@@ -350,6 +352,124 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 	fclose(fp);
 
 	return data;
+}
+
+#define SPECIAL_CHAR '#'
+#define PARAM_LENGTH 30
+void _loadParametersFromFile(struct parameters *params, char const *file,
+		struct dataSet *trainingData, struct dataSet *testingData) {
+
+	int i;
+	FILE *fp;
+	char *line, *record;
+	char buffer[1024];
+
+	fp = fopen(file, "r");
+
+	if (fp == NULL) {
+		printf("Error: file '%s' cannot be found.\nTerminating.\n", file);
+		exit(0);
+	}
+
+	while ((line = fgets(buffer, sizeof(buffer), fp)) != NULL) {
+		//if space
+		for (i = 0; line[i] && isspace(line[i]); i++)
+			;
+
+		if (line[i] == SPECIAL_CHAR) {
+			continue;
+		}
+
+		record = strtok(line, " =\n");
+
+		while (record != NULL) {
+
+			//training
+			if (strcmp(record, "training") == 0) {
+				record = strtok(NULL, " =\n");
+				trainingData = _loadMLDataSetFromFile(record, "train");
+			}
+
+			//testing
+			if (strcmp(record, "testing") == 0) {
+				record = strtok(NULL, " =\n");
+				trainingData = _loadMLDataSetFromFile(record, "test");
+			}
+
+			//inputs
+			if (strcmp(record, "inputs") == 0) {
+				record = strtok(NULL, " =\n");
+				_setNumInputs(params, atoi(record));
+			}
+
+			//outputs
+			if (strcmp(record, "outputs") == 0) {
+				record = strtok(NULL, " =\n");
+				_setNumOutputs(params, atoi(record));
+			}
+
+			//nodes
+			if (strcmp(record, "nodes") == 0) {
+				record = strtok(NULL, " =\n");
+				_setNumNodes(params, atoi(record));
+			}
+
+			//arity
+			if (strcmp(record, "arity") == 0) {
+				record = strtok(NULL, " =\n");
+				_setArity(params, atoi(record));
+			}
+
+			//shortcutconnections
+			if (strcmp(record, "shortcutconnections") == 0) {
+				record = strtok(NULL, " =\n");
+				params->shortcutConnections = atoi(record);
+			}
+
+			//functions
+			if (strcmp(record, "functions") == 0) {
+				record = strtok(NULL, " =\n");
+				//TODO: FIX!
+//				_addNodeFunction(params, record);
+			}
+
+			//mu
+			if (strcmp(record, "mu") == 0) {
+				record = strtok(NULL, " =\n");
+				params->mu = atoi(record);
+			}
+
+			//lambda
+			if (strcmp(record, "lambda") == 0) {
+				record = strtok(NULL, " =\n");
+				params->lambda = atoi(record);
+			}
+
+			//strategy
+			if (strcmp(record, "strategy") == 0) {
+				record = strtok(NULL, " =\n");
+				params->evolutionaryStrategy = record[0];
+			}
+
+			//mutationrate
+			if (strcmp(record, "mutationrate") == 0) {
+				record = strtok(NULL, " =\n");
+				params->mutationRate = atof(record);
+			}
+
+			//mutationtype
+			if (strcmp(record, "mutationtype") == 0) {
+				record = strtok(NULL, " =\n");
+				_setMutationType(params, record);
+			}
+
+			record = strtok(NULL, " =\n");
+		}
+
+	}
+
+	fclose(fp);
+
 }
 
 //-----------------------------------------------------------------

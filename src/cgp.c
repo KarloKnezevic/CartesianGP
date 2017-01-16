@@ -54,6 +54,11 @@ struct parameters *initialiseParameters(const int numInputs, const int numNodes,
 	return _initialiseParameters(numInputs, numNodes, numOutputs, arity);
 }
 
+struct parameters *initialiseParametersFromFile(char const *fileName,
+		struct dataSet *trainingData, struct dataSet *testingData) {
+	return _initialiseParametersFromFile(fileName, trainingData, testingData);
+}
+
 struct chromosome *initialiseChromosome(struct parameters *params) {
 	return _initialiseChromosome(params);
 }

@@ -13,40 +13,53 @@ int main(int argc, char *argv[]) {
 	struct chromosome *fittestChromosome = NULL;
 	struct results *results = NULL;
 
-	//TRAIN and TEST data
+	struct dataSet *trainingData = NULL;
+	struct dataSet *testingData = NULL;
 
-	struct dataSet *trainingData = initialiseMLDataSetFromFile(
-			"data/data_2.arff", "train");
+	int maxGen = MAXGEN;
+	int maxRun = MAXRUN;
 
-	struct dataSet *testingData = initialiseMLDataSetFromFile(
-			"data/data_2.arff", "test");
+	//if input file
+	if (2 == argc) {
+		params = initialiseParametersFromFile(argv[1], trainingData, testingData);
 
-	//PARAM SETUP
+		return 0;
+	} else {
+		//TRAIN and TEST data
 
-	int numInputs = trainingData->numInputs;
-	int numNodes = NUM_NODES;
-	int numOutputs = trainingData->numOutputs;
-	int nodeArity = NODE_ARITY;
+		trainingData = initialiseMLDataSetFromFile("data/data_2.arff", "train");
 
-	params = initialiseParameters(numInputs, numNodes, numOutputs, nodeArity);
+		testingData = initialiseMLDataSetFromFile("data/data_2.arff", "test");
 
-	//ADDITIONAL PARAM SETUP
+		//PARAM SETUP
 
-	addNodeFunction(params, getAllF());
-	//setMutationType(params, "probabilisticActive");
+		int numInputs = trainingData->numInputs;
+		int numNodes = NUM_NODES;
+		int numOutputs = trainingData->numOutputs;
+		int nodeArity = NODE_ARITY;
+
+		params = initialiseParameters(numInputs, numNodes, numOutputs,
+				nodeArity);
+
+		//ADDITIONAL PARAM SETUP
+		addNodeFunction(params, getAllF());
+	}
 
 	//CGP RUN
-	results = repeatCGP(params, trainingData, MAXGEN, MAXRUN);
+
+	results = repeatCGP(params, trainingData, maxGen, maxRun);
 	fittestChromosome = getResultsBestChromosome(results);
 
 	//PRINT FITTEST
 	printPretty(fittestChromosome, NULL);
 
 	//TEST
+
 	printf("\nTesting...\n");
 	setChromosomeFitness(params, fittestChromosome, testingData);
 	printf("Test data fitness: %f\n", fittestChromosome->fitness);
 
+	//FREE
 	freeChromosome(fittestChromosome);
 	freeResults(results);
 	freeDataSet(trainingData);

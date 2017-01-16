@@ -18,6 +18,7 @@
 #include "fitness/fitness.h"
 #include "selection/selection.h"
 #include "reproduction/reproduction.h"
+#include "stream/stream.h"
 
 //-----------------------------------------------------------------
 //                          CONSTRUCTOR
@@ -65,6 +66,30 @@ struct parameters *_initialiseParameters(const int numInputs,
 	REPRODUCTIONSCHEMENAMELENGTH);
 
 	srand(time(NULL));
+
+	return params;
+}
+
+struct parameters *_initialiseParametersFromFile(char const *fileName,
+		struct dataSet *trainingData, struct dataSet *testingData) {
+
+	struct parameters *params;
+
+	params = (struct parameters*) malloc(sizeof(struct parameters));
+
+	//DEFAULT PARAMETERS
+	params->mu = MU;
+	params->lambda = LAMBDA;
+	params->evolutionaryStrategy = EVOLUTIONARYSTRATEGY;
+	params->mutationRate = MUTATIONRATE;
+	params->recurrentConnectionProbability = RECCURENTCONNECTIONPROBABILITY;
+	params->connectionWeightRange = CONNECTIONWEIGHTRANGE;
+	params->amplitudeRange = AMPLITUDERANGE;
+	params->shortcutConnections = SHORTCUTCONNECTIONS;
+	params->targetFitness = TARGETFITNESS;
+	params->updateFrequency = UPDATEFREQUENCY;
+
+	_loadParametersFromFile(params, fileName, trainingData, testingData);
 
 	return params;
 }
@@ -222,7 +247,8 @@ void _printParameters(struct parameters *params) {
 	printf("Nodes:\t\t\t\t\t%d\n", params->numNodes);
 	printf("Outputs:\t\t\t\t%d\n", params->numOutputs);
 	printf("Node Arity:\t\t\t\t%d\n", params->arity);
-	printf("Connection weights range:\t\t+/- %f\n", params->connectionWeightRange);
+	printf("Connection weights range:\t\t+/- %f\n",
+			params->connectionWeightRange);
 	printf("Mutation Type:\t\t\t\t%s\n", params->mutationTypeName);
 	printf("Mutation rate:\t\t\t\t%f\n", params->mutationRate);
 	printf("Recurrent Connection Probability:\t%f\n",
@@ -267,7 +293,6 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 
 	struct function *object;
 	while (pch != NULL) {
-
 		object = getFunction(pch);
 
 		if (NULL != object) {
@@ -289,7 +314,8 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 }
 
 void _addCustomNodeFunction(struct parameters *params,
-		struct matrix* (*function)(const int numInputs, struct matrix **inputs, const double *weights, const double amplitude),
+		struct matrix* (*function)(const int numInputs, struct matrix **inputs,
+				const double *weights, const double amplitude),
 		char const *functionName, int maxNumInputs) {
 	if (params->funcSet->numFunctions >= FUNCTIONSETSIZE) {
 		printf(
