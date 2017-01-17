@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
 	//TEST
 	printf("\n\n---TESTING---\n");
-	setChromosomeFitness(params, fittestChromosome, trainingData);
+	setChromosomeFitness(params, fittestChromosome, testingData);
 	printf("Test fitness: %f\n", fittestChromosome->fitness);
 
 	//FREE

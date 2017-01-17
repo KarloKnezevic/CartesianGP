@@ -53,7 +53,7 @@
 #define SHORTCUTCONNECTIONS				1
 #define TARGETFITNESS					0
 #define POPULATIONSIZE					20 //only used when override cga
-#define MAXGEN							1000
+#define MAXGEN							5000
 #define MAXRUN							1
 
 //-----------------------------------------------------------------
