@@ -116,8 +116,6 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 	strncpy(params->reproductionSchemeName, "mutateRandomParent",
 	REPRODUCTIONSCHEMENAMELENGTH);
 
-	_printParameters(params);
-
 	//load params
 	_loadParametersFromFile(params, fileName, trainingData, testingData);
 

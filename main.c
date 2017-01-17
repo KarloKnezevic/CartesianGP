@@ -20,8 +20,6 @@ int main(int argc, char *argv[]) {
 	if (2 == argc) {
 		params = initialiseParametersFromFile(argv[1], &trainingData,
 				&testingData);
-
-		return 0;
 	} else {
 		//TRAIN and TEST data
 		trainingData = initialiseMLDataSetFromFile("data/data_2.arff", "train");
