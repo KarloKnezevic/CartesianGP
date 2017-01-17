@@ -21,9 +21,16 @@ int main(int argc, char *argv[]) {
 		params = initialiseParametersFromFile(argv[1], &trainingData,
 				&testingData);
 	} else {
+		if (DEBUG != 1) {
+			//RELEASE VERSION
+			printf(
+					"ERROR: path to parameters file must be given.\nTerminating...\n");
+			return 0;
+		}
+
 		//TRAIN and TEST data
-		trainingData = initialiseMLDataSetFromFile("data/data_2.arff", "train");
-		testingData = initialiseMLDataSetFromFile("data/data_2.arff", "test");
+		trainingData = initialiseMLDataSetFromFile("data/data_1.dt", "train");
+		testingData = initialiseMLDataSetFromFile("data/data_1.dt", "test");
 
 		//PARAM SETUP
 		int numInputs = trainingData->numInputs;

@@ -9,6 +9,8 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+#define DEBUG 0
+
 #define EPSILON 1e-10
 
 //-----------------------------------------------------------------
