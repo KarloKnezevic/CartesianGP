@@ -37,6 +37,8 @@ struct parameters {
 	double targetFitness;
 
 	int updateFrequency;
+	int runs;
+	int generations;
 
 	int shortcutConnections;
 
@@ -65,7 +67,7 @@ struct parameters *_initialiseParameters(const int numInputs,
 		const int numNodes, const int numOutputs, const int arity);
 
 struct parameters *_initialiseParametersFromFile(char const *fileName,
-		struct dataSet *trainingData, struct dataSet *testingData);
+		struct dataSet **trainingData, struct dataSet **testingData);
 
 //-----------------------------------------------------------------
 //                          SETTERS
@@ -88,11 +90,17 @@ void _setArity(struct parameters *params, int arity);
 
 void _setTargetFitness(struct parameters *params, double targetFitness);
 
+void _setNumRuns(struct parameters *params, int numRuns);
+
+void _setNumGenerations(struct parameters *params, int numGenerations);
+
 void _setUpdateFrequency(struct parameters *params, int updateFrequency);
 
 void _setShortcutConnections(struct parameters *params, int shortcutConnections);
 
 void _setConnectionWeightRange(struct parameters *params, double weightRange);
+
+void _setAmplitudeRange(struct parameters *params, double amplitudeRange);
 
 //-----------------------------------------------------------------
 //                          TOSTRING

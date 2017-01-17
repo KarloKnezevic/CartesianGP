@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------
 #define NUM_INPUT						1
 #define NUM_OUTPUT						1
-#define NUM_NODES						200
+#define NUM_NODES						50
 #define NODE_ARITY						2
 #define NUM_SAMPLES						5
 

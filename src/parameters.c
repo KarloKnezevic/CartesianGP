@@ -41,6 +41,8 @@ struct parameters *_initialiseParameters(const int numInputs,
 	params->shortcutConnections = SHORTCUTCONNECTIONS;
 	params->targetFitness = TARGETFITNESS;
 	params->updateFrequency = UPDATEFREQUENCY;
+	params->runs = MAXRUN;
+	params->generations = MAXGEN;
 
 	_setNumInputs(params, numInputs);
 	_setNumNodes(params, numNodes);
@@ -71,7 +73,7 @@ struct parameters *_initialiseParameters(const int numInputs,
 }
 
 struct parameters *_initialiseParametersFromFile(char const *fileName,
-		struct dataSet *trainingData, struct dataSet *testingData) {
+		struct dataSet **trainingData, struct dataSet **testingData) {
 
 	struct parameters *params;
 
@@ -88,11 +90,66 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 	params->shortcutConnections = SHORTCUTCONNECTIONS;
 	params->targetFitness = TARGETFITNESS;
 	params->updateFrequency = UPDATEFREQUENCY;
+	params->runs = MAXRUN;
+	params->generations = MAXGEN;
+
+	_setNumInputs(params, NUM_INPUT);
+	_setNumNodes(params, NUM_NODES);
+	_setNumOutputs(params, NUM_OUTPUT);
+	_setArity(params, NODE_ARITY);
+
+	params->mutationType = probabilisticMutation;
+	strncpy(params->mutationTypeName, "probabilistic", MUTATIONTYPENAMELENGTH);
 
 	params->funcSet = (struct functionSet*) malloc(sizeof(struct functionSet));
 	params->funcSet->numFunctions = 0;
 
+	params->fitnessFunction = supervisedLearning;
+	strncpy(params->fitnessFunctionName, "supervisedLearning",
+	FITNESSFUNCTIONNAMELENGTH);
+
+	params->selectionScheme = selectFittest;
+	strncpy(params->selectionSchemeName, "selectFittest",
+	SELECTIONSCHEMENAMELENGTH);
+
+	params->reproductionScheme = mutateRandomParent;
+	strncpy(params->reproductionSchemeName, "mutateRandomParent",
+	REPRODUCTIONSCHEMENAMELENGTH);
+
+	_printParameters(params);
+
+	//load params
 	_loadParametersFromFile(params, fileName, trainingData, testingData);
+
+	//check inputs
+	if ((*trainingData)->numInputs != (*testingData)->numInputs) {
+		printf(
+				"\nError: training data num inputs %d and testing data num inputs %d is not same. "
+						"These two values should be same. "
+						"\nTerminating.\n", (*trainingData)->numInputs,
+				(*testingData)->numInputs);
+		exit(0);
+	} else {
+		_setNumInputs(params, (*trainingData)->numInputs);
+	}
+
+	//check outputs
+	if ((*trainingData)->numOutputs != (*testingData)->numOutputs) {
+		printf(
+				"\nError: training data num outputs %d and testing data num outputs %d is not same. "
+						"These two values should be same. "
+						"\nTerminating.\n", (*trainingData)->numOutputs,
+				(*testingData)->numOutputs);
+		exit(0);
+	} else {
+		_setNumOutputs(params, (*trainingData)->numOutputs);
+	}
+
+	srand(time(NULL));
+
+	printf("All parameters initialized from %s.\n", fileName);
+
+	_printParameters(params);
 
 	return params;
 }
@@ -105,9 +162,9 @@ void _setMu(struct parameters *params, int mu) {
 	if (mu > 0) {
 		params->mu = mu;
 	} else {
-		printf(
-				"\nWarning: mu value '%d' is invalid. Mu value must have a value of one or greater. Mu value left unchanged as '%d'.\n",
-				mu, params->mu);
+		printf("\nWarning: mu value '%d' is invalid. "
+				"Mu value must have a value of one or greater. "
+				"Mu value left unchanged as '%d'.\n", mu, params->mu);
 	}
 }
 
@@ -116,9 +173,10 @@ void _setLambda(struct parameters *params, int lambda) {
 	if (lambda > 0) {
 		params->lambda = lambda;
 	} else {
-		printf(
-				"\nWarning: lambda value '%d' is invalid. Lambda value must have a value of one or greater. Lambda value left unchanged as '%d'.\n",
-				lambda, params->lambda);
+		printf("\nWarning: lambda value '%d' is invalid. "
+				"Lambda value must have a value of one or greater. "
+				"Lambda value left unchanged as '%d'.\n", lambda,
+				params->lambda);
 	}
 }
 
@@ -128,8 +186,9 @@ void _setEvolutionaryStrategy(struct parameters *params,
 	if (evolutionaryStrategy == '+' || evolutionaryStrategy == ',') {
 		params->evolutionaryStrategy = evolutionaryStrategy;
 	} else {
-		printf(
-				"\nWarning: the evolutionary strategy '%c' is invalid. The evolutionary strategy must be '+' or ','. The evolutionary strategy has been left unchanged as '%c'.\n",
+		printf("\nWarning: the evolutionary strategy '%c' is invalid. "
+				"The evolutionary strategy must be '+' or ','. "
+				"The evolutionary strategy has been left unchanged as '%c'.\n",
 				evolutionaryStrategy, params->evolutionaryStrategy);
 	}
 }
@@ -139,8 +198,9 @@ void _setMutationRate(struct parameters *params, double mutationRate) {
 	if (mutationRate >= 0 && mutationRate <= 1) {
 		params->mutationRate = mutationRate;
 	} else {
-		printf(
-				"\nWarning: mutation rate '%f' is invalid. The mutation rate must be in the range [0,1]. The mutation rate has been left unchanged as '%f'.\n",
+		printf("\nWarning: mutation rate '%f' is invalid. "
+				"The mutation rate must be in the range [0,1]. "
+				"The mutation rate has been left unchanged as '%f'.\n",
 				mutationRate, params->mutationRate);
 	}
 }
@@ -153,7 +213,9 @@ void _setRecurrentConnectionProbability(struct parameters *params,
 		params->recurrentConnectionProbability = recurrentConnectionProbability;
 	} else {
 		printf(
-				"\nWarning: recurrent connection probability '%f' is invalid. The recurrent connection probability must be in the range [0,1]. The recurrent connection probability has been left unchanged as '%f'.\n",
+				"\nWarning: recurrent connection probability '%f' is invalid. "
+						"The recurrent connection probability must be in the range [0,1]. "
+						"The recurrent connection probability has been left unchanged as '%f'.\n",
 				recurrentConnectionProbability,
 				params->recurrentConnectionProbability);
 	}
@@ -161,9 +223,8 @@ void _setRecurrentConnectionProbability(struct parameters *params,
 
 void _setNumInputs(struct parameters *params, int numInputs) {
 	if (numInputs <= 0) {
-		printf(
-				"Error: number of chromosome inputs cannot be less than one; %d is invalid.\nTerminating.\n",
-				numInputs);
+		printf("Error: number of chromosome inputs cannot be "
+				"less than one; %d is invalid.\nTerminating.\n", numInputs);
 		exit(0);
 	}
 
@@ -172,9 +233,8 @@ void _setNumInputs(struct parameters *params, int numInputs) {
 
 void _setNumNodes(struct parameters *params, int numNodes) {
 	if (numNodes < 0) {
-		printf(
-				"Error: number of chromosome nodes cannot be negative; %d is invalid.\nTerminating.\n",
-				numNodes);
+		printf("Error: number of chromosome nodes cannot be "
+				"negative; %d is invalid.\nTerminating.\n", numNodes);
 		exit(0);
 	}
 
@@ -183,9 +243,8 @@ void _setNumNodes(struct parameters *params, int numNodes) {
 
 void _setNumOutputs(struct parameters *params, int numOutputs) {
 	if (numOutputs < 0) {
-		printf(
-				"Error: number of chromosome outputs cannot be less than one; %d is invalid.\nTerminating.\n",
-				numOutputs);
+		printf("Error: number of chromosome outputs cannot be "
+				"less than one; %d is invalid.\nTerminating.\n", numOutputs);
 		exit(0);
 	}
 
@@ -194,9 +253,8 @@ void _setNumOutputs(struct parameters *params, int numOutputs) {
 
 void _setArity(struct parameters *params, int arity) {
 	if (arity < 0) {
-		printf(
-				"Error: node arity cannot be less than one; %d is invalid.\nTerminating.\n",
-				arity);
+		printf("Error: node arity cannot be less than one; %d is invalid.\n"
+				"Terminating.\n", arity);
 		exit(0);
 	}
 
@@ -207,11 +265,34 @@ void _setTargetFitness(struct parameters *params, double targetFitness) {
 	params->targetFitness = targetFitness;
 }
 
+void _setNumRuns(struct parameters *params, int numRuns) {
+	if (numRuns < 1) {
+		printf("Warning: number of runs of %d is invalid. "
+				"Number of runs must be >= 1. "
+				"Number of runs is left unchanged as %d.\n", numRuns,
+				params->runs);
+	} else {
+		params->runs = numRuns;
+	}
+}
+
+void _setNumGenerations(struct parameters *params, int numGenerations) {
+	if (numGenerations < 1) {
+		printf("Warning: number of generations of %d is invalid. "
+				"Number of generations must be >= 1. "
+				"Number of generations is left unchanged as %d.\n",
+				numGenerations, params->generations);
+	} else {
+		params->generations = numGenerations;
+	}
+}
+
 void _setUpdateFrequency(struct parameters *params, int updateFrequency) {
 	if (updateFrequency < 0) {
-		printf(
-				"Warning: update frequency of %d is invalid. Update frequency must be >= 0. Update frequency is left unchanged as %d.\n",
-				updateFrequency, params->updateFrequency);
+		printf("Warning: update frequency of %d is invalid. "
+				"Update frequency must be >= 0. "
+				"Update frequency is left unchanged as %d.\n", updateFrequency,
+				params->updateFrequency);
 	} else {
 		params->updateFrequency = updateFrequency;
 	}
@@ -221,14 +302,19 @@ void _setShortcutConnections(struct parameters *params, int shortcutConnections)
 	if (shortcutConnections == 0 || shortcutConnections == 1) {
 		params->shortcutConnections = shortcutConnections;
 	} else {
-		printf(
-				"\nWarning: shortcut connection '%d' is invalid. The shortcut connections takes values 0 or 1. The shortcut connection has been left unchanged as '%d'.\n",
+		printf("\nWarning: shortcut connection '%d' is invalid. "
+				"The shortcut connections takes values 0 or 1. "
+				"The shortcut connection has been left unchanged as '%d'.\n",
 				shortcutConnections, params->shortcutConnections);
 	}
 }
 
 void _setConnectionWeightRange(struct parameters *params, double weightRange) {
 	params->connectionWeightRange = weightRange;
+}
+
+void _setAmplitudeRange(struct parameters *params, double amplitudeRange) {
+	params->amplitudeRange = amplitudeRange;
 }
 
 //-----------------------------------------------------------------
@@ -242,27 +328,43 @@ void _printParameters(struct parameters *params) {
 	}
 
 	printf("-----------------------------------------------------------\n");
-	printf("                       Parameters                          \n");
+	printf("                     *Parameters*                          \n");
 	printf("-----------------------------------------------------------\n");
-	printf("Evolutionary Strategy:\t\t\t(%d%c%d)-ES\n", params->mu,
-			params->evolutionaryStrategy, params->lambda);
+
+	printf("-----------------------------------------------------------\n");
+	printf("                    Network structure                      \n");
+	printf("-----------------------------------------------------------\n");
 	printf("Inputs:\t\t\t\t\t%d\n", params->numInputs);
 	printf("Nodes:\t\t\t\t\t%d\n", params->numNodes);
 	printf("Outputs:\t\t\t\t%d\n", params->numOutputs);
 	printf("Node Arity:\t\t\t\t%d\n", params->arity);
 	printf("Connection weights range:\t\t+/- %f\n",
 			params->connectionWeightRange);
+	printf("Amplitude range:\t\t\t+/- %f %s\n", params->amplitudeRange, "const if 1.0");
+	printf("Shortcut Connections:\t\t\t%d\n", params->shortcutConnections);
+	_printFunctionSet(params);
+
+	printf("-----------------------------------------------------------\n");
+	printf("                   Genetic parameters                      \n");
+	printf("-----------------------------------------------------------\n");
+	printf("Evolutionary Strategy:\t\t\t(%d%c%d)-ES\n", params->mu,
+			params->evolutionaryStrategy, params->lambda);
 	printf("Mutation Type:\t\t\t\t%s\n", params->mutationTypeName);
 	printf("Mutation rate:\t\t\t\t%f\n", params->mutationRate);
 	printf("Recurrent Connection Probability:\t%f\n",
 			params->recurrentConnectionProbability);
-	printf("Shortcut Connections:\t\t\t%d\n", params->shortcutConnections);
-	printf("Fitness Function:\t\t\t%s\n", params->fitnessFunctionName);
-	printf("Target Fitness:\t\t\t\t%f\n", params->targetFitness);
 	printf("Selection scheme:\t\t\t%s\n", params->selectionSchemeName);
 	printf("Reproduction scheme:\t\t\t%s\n", params->reproductionSchemeName);
+	printf("Fitness Function:\t\t\t%s\n", params->fitnessFunctionName);
+	printf("Target Fitness:\t\t\t\t%f\n", params->targetFitness);
+
+	printf("-----------------------------------------------------------\n");
+	printf("                 Algorithm parameters                      \n");
+	printf("-----------------------------------------------------------\n");
+	printf("Runs:\t\t\t\t\t%d\n", params->runs);
+	printf("Generations:\t\t\t\t%d\n", params->generations);
 	printf("Update frequency:\t\t\t%d\n", params->updateFrequency);
-	_printFunctionSet(params);
+
 	printf("-----------------------------------------------------------\n\n");
 }
 

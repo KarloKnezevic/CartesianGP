@@ -16,23 +16,18 @@ int main(int argc, char *argv[]) {
 	struct dataSet *trainingData = NULL;
 	struct dataSet *testingData = NULL;
 
-	int maxGen = MAXGEN;
-	int maxRun = MAXRUN;
-
 	//if input file
 	if (2 == argc) {
-		params = initialiseParametersFromFile(argv[1], trainingData, testingData);
+		params = initialiseParametersFromFile(argv[1], &trainingData,
+				&testingData);
 
 		return 0;
 	} else {
 		//TRAIN and TEST data
-
 		trainingData = initialiseMLDataSetFromFile("data/data_2.arff", "train");
-
 		testingData = initialiseMLDataSetFromFile("data/data_2.arff", "test");
 
 		//PARAM SETUP
-
 		int numInputs = trainingData->numInputs;
 		int numNodes = NUM_NODES;
 		int numOutputs = trainingData->numOutputs;
@@ -46,15 +41,14 @@ int main(int argc, char *argv[]) {
 	}
 
 	//CGP RUN
-
-	results = repeatCGP(params, trainingData, maxGen, maxRun);
+	results = repeatCGP(params, trainingData, params->generations,
+			params->runs);
 	fittestChromosome = getResultsBestChromosome(results);
 
 	//PRINT FITTEST
 	printPretty(fittestChromosome, NULL);
 
 	//TEST
-
 	printf("\nTesting...\n");
 	setChromosomeFitness(params, fittestChromosome, testingData);
 	printf("Test data fitness: %f\n", fittestChromosome->fitness);

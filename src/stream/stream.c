@@ -357,7 +357,7 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 #define SPECIAL_CHAR '#'
 #define PARAM_LENGTH 30
 void _loadParametersFromFile(struct parameters *params, char const *file,
-		struct dataSet *trainingData, struct dataSet *testingData) {
+		struct dataSet **trainingData, struct dataSet **testingData) {
 
 	int i;
 	FILE *fp;
@@ -387,13 +387,13 @@ void _loadParametersFromFile(struct parameters *params, char const *file,
 			//training
 			if (strcmp(record, "training") == 0) {
 				record = strtok(NULL, " =\n");
-				trainingData = _loadMLDataSetFromFile(record, "train");
+				*trainingData = _loadMLDataSetFromFile(record, "train");
 			}
 
 			//testing
 			if (strcmp(record, "testing") == 0) {
 				record = strtok(NULL, " =\n");
-				trainingData = _loadMLDataSetFromFile(record, "test");
+				*testingData = _loadMLDataSetFromFile(record, "test");
 			}
 
 			//inputs
@@ -423,7 +423,7 @@ void _loadParametersFromFile(struct parameters *params, char const *file,
 			//shortcutconnections
 			if (strcmp(record, "shortcutconnections") == 0) {
 				record = strtok(NULL, " =\n");
-				params->shortcutConnections = atoi(record);
+				_setShortcutConnections(params, atoi(record));
 			}
 
 			//functions
@@ -435,31 +435,55 @@ void _loadParametersFromFile(struct parameters *params, char const *file,
 			//mu
 			if (strcmp(record, "mu") == 0) {
 				record = strtok(NULL, " =\n");
-				params->mu = atoi(record);
+				_setMu(params, atoi(record));
 			}
 
 			//lambda
 			if (strcmp(record, "lambda") == 0) {
 				record = strtok(NULL, " =\n");
-				params->lambda = atoi(record);
+				_setLambda(params, atoi(record));
 			}
 
 			//strategy
 			if (strcmp(record, "strategy") == 0) {
 				record = strtok(NULL, " =\n");
-				params->evolutionaryStrategy = record[0];
+				_setEvolutionaryStrategy(params, record[0]);
 			}
 
 			//mutationrate
 			if (strcmp(record, "mutationrate") == 0) {
 				record = strtok(NULL, " =\n");
-				params->mutationRate = atof(record);
+				_setMutationRate(params, atof(record));
 			}
 
 			//mutationtype
 			if (strcmp(record, "mutationtype") == 0) {
 				record = strtok(NULL, " =\n");
 				_setMutationType(params, record);
+			}
+
+			//amplitude
+			if (strcmp(record, "amplitude") == 0) {
+				record = strtok(NULL, " =\n");
+				_setAmplitudeRange(params, atof(record));
+			}
+
+			//runs
+			if (strcmp(record, "runs") == 0) {
+				record = strtok(NULL, " =\n");
+				_setNumRuns(params, atoi(record));
+			}
+
+			//generations
+			if (strcmp(record, "generations") == 0) {
+				record = strtok(NULL, " =\n");
+				_setNumGenerations(params, atoi(record));
+			}
+
+			//update frequency
+			if (strcmp(record, "updatefrequency") == 0) {
+				record = strtok(NULL, " =\n");
+				_setUpdateFrequency(params, atoi(record));
 			}
 
 			record = strtok(NULL, " =\n");

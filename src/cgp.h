@@ -35,7 +35,7 @@ struct parameters *initialiseParameters(const int numInputs, const int numNodes,
 		const int numOutputs, const int arity);
 
 struct parameters *initialiseParametersFromFile(char const *fileName,
-		struct dataSet *trainingData, struct dataSet *testingData);
+		struct dataSet **trainingData, struct dataSet **testingData);
 
 void freeParameters(struct parameters *params);
 
