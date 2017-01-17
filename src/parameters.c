@@ -89,6 +89,9 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 	params->targetFitness = TARGETFITNESS;
 	params->updateFrequency = UPDATEFREQUENCY;
 
+	params->funcSet = (struct functionSet*) malloc(sizeof(struct functionSet));
+	params->funcSet->numFunctions = 0;
+
 	_loadParametersFromFile(params, fileName, trainingData, testingData);
 
 	return params;

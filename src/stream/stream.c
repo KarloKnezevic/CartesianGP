@@ -429,9 +429,7 @@ void _loadParametersFromFile(struct parameters *params, char const *file,
 			//functions
 			if (strcmp(record, "functions") == 0) {
 				record = strtok(NULL, " =\n");
-				//TODO: FIX!
-//				printf(record);
-//				_addNodeFunction(params, record);
+				_addNodeFunction(params, record);
 			}
 
 			//mu
