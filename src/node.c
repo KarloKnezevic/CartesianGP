@@ -66,6 +66,8 @@ void _copyNode(struct node *nodeDest, struct node *nodeSrc) {
 
 	nodeDest->function = nodeSrc->function;
 
+	nodeDest->amplitude = nodeSrc->amplitude;
+
 	nodeDest->active = nodeSrc->active;
 
 	nodeDest->maxArity = nodeSrc->maxArity;

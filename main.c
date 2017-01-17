@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 		params = initialiseParametersFromFile(argv[1], &trainingData,
 				&testingData);
 	} else {
-		if (DEBUG != 1) {
+		if (__TEST__ != 1) {
 			//RELEASE VERSION
 			printf(
 					"ERROR: path to parameters file must be given.\nTerminating...\n");
@@ -29,8 +29,13 @@ int main(int argc, char *argv[]) {
 		}
 
 		//TRAIN and TEST data
-		trainingData = initialiseMLDataSetFromFile("data/data_1.dt", "train");
-		testingData = initialiseMLDataSetFromFile("data/data_1.dt", "test");
+//		trainingData = initialiseMLDataSetFromFile("data/data_2.arff", "train");
+//		testingData = initialiseMLDataSetFromFile("data/data_2.arff", "test");
+
+		trainingData = _loadBCWDataSetFromFile(
+				"data/breast-cancer-wisconsin.data", "train");
+		testingData = _loadBCWDataSetFromFile(
+				"data/breast-cancer-wisconsin.data", "test");
 
 		//PARAM SETUP
 		int numInputs = trainingData->numInputs;
@@ -54,9 +59,9 @@ int main(int argc, char *argv[]) {
 	printPretty(fittestChromosome, NULL);
 
 	//TEST
-	printf("\nTesting...\n");
-	setChromosomeFitness(params, fittestChromosome, testingData);
-	printf("Test data fitness: %f\n", fittestChromosome->fitness);
+	printf("\n\n---TESTING---\n");
+	setChromosomeFitness(params, fittestChromosome, trainingData);
+	printf("Test fitness: %f\n", fittestChromosome->fitness);
 
 	//FREE
 	freeChromosome(fittestChromosome);

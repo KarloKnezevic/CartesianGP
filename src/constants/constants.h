@@ -9,7 +9,7 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
-#define DEBUG 0
+#define __TEST__ 1
 
 #define EPSILON 1e-10
 
@@ -46,20 +46,20 @@
 #define MU								1
 #define LAMBDA							4
 #define EVOLUTIONARYSTRATEGY			'+'
-#define MUTATIONRATE					0.2
+#define MUTATIONRATE					0.1
 #define RECCURENTCONNECTIONPROBABILITY	0.00
 #define CONNECTIONWEIGHTRANGE			0
-#define AMPLITUDERANGE					1.1	//if 0, 1 is set
+#define AMPLITUDERANGE					1	//if 0, 1 is set
 #define SHORTCUTCONNECTIONS				1
 #define TARGETFITNESS					0
 #define POPULATIONSIZE					20 //only used when override cga
-#define MAXGEN							20
-#define MAXRUN							5
+#define MAXGEN							1000
+#define MAXRUN							1
 
 //-----------------------------------------------------------------
 //                             PRINT
 //-----------------------------------------------------------------
 
-#define UPDATEFREQUENCY					5
+#define UPDATEFREQUENCY					1
 
 #endif /* CONSTANTS_H_ */

@@ -19,5 +19,6 @@
 #include "src/functions/functions.h"
 #include "src/chromosome.h"
 #include "src/parameters.h"
+#include "src/stream/stream.h"
 
 #endif /* MAIN_H_ */
