@@ -581,7 +581,7 @@ double _getRandomAmplitude(double amplitudeRange) {
 		return 1;
 	}
 
-	return (_randDecimal() * 2 * amplitudeRange) - amplitudeRange;
+	return _randDecimal();
 }
 
 int _getRandomNodeInput(int numChromoInputs, int numNodes, int nodePosition,

@@ -136,6 +136,21 @@ int softmax(struct parameters *params, struct chromosome *chromo) {
 }
 
 //-----------------------------------------------------------------
+//                  Accuracy
+//-----------------------------------------------------------------
+
+int trueClassification(struct parameters *params,
+		struct matrix *confusionMatrix) {
+
+	int true = 0;
+	for (int i = 0; i < confusionMatrix->cols; i++) {
+		true += confusionMatrix->data[i][i];
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------
 //                  Supervised learning
 //-----------------------------------------------------------------
 
@@ -184,7 +199,9 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 	/**
 	 * Calculate Matthews correlation coefficient
 	 */
-	double MCC = MatthewsCorrelationCoefficient(params, confusionMatrix);
+	//double MCC = MatthewsCorrelationCoefficient(params, confusionMatrix);
+	double MCC = (double) trueClassification(params, confusionMatrix)
+			/ (double) _getNumDataSetSamples(data);
 
 	//free resources
 	_freeMatrix(confusionMatrix);
