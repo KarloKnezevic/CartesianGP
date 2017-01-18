@@ -512,7 +512,7 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		// display progress
 		if (params->updateFrequency != 0
 				&& (gen % params->updateFrequency == 0 || gen >= numGens - 1)) {
-			printf("%d\t%f\n", gen, bestChromo->fitness);
+			printf("%d\t%f\t%d\n", gen, bestChromo->fitness, bestChromo->numActiveNodes);
 		}
 
 		if (params->evolutionaryStrategy == '+') {

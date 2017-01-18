@@ -18,6 +18,25 @@
 #include "../mutation/mutation.h"
 
 //-----------------------------------------------------------------
+//                       READERS FACTORY
+//-----------------------------------------------------------------
+
+#define PARSER_METHOD_LENGTH 20
+struct dataSet *_loadGenericMethodDataSetFromFile(char const *method,
+		char const *file, char const *param) {
+
+	if (strncmp(method, "sca", PARSER_METHOD_LENGTH) == 0) {
+		return _loadMLDataSetFromFile(file, param);
+	} else if (strncmp(method, "breast-cancer",
+	PARSER_METHOD_LENGTH) == 0) {
+		return _loadBCWDataSetFromFile(file, param);
+	}
+
+	//by default sca
+	return _loadMLDataSetFromFile(file, param);
+}
+
+//-----------------------------------------------------------------
 //                          READERS
 //-----------------------------------------------------------------
 
@@ -491,7 +510,7 @@ struct dataSet *_loadBCWDataSetFromFile(char const *file, char const *param) {
 			if (class != 0) {
 				for (int i = 0; i < data->numOutputs; i++) {
 					data->outputData[lineNum - readFrom][i] =
-							(class/2 - 1) == i ? 1 : 0;
+							(class / 2 - 1) == i ? 1 : 0;
 				}
 			}
 		}
@@ -525,6 +544,8 @@ void _loadParametersFromFile(struct parameters *params, char const *file,
 		exit(0);
 	}
 
+	char parsermethod[PARSER_METHOD_LENGTH];
+
 	while ((line = fgets(buffer, sizeof(buffer), fp)) != NULL) {
 		//if space
 		for (i = 0; line[i] && isspace(line[i]); i++)
@@ -538,16 +559,24 @@ void _loadParametersFromFile(struct parameters *params, char const *file,
 
 		while (record != NULL) {
 
+			//method
+			if (strcmp(record, "parsermethod") == 0) {
+				record = strtok(NULL, " =\n");
+				strncpy(parsermethod, record, PARSER_METHOD_LENGTH);
+			}
+
 			//training
 			if (strcmp(record, "training") == 0) {
 				record = strtok(NULL, " =\n");
-				*trainingData = _loadMLDataSetFromFile(record, "train");
+				*trainingData = _loadGenericMethodDataSetFromFile(parsermethod,
+						record, "train");
 			}
 
 			//testing
 			if (strcmp(record, "testing") == 0) {
 				record = strtok(NULL, " =\n");
-				*testingData = _loadMLDataSetFromFile(record, "test");
+				*testingData = _loadGenericMethodDataSetFromFile(parsermethod,
+						record, "test");
 			}
 
 			//inputs

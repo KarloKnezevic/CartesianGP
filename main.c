@@ -29,13 +29,11 @@ int main(int argc, char *argv[]) {
 		}
 
 		//TRAIN and TEST data
-//		trainingData = initialiseMLDataSetFromFile("data/data_2.arff", "train");
-//		testingData = initialiseMLDataSetFromFile("data/data_2.arff", "test");
-
-		trainingData = _loadBCWDataSetFromFile(
-				"data/breast-cancer-wisconsin.data", "train");
-		testingData = _loadBCWDataSetFromFile(
-				"data/breast-cancer-wisconsin.data", "test");
+		//sca, breast-cancer ( data/breast-cancer-wisconsin.data )
+		trainingData = _loadGenericMethodDataSetFromFile("sca",
+				"data/noisy_e.dt", "train");
+		testingData = _loadGenericMethodDataSetFromFile("sca",
+				"data/noisy_e.dt", "test");
 
 		//PARAM SETUP
 		int numInputs = trainingData->numInputs;
