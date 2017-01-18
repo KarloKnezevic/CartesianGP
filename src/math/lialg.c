@@ -162,6 +162,34 @@ double _zerro_div(double a, double b) {
 	return a / b;
 }
 
+double _max_(struct matrix *m) {
+	double max = m->data[0][0];
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			if (m->data[i][j] > max) {
+				max = m->data[i][j];
+			}
+		}
+	}
+
+	return max;
+}
+
+double _min_(struct matrix *m) {
+	double min = m->data[0][0];
+
+	for (int i = 0; i < m->rows; i++) {
+		for (int j = 0; j < m->cols; j++) {
+			if (m->data[i][j] < min) {
+				min = m->data[i][j];
+			}
+		}
+	}
+
+	return min;
+}
+
 struct matrix* _mulWithScalar(struct matrix *m, double scalar) {
 	for (int i = 0; i < m->rows; i++) {
 		for (int j = 0; j < m->cols; j++) {
@@ -499,9 +527,11 @@ struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors,
 	mtype t_m2 = _getMatrixType(m2);
 
 	double x1 =
-			t_m1 == SCALAR ? m1->data[0][0] : (_abs(m1, factors, amplitude))->data[0][0];
+			t_m1 == SCALAR ?
+					m1->data[0][0] : (_abs(m1, factors, amplitude))->data[0][0];
 	double x2 =
-			t_m2 == SCALAR ? m2->data[0][0] : (_abs(m2, factors, amplitude))->data[0][0];
+			t_m2 == SCALAR ?
+					m2->data[0][0] : (_abs(m2, factors, amplitude))->data[0][0];
 
 	int res = x1 > x2 ? 1 : (x1 < x2 ? -1 : 0);
 
@@ -511,6 +541,44 @@ struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors,
 struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors,
 		const double amplitude) {
 	return _gt(m2, m1, factors, amplitude);
+}
+
+struct matrix* _max(struct matrix *m1, const double *factors,
+		const double amplitude) {
+	return _initialiseMatrixFromScalar(_max_(m1));
+}
+
+struct matrix* _max2(struct matrix *m1, struct matrix *m2,
+		const double *factors, const double amplitude) {
+	double first = _max_(m1);
+	double second = _max_(m2);
+
+	double res = first > second ? first : second;
+	return _initialiseMatrixFromScalar(res);
+}
+
+struct matrix* _min(struct matrix *m1, const double *factors,
+		const double amplitude) {
+	double min = m1->data[0][0];
+
+	for (int i = 0; i < m1->rows; i++) {
+		for (int j = 0; j < m1->cols; j++) {
+			if (m1->data[i][j] < min) {
+				min = m1->data[i][j];
+			}
+		}
+	}
+
+	return _initialiseMatrixFromScalar(min);
+}
+
+struct matrix* _min2(struct matrix *m1, struct matrix *m2,
+		const double *factors, const double amplitude) {
+	double first = _min_(m1);
+	double second = _min_(m2);
+
+	double res = first < second ? first : second;
+	return _initialiseMatrixFromScalar(res);
 }
 
 //-----------------------------------------------------------------

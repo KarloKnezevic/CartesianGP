@@ -114,6 +114,18 @@ struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors,
 struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors,
 		const double amplitude);
 
+struct matrix* _max(struct matrix *m1, const double *factors,
+		const double amplitude);
+
+struct matrix* _max2(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
+
+struct matrix* _min(struct matrix *m1, const double *factors,
+		const double amplitude);
+
+struct matrix* _min2(struct matrix *m1, struct matrix *m2, const double *factors,
+		const double amplitude);
+
 //-----------------------------------------------------------------
 //                          STAT
 //-----------------------------------------------------------------

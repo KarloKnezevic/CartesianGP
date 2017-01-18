@@ -127,5 +127,26 @@ struct matrix *_mean(const int numInputs, struct matrix **matrices,
 struct matrix *_median(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude);
 
+struct matrix *_max1(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude);
+
+struct matrix *_maxMisc(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude);
+
+struct matrix *_min1(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude);
+
+struct matrix *_minMisc(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude);
+
+struct matrix *_nop(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude);
+
+struct matrix *_const(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude);
+
+struct matrix *_constVector(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude);
+
 
 #endif /* FUNCTIONS_H_ */

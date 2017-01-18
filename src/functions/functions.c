@@ -12,6 +12,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include "../util.h"
 
 //-----------------------------------------------------------------
 //                           FACTORY
@@ -19,7 +20,8 @@
 
 struct function *_init(const char *functionName,
 		struct matrix *(*function)(const int numInputs, struct matrix **inputs,
-				const double *connectionWeights, const double amplitude), int args) {
+				const double *connectionWeights, const double amplitude),
+		int args) {
 
 	struct function *object = (struct function*) malloc(
 			sizeof(struct function));
@@ -113,6 +115,24 @@ struct function *getFunction(char const *functionName) {
 		return _init("median", _median, 1);
 	}
 
+	//MISC
+
+	else if (strncmp(functionName, "max1", FUNCTIONNAMELENGTH) == 0) {
+		return _init("max1", _max1, 1);
+	} else if (strncmp(functionName, "max2", FUNCTIONNAMELENGTH) == 0) {
+		return _init("max2", _maxMisc, 2);
+	} else if (strncmp(functionName, "min1", FUNCTIONNAMELENGTH) == 0) {
+		return _init("min1", _min1, 1);
+	} else if (strncmp(functionName, "min2", FUNCTIONNAMELENGTH) == 0) {
+		return _init("min2", _minMisc, 2);
+	} else if (strncmp(functionName, "nop", FUNCTIONNAMELENGTH) == 0) {
+		return _init("nop", _nop, 1);
+	} else if (strncmp(functionName, "constS", FUNCTIONNAMELENGTH) == 0) {
+		return _init("constS", _const, 0);
+	} else if (strncmp(functionName, "constV", FUNCTIONNAMELENGTH) == 0) {
+		return _init("constV", _constVector, 0);
+	}
+
 	else {
 		printf("Warning: function '%s' is not known and was not added.\n",
 				functionName);
@@ -125,9 +145,10 @@ char *getAllF() {
 //	return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,pushfront,set,sum";
 //	return "add,sub,mul,div,abs,sqrt,pow,sin,cos,tanh,tan,exp,GT,LT";
 //	return "stdev,mean";
+//	return "max1,max2,min1,min2,nop,constS,constV";
 	return "head,last,length,tail,diff,avgdiff,rotate,reverse,pushback,"
 			"pushfront,set,sum,add,sub,mul,div,abs,sqrt,pow,sin,"
-			"cos,tanh,tan,exp,GT,LT,stdev,mean";
+			"cos,tanh,tan,exp,GT,LT,stdev,mean,max1,max2,min1,min2,nop,constS,constV";
 }
 
 //-----------------------------------------------------------------
@@ -414,5 +435,48 @@ struct matrix *_mean(const int numInputs, struct matrix **matrices,
 struct matrix *_median(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude) {
 	return NULL;
+}
+
+struct matrix *_max1(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude) {
+	return _max(matrices[0], connectionWeights, amplitude);
+}
+
+struct matrix *_maxMisc(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude) {
+	return _max2(matrices[0], matrices[1], connectionWeights, amplitude);
+}
+
+struct matrix *_min1(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude) {
+	return _min(matrices[0], connectionWeights, amplitude);
+}
+
+struct matrix *_minMisc(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude) {
+	return _min2(matrices[0], matrices[1], connectionWeights, amplitude);
+}
+
+struct matrix *_nop(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude) {
+	//do nothing
+	return _copyMatrixOf(matrices[0]);
+}
+
+struct matrix *_const(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude) {
+	//return amplitude * [0,1]
+	return _initialiseMatrixFromScalar(_randDecimal() * amplitude);
+}
+
+struct matrix *_constVector(const int numInputs, struct matrix **matrices,
+		const double *connectionWeights, const double amplitude) {
+	int vectorLen = 20;
+	struct matrix *m = _initialiseMatrix(1, vectorLen);
+	for (int i = 0; i < vectorLen; i++) {
+		m->data[0][i] = amplitude;
+	}
+
+	return m;
 }
 
