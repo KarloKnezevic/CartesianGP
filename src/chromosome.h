@@ -40,6 +40,8 @@ struct chromosome {
 	struct matrix **nodeInputsHold;
 
 	int generation;
+
+	int print;
 };
 
 //-----------------------------------------------------------------

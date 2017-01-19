@@ -180,6 +180,17 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 	//for each data
 	for (i = 0; i < _getNumDataSetSamples(data); i++) {
 
+		if (chromo->print == 1) {
+			printf("Izvodim mrezu za\n");
+			for (int k = 0; k < data->numInputs; k++) {
+				printf("%d_", k);
+				_printMatrix(data->inputData[i][k]);
+				printf(" ");
+			}
+			printf("\n");
+
+		}
+
 		_executeChromosome(chromo, _getDataSetSampleInputs(data, i));
 
 		int predictedClass = softmax(params, chromo);
@@ -200,6 +211,11 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 			exit(0);
 		}
 
+		if (chromo->print == 1) {
+			printf("TRUE: %d PREDICTED: %d\n", trueClass, predictedClass);
+		}
+
+
 		//add data to confusion matrix [TRUE CLASS][PREDICTED CLASS]
 		confusionMatrix->data[trueClass][predictedClass] =
 				confusionMatrix->data[trueClass][predictedClass] + 1;
@@ -215,6 +231,7 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 
 	if (params->print == 1) {
 		_printMatrix(confusionMatrix);
+		printf("\n");
 	}
 
 	//free resources

@@ -159,9 +159,9 @@ void _freeMatrix(struct matrix *m) {
 //-----------------------------------------------------------------
 
 double _zerro_div(double a, double b) {
-	if (abs(b) < EPSILON && abs(a) < EPSILON) {
+	if (fabs(b) < EPSILON && fabs(a) < EPSILON) {
 		return 1;
-	} else if (abs(b) < EPSILON) {
+	} else if (fabs(b) < EPSILON) {
 		return a > 0 ? DBL_MAX : DBL_MIN;
 	}
 
@@ -541,7 +541,7 @@ struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors,
 
 	int res = x1 > x2 ? 1 : (x1 < x2 ? -1 : 0);
 
-	return _initialiseMatrixFromScalar(res);
+	return _mulWithScalar(_initialiseMatrixFromScalar(res), amplitude);
 }
 
 struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors,
