@@ -56,14 +56,8 @@ int main(int argc, char *argv[]) {
 	//PRINT FITTEST
 	printPretty(fittestChromosome, NULL);
 
-	//TRAIN
-	printf("\n\n---TRAINING---\n");
-	params->print = 1;
-	setChromosomeFitness(params, fittestChromosome, trainingData);
-
 	//TEST
 	printf("\n\n---TESTING---\n");
-	params->print = 1;
 	setChromosomeFitness(params, fittestChromosome, testingData);
 	printf("Test fitness: %f\n", fittestChromosome->fitness);
 

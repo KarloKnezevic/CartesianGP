@@ -128,18 +128,10 @@ int softmax(struct parameters *params, struct chromosome *chromo) {
 	for (int i = 0; i < _getNumChromosomeOutputs(chromo); i++) {
 		double value = SCALAR(_getChromosomeOutput(chromo, i));
 
-		if (params->print == 1) {
-			printf("%.5f ", value);
-		}
-
 		if (value > max) {
 			max = SCALAR(_getChromosomeOutput(chromo, i));
 			maxIndex = i;
 		}
-	}
-
-	if (params->print == 1) {
-		printf("\n");
 	}
 
 	return maxIndex;
@@ -212,10 +204,6 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 	//double MCC = MatthewsCorrelationCoefficient(params, confusionMatrix);
 	double MCC = (double) trueClassification(params, confusionMatrix)
 			/ (double) _getNumDataSetSamples(data);
-
-	if (params->print == 1) {
-		_printMatrix(confusionMatrix);
-	}
 
 	//free resources
 	_freeMatrix(confusionMatrix);
