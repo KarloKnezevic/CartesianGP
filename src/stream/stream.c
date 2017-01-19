@@ -371,7 +371,7 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 	}
 
 	printf("%s dataset loaded...\n", param);
-	int classes[data->numOutputs];
+	/*int classes[data->numOutputs];
 	for (int i = 0; i < data->numOutputs; i++) {
 		classes[i] = 0;
 	}
@@ -389,7 +389,7 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 	for (int i = 0; i < data->numOutputs; i++) {
 		printf("Class %d : %d\n", i, classes[i]);
 	}
-	printf("\n");
+	printf("\n");*/
 
 	fclose(fp);
 

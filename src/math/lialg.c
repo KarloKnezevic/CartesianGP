@@ -399,6 +399,13 @@ struct matrix* _sqrt(struct matrix *m1, const double *factors,
 	return _m;
 }
 
+double _sec_pow(double a, double b) {
+	double res = fabs(a);
+	res = pow(a, b);
+
+	return a > 0 ? res : -1*res;
+}
+
 struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
 		const double amplitude) {
 	mtype t_m1 = _getMatrixType(m1);
@@ -411,12 +418,12 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
 	} else if (SCALAR == t_m1 && VECTOR == t_m2) {
 		_m = _initialiseMatrixFromArray(m2->rows, m2->cols, m2->data[0]);
 		for (int i = 0; i < _m->cols; i++) {
-			_m->data[0][i] = pow(_m->data[0][i], m1->data[0][0]);
+			_m->data[0][i] = _sec_pow(_m->data[0][i], m1->data[0][0]);
 		}
 	} else if (VECTOR == t_m1 && SCALAR == t_m2) {
 		_m = _initialiseMatrixFromArray(m1->rows, m1->cols, m1->data[0]);
 		for (int i = 0; i < _m->cols; i++) {
-			_m->data[0][i] = pow(_m->data[0][i], m2->data[0][0]);
+			_m->data[0][i] = _sec_pow(_m->data[0][i], m2->data[0][0]);
 		}
 	} else {
 		struct matrix *first = m1->cols > m2->cols ? m1 : m2;
@@ -426,7 +433,7 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
 				first->data[0]);
 		second = _abs(second, factors, amplitude);
 		for (int i = 0; i < _m->cols; i++) {
-			_m->data[0][i] = pow(_m->data[0][i], second->data[0][i]);
+			_m->data[0][i] = _sec_pow(_m->data[0][i], second->data[0][0]);
 		}
 
 		_freeMatrix(second);
