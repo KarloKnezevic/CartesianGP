@@ -160,7 +160,7 @@ struct matrix *_head(const int numInputs, struct matrix **matrices,
 
 	struct matrix *m = matrices[0];
 
-	return _initialiseMatrixFromScalar(m->data[0][0]);
+	return _mulWithScalar(_initialiseMatrixFromScalar(m->data[0][0]), amplitude);
 }
 
 struct matrix *_last(const int numInputs, struct matrix **matrices,
@@ -172,14 +172,14 @@ struct matrix *_last(const int numInputs, struct matrix **matrices,
 		return _copyMatrixOf(m);
 	}
 
-	return _initialiseMatrixFromScalar(m->data[0][m->cols - 1]);
+	return _mulWithScalar(_initialiseMatrixFromScalar(m->data[0][m->cols - 1]), amplitude);
 }
 
 struct matrix *_length(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
-	return _initialiseMatrixFromScalar(m->cols);
+	return _mulWithScalar(_initialiseMatrixFromScalar(m->cols), amplitude);
 }
 
 struct matrix *_tail(const int numInputs, struct matrix **matrices,
@@ -187,10 +187,10 @@ struct matrix *_tail(const int numInputs, struct matrix **matrices,
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
-		return _initialiseMatrixFromScalar(0);
+		return _mulWithScalar(_copyMatrixOf(m), amplitude);
 	}
 
-	return _initialiseMatrixFromArray(1, m->cols - 1, &(m->data[0][1]));
+	return _mulWithScalar(_initialiseMatrixFromArray(1, m->cols - 1, &(m->data[0][1])), amplitude);
 }
 
 struct matrix *_diff(const int numInputs, struct matrix **matrices,
@@ -198,7 +198,7 @@ struct matrix *_diff(const int numInputs, struct matrix **matrices,
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
-		return _mulWithScalar(_copyMatrixOf(m), -1);
+		return _mulWithScalar(_copyMatrixOf(m), -1 * amplitude);
 	}
 
 	struct matrix *m_ = _copyMatrixOf(m);
@@ -209,7 +209,7 @@ struct matrix *_diff(const int numInputs, struct matrix **matrices,
 		}
 	}
 
-	return m_;
+	return _mulWithScalar(m_, amplitude);
 }
 
 struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
@@ -217,7 +217,7 @@ struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
-		return _copyMatrixOf(m);
+		return _mulWithScalar(_copyMatrixOf(m), amplitude);
 	}
 
 	struct matrix *m_ = _copyMatrixOf(m);
@@ -230,7 +230,7 @@ struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
 		m_->data[i][0] = (double) sum / m->cols;
 	}
 
-	return m_;
+	return _mulWithScalar(m_, amplitude);
 }
 
 struct matrix *_rotate(const int numInputs, struct matrix **matrices,
@@ -238,7 +238,7 @@ struct matrix *_rotate(const int numInputs, struct matrix **matrices,
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
-		return _copyMatrixOf(m);
+		return _mulWithScalar(_copyMatrixOf(m), amplitude);
 	}
 
 	struct matrix *m_ = _copyMatrixOf(m);
@@ -249,7 +249,7 @@ struct matrix *_rotate(const int numInputs, struct matrix **matrices,
 		}
 	}
 
-	return m_;
+	return _mulWithScalar(m_, amplitude);
 }
 
 struct matrix *_reverse(const int numInputs, struct matrix **matrices,
@@ -257,7 +257,7 @@ struct matrix *_reverse(const int numInputs, struct matrix **matrices,
 	struct matrix *m = matrices[0];
 
 	if (m->cols == 1) {
-		return _copyMatrixOf(m);
+		return _mulWithScalar(_copyMatrixOf(m), amplitude);
 	}
 
 	struct matrix *m_ = _copyMatrixOf(m);
@@ -268,7 +268,7 @@ struct matrix *_reverse(const int numInputs, struct matrix **matrices,
 		}
 	}
 
-	return m_;
+	return _mulWithScalar(m_, amplitude);
 }
 
 struct matrix *_pushback(const int numInputs, struct matrix **matrices,
@@ -284,7 +284,7 @@ struct matrix *_pushback(const int numInputs, struct matrix **matrices,
 		_m->data[0][i] = matrices[1]->data[0][j];
 	}
 
-	return _m;
+	return _mulWithScalar(_m, amplitude);
 }
 
 struct matrix *_pushfront(const int numInputs, struct matrix **matrices,
@@ -300,7 +300,7 @@ struct matrix *_pushfront(const int numInputs, struct matrix **matrices,
 		_m->data[0][i] = matrices[0]->data[0][j];
 	}
 
-	return _m;
+	return _mulWithScalar(_m, amplitude);
 }
 
 struct matrix *_set(const int numInputs, struct matrix **matrices,
@@ -315,7 +315,7 @@ struct matrix *_set(const int numInputs, struct matrix **matrices,
 	//no scalar values
 	if (-1 == index) {
 		//return random matrix
-		return _copyMatrixOf(matrices[rand() % 2]);
+		return _pushback(numInputs, matrices, connectionWeights, amplitude);
 	}
 
 	//if other scalar too
@@ -329,7 +329,7 @@ struct matrix *_set(const int numInputs, struct matrix **matrices,
 		_m->data[0][i] = matrices[index]->data[0][0];
 	}
 
-	return _m;
+	return _mulWithScalar(_m, amplitude);
 }
 
 struct matrix *_sum(const int numInputs, struct matrix **matrices,
@@ -460,7 +460,7 @@ struct matrix *_minMisc(const int numInputs, struct matrix **matrices,
 struct matrix *_nop(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude) {
 	//do nothing
-	return _copyMatrixOf(matrices[0]);
+	return _mulWithScalar(_copyMatrixOf(matrices[0]), amplitude);
 }
 
 struct matrix *_const(const int numInputs, struct matrix **matrices,

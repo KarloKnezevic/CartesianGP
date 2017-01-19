@@ -58,6 +58,8 @@ struct parameters {
 			struct chromosome **parents, struct chromosome **children,
 			int numParents, int numChildren);
 	char reproductionSchemeName[REPRODUCTIONSCHEMENAMELENGTH];
+
+	int print;
 };
 
 //-----------------------------------------------------------------
