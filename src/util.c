@@ -43,22 +43,12 @@ int _randInt(int n) {
 //                            COMPARE
 //-----------------------------------------------------------------
 
-int compare(const void * a, const void * b) {
-	double diff = *(double *) a - *(double *) b;
-
-	if (fabs(diff) < EPSILON) {
-		return 0;
-	}
-
-	return diff > 0 ? 1 : -1;
-}
-
 int _cmpInt(const void * a, const void * b) {
-	return compare(a, b);
+	return *(int *) a - *(int *) b;
 }
 
 int _cmpDouble(const void * a, const void * b) {
-	return compare(a, b);
+	return *(double *) a - *(double *) b;
 }
 
 //-----------------------------------------------------------------
