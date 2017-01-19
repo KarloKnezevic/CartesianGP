@@ -311,6 +311,7 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 			//until the end of line
 			int class = -1;
+			int outputIndex = 0;
 			struct matrix *attributeVector = _initialiseMatrix(1,
 					data->numInputs - 1);
 			while (record != NULL) {
@@ -329,7 +330,8 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 				} else {
 					class = atoi(record);
-					int outputIndex = col - data->numInputs;
+
+					outputIndex = col - data->numInputs;
 
 					//if is first and class not 0
 					if (0 == outputIndex && 0 != class) {
@@ -353,10 +355,10 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 				col++;
 			}
 
-			if (class != 0) {
+			if (class != 0 && outputIndex == 0) {
 				for (int i = 0; i < data->numOutputs; i++) {
 					data->outputData[lineNum - readFrom][i] =
-							class == i ? 1 : 0;
+							(class-1) == i ? 1 : 0;
 				}
 			}
 		}
@@ -367,6 +369,27 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 
 		lineNum++;
 	}
+
+	printf("%s dataset loaded...\n", param);
+	int classes[data->numOutputs];
+	for (int i = 0; i < data->numOutputs; i++) {
+		classes[i] = 0;
+	}
+
+	for (int i = 0; i < data->numSamples; i++) {
+		for (int j = 0; j < data->numOutputs; j++) {
+			printf("%f ", data->outputData[i][j]);
+			if (data->outputData[i][j] == 1) {
+				classes[j] += 1;
+			}
+		}
+		printf("\n");
+	}
+
+	for (int i = 0; i < data->numOutputs; i++) {
+		printf("Class %d : %d\n", i, classes[i]);
+	}
+	printf("\n");
 
 	fclose(fp);
 
