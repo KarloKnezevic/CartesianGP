@@ -123,7 +123,13 @@ void _printMatrix(struct matrix *m) {
 
 			printf("%.3lf", m->data[i][j]);
 		}
-		printf("|\n");
+
+		printf("|");
+
+		if (i < m->rows - 1) {
+			printf("\n");
+		}
+
 	}
 
 	return;
