@@ -569,7 +569,7 @@ struct matrix* _lt(struct matrix *m1, struct matrix *m2, const double *factors,
 
 struct matrix* _max(struct matrix *m1, const double *factors,
 		const double amplitude) {
-	return _initialiseMatrixFromScalar(_max_(m1));
+	return _mulWithScalar(_initialiseMatrixFromScalar(_max_(m1)), amplitude);
 }
 
 struct matrix* _max2(struct matrix *m1, struct matrix *m2,
@@ -578,7 +578,7 @@ struct matrix* _max2(struct matrix *m1, struct matrix *m2,
 	double second = _max_(m2);
 
 	double res = first > second ? first : second;
-	return _initialiseMatrixFromScalar(res);
+	return _mulWithScalar(_initialiseMatrixFromScalar(res), amplitude);
 }
 
 struct matrix* _min(struct matrix *m1, const double *factors,
@@ -593,7 +593,7 @@ struct matrix* _min(struct matrix *m1, const double *factors,
 		}
 	}
 
-	return _initialiseMatrixFromScalar(min);
+	return _mulWithScalar(_initialiseMatrixFromScalar(min), amplitude);
 }
 
 struct matrix* _min2(struct matrix *m1, struct matrix *m2,
@@ -602,7 +602,7 @@ struct matrix* _min2(struct matrix *m1, struct matrix *m2,
 	double second = _min_(m2);
 
 	double res = first < second ? first : second;
-	return _initialiseMatrixFromScalar(res);
+	return _mulWithScalar(_initialiseMatrixFromScalar(res), amplitude);
 }
 
 //-----------------------------------------------------------------
@@ -614,7 +614,7 @@ struct matrix* _arithmetic_mean(struct matrix *m1, const double *factors,
 	struct matrix *_m = _sumElements(m1, factors, amplitude);
 	_m->data[0][0] /= m1->cols;
 
-	return _m;
+	return _mulWithScalar(_m, amplitude);
 }
 
 struct matrix* _med(struct matrix *m1, const double *factors,
@@ -635,7 +635,7 @@ struct matrix* _standard_deviation(struct matrix *m1, const double *factors,
 	stdev = sqrt(stdev);
 	_m->data[0][0] = stdev;
 
-	return _m;
+	return _mulWithScalar(_m, amplitude);
 }
 
 //-----------------------------------------------------------------
