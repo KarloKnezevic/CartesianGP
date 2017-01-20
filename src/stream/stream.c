@@ -484,25 +484,9 @@ struct dataSet *_loadBCWDataSetFromFile(char const *file, char const *param) {
 					}
 
 				} else {
+					//2 or 4
 					class = atoi(record);
-					int outputIndex = col - data->numInputs;
-
-					//if is first and class not 0
-					if (0 == outputIndex && 0 != class) {
-						break;
-					}
-
-					//possible decade class 0
-					if (outputIndex == 0) {
-						//by default, example is in 0th class
-						data->outputData[lineNum - readFrom][outputIndex] = 1;
-					} else {
-						int binary = atoi(record);
-						data->outputData[lineNum - readFrom][col
-								- data->numInputs] = binary;
-						data->outputData[lineNum - readFrom][0] -= binary;
-					}
-
+					break;
 				}
 
 				record = strtok(NULL, " ,\n");
