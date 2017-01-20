@@ -172,7 +172,8 @@ struct matrix *_last(const int numInputs, struct matrix **matrices,
 		return _copyMatrixOf(m);
 	}
 
-	return _mulWithScalar(_initialiseMatrixFromScalar(m->data[0][m->cols - 1]), amplitude);
+	return _mulWithScalar(_initialiseMatrixFromScalar(m->data[0][m->cols - 1]),
+			amplitude);
 }
 
 struct matrix *_length(const int numInputs, struct matrix **matrices,
@@ -190,7 +191,9 @@ struct matrix *_tail(const int numInputs, struct matrix **matrices,
 		return _mulWithScalar(_copyMatrixOf(m), amplitude);
 	}
 
-	return _mulWithScalar(_initialiseMatrixFromArray(1, m->cols - 1, &(m->data[0][1])), amplitude);
+	return _mulWithScalar(
+			_initialiseMatrixFromArray(1, m->cols - 1, &(m->data[0][1])),
+			amplitude);
 }
 
 struct matrix *_diff(const int numInputs, struct matrix **matrices,
@@ -216,19 +219,22 @@ struct matrix *_avgdiff(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude) {
 	struct matrix *m = matrices[0];
 
-	if (m->cols == 1) {
+	if (matrices[0]->cols == 1) {
 		return _mulWithScalar(_copyMatrixOf(m), amplitude);
 	}
 
-	struct matrix *m_ = _copyMatrixOf(m);
+	struct matrix *diff = _diff(numInputs, matrices, connectionWeights, 1);
+	struct matrix *m_ = _initialiseMatrix(m->rows, 1);
 
-	for (int i = 0; i < m->rows; i++) {
+	for (int i = 0; i < diff->rows; i++) {
 		double sum = 0;
-		for (int j = 0; j < m->cols; j++) {
-			sum += m->data[i][j];
+		for (int j = 0; j < diff->cols; j++) {
+			sum += diff->data[i][j];
 		}
-		m_->data[i][0] = (double) sum / m->cols;
+		m_->data[i][0] = (double) sum / diff->cols;
 	}
+
+	_freeMatrix(diff);
 
 	return _mulWithScalar(m_, amplitude);
 }
