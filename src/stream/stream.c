@@ -123,8 +123,8 @@ struct chromosome* _loadChromosomeFromFile(char const *file) {
 	for (i = 0; i < numNodes; i++) {
 
 		line = fgets(buffer, sizeof(buffer), fp);
-		record = strtok(line, ",\n");
-		chromo->nodes[i]->function = atoi(record);
+		sscanf(line, "%d,%lf", &chromo->nodes[i]->function,
+				&chromo->nodes[i]->amplitude);
 
 		for (j = 0; j < arity; j++) {
 			line = fgets(buffer, sizeof(buffer), fp);
@@ -358,7 +358,7 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param) {
 			if (class != 0 && outputIndex == 0) {
 				for (int i = 0; i < data->numOutputs; i++) {
 					data->outputData[lineNum - readFrom][i] =
-							(class-1) == i ? 1 : 0;
+							(class - 1) == i ? 1 : 0;
 				}
 			}
 		}
@@ -695,7 +695,8 @@ void _saveChromosome(struct chromosome *chromo, char const *fileName) {
 
 	/* save the chromosome structure */
 	for (i = 0; i < chromo->numNodes; i++) {
-		fprintf(fp, "%d\n", chromo->nodes[i]->function);
+		fprintf(fp, "%d,%f\n", chromo->nodes[i]->function,
+				chromo->nodes[i]->amplitude);
 
 		for (j = 0; j < chromo->arity; j++) {
 			fprintf(fp, "%d,%f\n", chromo->nodes[i]->inputs[j],
