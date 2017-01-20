@@ -14,10 +14,10 @@
 #include "../chromosome.h"
 #include "../dataset.h"
 
-#define EVAL_TP 0
-#define EVAL_TN 1
-#define EVAL_FP 2
-#define EVAL_FN 3
+#define EVAL_TP 	0
+#define EVAL_TN 	1
+#define EVAL_FP 	2
+#define EVAL_FN 	3
 
 struct evaluator {
 	double accuracy;
@@ -27,6 +27,9 @@ struct evaluator {
 	double precision;
 	double DOR;
 	double F1;
+
+	double F1_macro;
+	double F1_micro;
 };
 
 //-----------------------------------------------------------------
@@ -68,8 +71,6 @@ void _freeEvaluator(struct evaluator *eval);
 //-----------------------------------------------------------------
 //                             UTILITY
 //-----------------------------------------------------------------
-
-void TEST_EVAL();
 
 /**
  * THE HIGHER, THE BETTER
@@ -116,6 +117,22 @@ double _computePrecision(struct matrix *confusionMatrix);
  */
 double _computeDOR(struct matrix *confusionMatrix);
 
+//-----------------------------------------------------------------
+//                  Matthews correlation coefficient
+//-----------------------------------------------------------------
+
+double MatthewsCorrelationCoefficient(struct matrix *confusionMatrix);
+
+//-----------------------------------------------------------------
+//                       F MEASURES
+//-----------------------------------------------------------------
+
+double _computeFn(struct matrix *confusionMatrix, int n);
+
 double _computeF1(struct matrix *confusionMatrix);
+
+double _computeF1_micro(struct matrix *confusionMatrix);
+
+double _computeF1_macro(struct matrix *confusionMatrix);
 
 #endif /* EVALUATOR_H_ */

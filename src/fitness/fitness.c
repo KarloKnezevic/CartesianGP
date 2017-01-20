@@ -12,6 +12,7 @@
 #include <math.h>
 #include <string.h>
 #include "../math/lialg.h"
+#include "../machinelearning/evaluator.h"
 
 #define SCALAR(X) _getMatrixAsScalar(X)
 
@@ -33,76 +34,6 @@ void validate(struct chromosome *chromo, struct dataSet *data) {
 		printf("Terminating.\n");
 		exit(0);
 	}
-}
-
-//-----------------------------------------------------------------
-//                  Matthews correlation coefficient
-//-----------------------------------------------------------------
-
-#define CC(__x__, __y__) (confusionMatrix->data[__x__][__y__])
-
-double MatthewsCorrelationCoefficient(struct parameters *params,
-		struct matrix *confusionMatrix) {
-
-	int bound = confusionMatrix->cols;
-
-	double numerator = 0.0;
-	for (int k = 0; k < bound; k++) {
-		for (int l = 0; l < bound; l++) {
-			for (int m = 0; m < bound; m++) {
-
-				numerator += (CC(k,k) * CC(l, m)) - (CC(k,l) * CC(m, k));
-
-			}
-		}
-	}
-
-	double denominator1 = 0.0;
-	for (int k = 0; k < bound; k++) {
-		double sum1 = 0.0;
-		for (int l = 0; l < bound; l++) {
-			sum1 += CC(k, l);
-		}
-
-		double sum2 = 0.0;
-		for (int _k = 0; _k < bound; _k++) {
-			if (_k != k) {
-				for (int l = 0; l < bound; l++) {
-					sum2 += CC(_k, l);
-				}
-			}
-		}
-
-		denominator1 += sum1 * sum2;
-	}
-
-	double denominator2 = 0.0;
-	for (int k = 0; k < bound; k++) {
-		double sum1 = 0.0;
-		for (int l = 0; l < bound; l++) {
-			sum1 += CC(l, k);
-		}
-
-		double sum2 = 0.0;
-		for (int _k = 0; _k < bound; _k++) {
-			if (_k != k) {
-				for (int l = 0; l < bound; l++) {
-					sum2 += CC(l, _k);
-				}
-			}
-		}
-
-		denominator2 += sum1 * sum2;
-	}
-
-	if (denominator1 < EPSILON || denominator2 < EPSILON) {
-		//no better then random classification
-		return 0;
-	}
-
-	double MCC = numerator / (sqrt(denominator1) * sqrt(denominator2));
-
-	return MCC;
 }
 
 //-----------------------------------------------------------------
@@ -135,21 +66,6 @@ int softmax(struct parameters *params, struct chromosome *chromo) {
 	}
 
 	return maxIndex;
-}
-
-//-----------------------------------------------------------------
-//                  Accuracy
-//-----------------------------------------------------------------
-
-int trueClassification(struct parameters *params,
-		struct matrix *confusionMatrix) {
-
-	int true = 0;
-	for (int i = 0; i < confusionMatrix->cols; i++) {
-		true += confusionMatrix->data[i][i];
-	}
-
-	return true;
 }
 
 //-----------------------------------------------------------------
@@ -198,20 +114,16 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 
 	}
 
-	/**
-	 * Calculate Matthews correlation coefficient
-	 */
-	//double MCC = MatthewsCorrelationCoefficient(params, confusionMatrix);
-	double MCC = (double) trueClassification(params, confusionMatrix)
-			/ (double) _getNumDataSetSamples(data);
+//	MatthewsCorrelationCoefficient(confusionMatrix)
+	double fitness = _computeAccuracy(confusionMatrix);
 
 	//free resources
 	_freeMatrix(confusionMatrix);
 
 	/**
-	 * Return fitness as 1 - ABS( MCC )
+	 * Return fitness as 1 - ABS( fitness )
 	 */
-	return 1 - fabs(MCC);
+	return 1 - fabs(fitness);
 }
 
 //-----------------------------------------------------------------

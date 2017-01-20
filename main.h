@@ -20,5 +20,6 @@
 #include "src/chromosome.h"
 #include "src/parameters.h"
 #include "src/stream/stream.h"
+#include "src/machinelearning/evaluator.h"
 
 #endif /* MAIN_H_ */

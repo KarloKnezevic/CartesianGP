@@ -12,10 +12,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define _tp measures[EVAL_TP]
-#define _tn measures[EVAL_TN]
-#define _fp measures[EVAL_FP]
-#define _fn measures[EVAL_FN]
+#define _EVAL_CLASSES_	4
 
 //-----------------------------------------------------------------
 //                          CONSTRUCTOR
@@ -32,6 +29,9 @@ struct evaluator *_initialiseEvaluator(struct parameters *params) {
 	eval->precision = 0.0;
 	eval->DOR = 0.0;
 	eval->F1 = 0.0;
+
+	eval->F1_macro = 0.0;
+	eval->F1_micro = 0.0;
 
 	return eval;
 }
@@ -74,6 +74,8 @@ void _calculateAllMeasures(struct evaluator *eval,
 	eval->precision = _computePrecision(confusionMatrix);
 	eval->DOR = _computeDOR(confusionMatrix);
 	eval->F1 = _computeF1(confusionMatrix);
+	eval->F1_micro = _computeF1_micro(confusionMatrix);
+	eval->F1_macro = _computeF1_macro(confusionMatrix);
 }
 
 //-----------------------------------------------------------------
@@ -91,12 +93,14 @@ void _printEvaluator(struct evaluator *eval) {
 	printf("                     *Evaluator*                           \n");
 	printf("-----------------------------------------------------------\n");
 	printf("Accuracy:\t\t%f\n", eval->accuracy);
-	printf("Error:\t\t%f\n", eval->error);
-	printf("Sensitivity:\t\t%f\n", eval->sensitivity);
+	printf("Error:\t\t\t%f\n", eval->error);
+	printf("Sensitivity(R):\t\t%f\n", eval->sensitivity);
 	printf("Specificity:\t\t%f\n", eval->specificity);
-	printf("Precision:\t\t%f\n", eval->precision);
-	printf("DOR:\t\t%f\n", eval->DOR);
-	printf("F1:\t\t%f\n", eval->F1);
+	printf("Precision(P):\t\t%f\n", eval->precision);
+	printf("DOR:\t\t\t%f\n", eval->DOR);
+	printf("F1:\t\t\t%f\n\n", eval->F1);
+	printf("F1 micro:\t\t%f\n", eval->F1_micro);
+	printf("F1 macro:\t\t%f\n", eval->F1_macro);
 	printf("-----------------------------------------------------------\n\n");
 }
 
@@ -112,49 +116,55 @@ void _freeEvaluator(struct evaluator *eval) {
 //                             UTILITY
 //-----------------------------------------------------------------
 
-void TEST_EVAL() {
-	struct matrix *confusionMatrix = _initialiseMatrix(2, 2);
-	confusionMatrix->data[0][0] = 6;
-	confusionMatrix->data[0][1] = 2;
-	confusionMatrix->data[1][0] = 12;
-	confusionMatrix->data[1][1] = 130;
+//void _TEST_EVAL() {
+//	struct matrix *confusionMatrix = _initialiseMatrix(3, 3);
+//	confusionMatrix->data[0][0] = 100;
+//	confusionMatrix->data[0][1] = 10;
+//	confusionMatrix->data[0][2] = 1;
+//	confusionMatrix->data[1][0] = 2;
+//	confusionMatrix->data[1][1] = 2;
+//	confusionMatrix->data[1][2] = 3;
+//	confusionMatrix->data[2][0] = 8;
+//	confusionMatrix->data[2][1] = 5;
+//	confusionMatrix->data[2][2] = 400;
+//
+//	struct evaluator *eval = _initialiseEvaluator(NULL);
+//
+//	_calculateAllMeasures(eval, confusionMatrix);
+//	_printEvaluator(eval);
+//
+//	_freeEvaluator(eval);
+//	_freeMatrix(confusionMatrix);
+//}
 
-	struct evaluator *eval = _initialiseEvaluator(NULL);
-
-	_calculateAllMeasures(confusionMatrix, eval);
-	_printEvaluator(eval);
-
-	_freeEvaluator(eval);
-	_freeMatrix(confusionMatrix);
-}
-
-int *_calculate_4_class(struct matrix *confusionMatrix, int class, int *res) {
-	if (NULL == res) {
-		res = (int *) calloc(4, sizeof(int));
-	}
-
+struct matrix *_calculate_4_class(struct matrix *confusionMatrix, int class,
+		struct matrix *res) {
 	for (int true = 0; true < confusionMatrix->rows; true++) {
 		for (int predicted = 0; predicted < confusionMatrix->cols;
 				predicted++) {
 
 			//TP
-			if (true == predicted) {
-				res[EVAL_TP] += confusionMatrix->data[true][predicted];
+			if (true == predicted && true == class) {
+				res->data[class][EVAL_TP] +=
+						confusionMatrix->data[true][predicted];
 			}
 
 			//TN
 			if (true != class && predicted != class) {
-				res[EVAL_TN] += confusionMatrix->data[true][predicted];
+				res->data[class][EVAL_TN] +=
+						confusionMatrix->data[true][predicted];
 			}
 
 			//FP
 			if (true != class && predicted == class) {
-				res[EVAL_FP] += confusionMatrix->data[true][predicted];
+				res->data[class][EVAL_FP] +=
+						confusionMatrix->data[true][predicted];
 			}
 
 			//FN
 			if (true == class && predicted != class) {
-				res[EVAL_FN] += confusionMatrix->data[true][predicted];
+				res->data[class][EVAL_FN] +=
+						confusionMatrix->data[true][predicted];
 			}
 		}
 	}
@@ -167,12 +177,30 @@ double _computeAccuracy(struct matrix *confusionMatrix) {
 		return 0.0;
 	}
 
-	int *measures = NULL;
+	struct matrix *measures = _initialiseMatrix(confusionMatrix->rows,
+	_EVAL_CLASSES_);
+
+	double acc = 0;
+	int evals = 0;
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
+
+		acc += (measures->data[class][EVAL_TP] + measures->data[class][EVAL_TN])
+				/ (measures->data[class][EVAL_TP]
+						+ measures->data[class][EVAL_TN]
+						+ measures->data[class][EVAL_FP]
+						+ measures->data[class][EVAL_FN]);
+
+		evals++;
+
+		if (2 == confusionMatrix->rows) {
+			break;
+		}
 	}
 
-	double acc = (_tp+ _tn) / (confusionMatrix->cols * (_tp + _tn + _fp + _fn));
+	acc /= evals;
+
+	_freeMatrix(measures);
 
 	free(measures);
 
@@ -188,14 +216,27 @@ double _computeSensitivity(struct matrix *confusionMatrix) {
 		return 0.0;
 	}
 
-	int *measures = NULL;
+	struct matrix *measures = _initialiseMatrix(confusionMatrix->rows,
+	_EVAL_CLASSES_);
+
+	double sensitivity = 0;
+	int evals = 0;
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
+
+		sensitivity += measures->data[class][EVAL_TP]
+				/ (measures->data[class][EVAL_TP]
+						+ measures->data[class][EVAL_FN]);
+
+		evals++;
+		if (2 == confusionMatrix->rows) {
+			break;
+		}
 	}
 
-	double sensitivity = (_tp) / (confusionMatrix->cols * (_tp + _fn));
+	sensitivity /= evals;
 
-	free(measures);
+	_freeMatrix(measures);
 
 	return sensitivity;
 }
@@ -205,14 +246,27 @@ double _computeSpecificity(struct matrix *confusionMatrix) {
 		return 0.0;
 	}
 
-	int *measures = NULL;
+	struct matrix *measures = _initialiseMatrix(confusionMatrix->rows,
+	_EVAL_CLASSES_);
+
+	double specificity = 0;
+	int evals = 0;
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
+
+		specificity += measures->data[class][EVAL_TN]
+				/ (measures->data[class][EVAL_TN]
+						+ measures->data[class][EVAL_FP]);
+
+		evals++;
+		if (2 == confusionMatrix->rows) {
+			break;
+		}
 	}
 
-	double specificity = (_tn) / (confusionMatrix->cols * (_tn + _fp));
+	specificity /= evals;
 
-	free(measures);
+	_freeMatrix(measures);
 
 	return specificity;
 }
@@ -222,14 +276,27 @@ double _computePrecision(struct matrix *confusionMatrix) {
 		return 0.0;
 	}
 
-	int *measures = NULL;
+	struct matrix *measures = _initialiseMatrix(confusionMatrix->rows,
+	_EVAL_CLASSES_);
+
+	double precision = 0;
+	int evals = 0;
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
+
+		precision += measures->data[class][EVAL_TP]
+				/ (measures->data[class][EVAL_TP]
+						+ measures->data[class][EVAL_FP]);
+
+		evals++;
+		if (2 == confusionMatrix->rows) {
+			break;
+		}
 	}
 
-	double precision = (_tp) / (confusionMatrix->cols * (_tp + _fp));
+	precision /= evals;
 
-	free(measures);
+	_freeMatrix(measures);
 
 	return precision;
 }
@@ -245,10 +312,141 @@ double _computeDOR(struct matrix *confusionMatrix) {
 	return (sensitivity * specificity) / ((1 - sensitivity) * (1 - specificity));
 }
 
-double _computeF1(struct matrix *confusionMatrix) {
+//-----------------------------------------------------------------
+//                  Matthews correlation coefficient
+//-----------------------------------------------------------------
+
+#define CC(__x__, __y__) (confusionMatrix->data[__x__][__y__])
+double MatthewsCorrelationCoefficient(struct matrix *confusionMatrix) {
+	int bound = confusionMatrix->cols;
+
+	double numerator = 0.0;
+	for (int k = 0; k < bound; k++) {
+		for (int l = 0; l < bound; l++) {
+			for (int m = 0; m < bound; m++) {
+
+				numerator += (CC(k,k) * CC(l, m)) - (CC(k,l) * CC(m, k));
+
+			}
+		}
+	}
+
+	double denominator1 = 0.0;
+	for (int k = 0; k < bound; k++) {
+		double sum1 = 0.0;
+		for (int l = 0; l < bound; l++) {
+			sum1 += CC(k, l);
+		}
+
+		double sum2 = 0.0;
+		for (int _k = 0; _k < bound; _k++) {
+			if (_k != k) {
+				for (int l = 0; l < bound; l++) {
+					sum2 += CC(_k, l);
+				}
+			}
+		}
+
+		denominator1 += sum1 * sum2;
+	}
+
+	double denominator2 = 0.0;
+	for (int k = 0; k < bound; k++) {
+		double sum1 = 0.0;
+		for (int l = 0; l < bound; l++) {
+			sum1 += CC(l, k);
+		}
+
+		double sum2 = 0.0;
+		for (int _k = 0; _k < bound; _k++) {
+			if (_k != k) {
+				for (int l = 0; l < bound; l++) {
+					sum2 += CC(l, _k);
+				}
+			}
+		}
+
+		denominator2 += sum1 * sum2;
+	}
+
+	if (denominator1 < EPSILON || denominator2 < EPSILON) {
+		//no better then random classification
+		return 0;
+	}
+
+	double MCC = numerator / (sqrt(denominator1) * sqrt(denominator2));
+
+	return MCC;
+}
+
+//-----------------------------------------------------------------
+//                       F MEASURES
+//-----------------------------------------------------------------
+
+double _computeFn(struct matrix *confusionMatrix, int n) {
 	double sensitivity = _computeSensitivity(confusionMatrix);
-	double specificity = _computeSpecificity(confusionMatrix);
 	double precision = _computePrecision(confusionMatrix);
 
-	return (2 * sensitivity * specificity) / (precision + sensitivity);
+	return ((1 + n * n) * sensitivity * precision)
+			/ ((n * n) * precision + sensitivity);
+}
+
+double _computeF1(struct matrix *confusionMatrix) {
+	return _computeFn(confusionMatrix, 1);
+}
+
+double _computeF1_micro(struct matrix *confusionMatrix) {
+	struct matrix *measures = _initialiseMatrix(confusionMatrix->rows,
+	_EVAL_CLASSES_);
+
+	for (int class = 0; class < confusionMatrix->rows; class++) {
+		measures = _calculate_4_class(confusionMatrix, class, measures);
+
+		if (class > 0) {
+			measures->data[0][EVAL_TP] += measures->data[class][EVAL_TP];
+			measures->data[0][EVAL_FP] += measures->data[class][EVAL_FP];
+			measures->data[0][EVAL_FN] += measures->data[class][EVAL_FN];
+		}
+	}
+
+	double precision = measures->data[0][EVAL_TP]
+			/ (measures->data[0][EVAL_TP] + measures->data[0][EVAL_FP]);
+
+	double sensitivity = measures->data[0][EVAL_TP]
+			/ (measures->data[0][EVAL_TP] + measures->data[0][EVAL_FN]);
+
+	double F = (2 * precision * sensitivity) / (precision + sensitivity);
+
+	_freeMatrix(measures);
+
+	return F;
+}
+
+double _computeF1_macro(struct matrix *confusionMatrix) {
+
+	struct matrix *measures = _initialiseMatrix(confusionMatrix->rows,
+	_EVAL_CLASSES_);
+
+	double F = 0.0;
+	double precision, sensitivity;
+	for (int class = 0; class < confusionMatrix->rows; class++) {
+		measures = _calculate_4_class(confusionMatrix, class, measures);
+
+		precision = measures->data[class][EVAL_TP]
+				/ (measures->data[class][EVAL_TP]
+						+ measures->data[class][EVAL_FP]);
+
+		sensitivity = measures->data[class][EVAL_TP]
+				/ (measures->data[class][EVAL_TP]
+						+ measures->data[class][EVAL_FN]);
+
+		F += (2 * precision * sensitivity) / (precision + sensitivity);
+	}
+
+	_printMatrix(measures);
+	printf("\n");
+
+	_freeMatrix(measures);
+
+	return F / confusionMatrix->rows;
 }
