@@ -476,7 +476,12 @@ struct matrix *_const1(const int numInputs, struct matrix **matrices,
 
 struct matrix *_constVector1(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude) {
-	int vectorLen = 20;
+	int vectorLen = NUM_NODES;
+
+	if (NUM_NODES < 5) {
+		vectorLen = 5;
+	}
+
 	struct matrix *m = _initialiseMatrix(1, vectorLen);
 	for (int i = 0; i < vectorLen; i++) {
 		m->data[0][i] = amplitude;
