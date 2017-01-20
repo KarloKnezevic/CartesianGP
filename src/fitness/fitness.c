@@ -179,7 +179,7 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 		int trueClass = -1;
 		//if there is K classes, is is used binary notation, and right class is denoted by 1
 		for (j = 0; j < params->numOutputs; j++) {
-			if (abs(1.0 - _getDataSetSampleOutput(data, i, j)) <= EPSILON) {
+			if (fabs(1.0 - _getDataSetSampleOutput(data, i, j)) <= EPSILON) {
 				trueClass = j;
 				break;
 			}
