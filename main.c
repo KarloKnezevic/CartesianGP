@@ -8,6 +8,8 @@
 
 #include "main.h"
 
+//#include <vld.h>
+
 int main(int argc, char *argv[]) {
 	struct parameters *params = NULL;
 	struct chromosome *fittestChromosome = NULL;
@@ -63,9 +65,9 @@ int main(int argc, char *argv[]) {
 
 	//TEST
 	printf("\n\n---TESTING---\n");
-	params->print = 0;
-	print = 0;
-	printPretty(fittestChromosome, NULL);
+	params->print = 1;
+	print = 1;
+	//printPretty(fittestChromosome, NULL);
 	setChromosomeFitness(params, fittestChromosome, testingData);
 	printf("Test fitness: %f\n", fittestChromosome->fitness);
 

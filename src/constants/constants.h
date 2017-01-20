@@ -9,6 +9,8 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+#include <vld.h>
+
 #define __TEST__ 1
 
 #define EPSILON 1e-10

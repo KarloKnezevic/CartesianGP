@@ -539,12 +539,32 @@ struct matrix* _gt(struct matrix *m1, struct matrix *m2, const double *factors,
 	mtype t_m1 = _getMatrixType(m1);
 	mtype t_m2 = _getMatrixType(m2);
 
-	double x1 =
-			t_m1 == SCALAR ?
-					m1->data[0][0] : (_abs(m1, factors, amplitude))->data[0][0];
-	double x2 =
-			t_m2 == SCALAR ?
-					m2->data[0][0] : (_abs(m2, factors, amplitude))->data[0][0];
+	double x1, x2;
+
+	if (t_m1 == SCALAR) {
+		x1 = m1->data[0][0];
+	}
+	else {
+		struct matrix *h = _abs(m1, factors, amplitude);
+		x1 = h->data[0][0];
+		_freeMatrix(h);
+	}
+
+	if (t_m2 == SCALAR) {
+		x2 = m2->data[0][0];
+	}
+	else {
+		struct matrix *h = _abs(m2, factors, amplitude);
+		x2 = h->data[0][0];
+		_freeMatrix(h);
+	}
+
+	//double x1 =
+	//		t_m1 == SCALAR ?
+	//				m1->data[0][0] : (_abs(m1, factors, amplitude))->data[0][0];
+	//double x2 =
+	//		t_m2 == SCALAR ?
+	//				m2->data[0][0] : (_abs(m2, factors, amplitude))->data[0][0];
 
 	int res = x1 > x2 ? 1 : (x1 < x2 ? -1 : 0);
 
