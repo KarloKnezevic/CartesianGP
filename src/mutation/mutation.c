@@ -151,6 +151,8 @@ void singleMutation(struct parameters *params, struct chromosome *chromo) {
 			previousGeneValue = chromo->nodes[nodeIndex]->function;
 			chromo->nodes[nodeIndex]->function = _getRandomFunction(
 					chromo->funcSet->numFunctions);
+			chromo->nodes[nodeIndex]->amplitude = _getRandomAmplitude(
+					params->amplitudeRange);
 			newGeneValue = chromo->nodes[nodeIndex]->function;
 
 			if ((previousGeneValue != newGeneValue)
@@ -229,6 +231,8 @@ void pointMutation(struct parameters *params, struct chromosome *chromo) {
 			nodeIndex = geneToMutate;
 			chromo->nodes[nodeIndex]->function = _getRandomFunction(
 					chromo->funcSet->numFunctions);
+			chromo->nodes[nodeIndex]->amplitude = _getRandomAmplitude(
+					params->amplitudeRange);
 		} else if (geneToMutate < numFunctionGenes + numInputGenes) {
 			nodeIndex =
 					(int) ((geneToMutate - numFunctionGenes) / chromo->arity);
@@ -280,6 +284,8 @@ void pointMutationWeights(struct parameters *params, struct chromosome *chromo) 
 			nodeIndex = geneToMutate;
 			chromo->nodes[nodeIndex]->function = _getRandomFunction(
 					chromo->funcSet->numFunctions);
+			chromo->nodes[nodeIndex]->amplitude = _getRandomAmplitude(
+					params->amplitudeRange);
 		}
 
 		//mutate node input gene
