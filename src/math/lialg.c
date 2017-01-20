@@ -140,7 +140,6 @@ void _printMatrix(struct matrix *m) {
 
 void _freeMatrix(struct matrix *m) {
 	if (m == NULL) {
-		//printf("Warning: double freeing of matrix prevented.\n");
 		return;
 	}
 
@@ -158,9 +157,9 @@ void _freeMatrix(struct matrix *m) {
 //-----------------------------------------------------------------
 
 double _zerro_div(double a, double b) {
-	if (abs(b) < EPSILON && abs(a) < EPSILON) {
+	if (fabs(b) < EPSILON && fabs(a) < EPSILON) {
 		return 1;
-	} else if (abs(b) < EPSILON) {
+	} else if (fabs(b) < EPSILON) {
 		return a > 0 ? DBL_MAX : DBL_MIN;
 	}
 
