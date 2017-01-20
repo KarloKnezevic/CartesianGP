@@ -127,10 +127,10 @@ struct function *getFunction(char const *functionName) {
 		return _init("min2", _minMisc, 2);
 	} else if (strncmp(functionName, "nop", FUNCTIONNAMELENGTH) == 0) {
 		return _init("nop", _nop, 1);
-	} else if (strncmp(functionName, "const_1", FUNCTIONNAMELENGTH) == 0) {
-		return _init("const_1", _const1, 0);
-	} else if (strncmp(functionName, "[1..1]", FUNCTIONNAMELENGTH) == 0) {
-		return _init("[1..1]", _constVector1, 0);
+	} else if (strncmp(functionName, "ONE", FUNCTIONNAMELENGTH) == 0) {
+		return _init("ONE", _const1, 0);
+	} else if (strncmp(functionName, "ONES", FUNCTIONNAMELENGTH) == 0) {
+		return _init("ONES", _constVector1, 0);
 	}
 
 	else {
