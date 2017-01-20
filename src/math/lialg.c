@@ -422,9 +422,10 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
 
 		_m = _initialiseMatrixFromArray(first->rows, first->cols,
 				first->data[0]);
+		//second is 1x1
 		second = _abs(second, factors, amplitude);
 		for (int i = 0; i < _m->cols; i++) {
-			_m->data[0][i] = pow(_m->data[0][i], second->data[0][i]);
+			_m->data[0][i] = pow(_m->data[0][i], second->data[0][0]);
 		}
 
 		_freeMatrix(second);
