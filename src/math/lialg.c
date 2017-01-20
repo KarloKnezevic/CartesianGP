@@ -125,7 +125,7 @@ void _printMatrix(struct matrix *m) {
 		}
 
 		printf("|");
-		if (i != m->rows-1) {
+		if (i != m->rows - 1) {
 			printf("\n");
 		}
 
@@ -192,6 +192,13 @@ double _min_(struct matrix *m) {
 	}
 
 	return min;
+}
+
+double _pow_(double a, double b) {
+	int sign = a > 0 ? 1 : -1;
+	a = fabs(a);
+
+	return sign * pow(a, b);
 }
 
 struct matrix* _mulWithScalar(struct matrix *m, double scalar) {
@@ -405,16 +412,16 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
 	struct matrix *_m;
 
 	if (SCALAR == t_m1 && SCALAR == t_m2) {
-		_m = _initialiseMatrixFromScalar(pow(m1->data[0][0], m2->data[0][0]));
+		_m = _initialiseMatrixFromScalar(_pow_(m1->data[0][0], m2->data[0][0]));
 	} else if (SCALAR == t_m1 && VECTOR == t_m2) {
 		_m = _initialiseMatrixFromArray(m2->rows, m2->cols, m2->data[0]);
 		for (int i = 0; i < _m->cols; i++) {
-			_m->data[0][i] = pow(_m->data[0][i], m1->data[0][0]);
+			_m->data[0][i] = _pow_(_m->data[0][i], m1->data[0][0]);
 		}
 	} else if (VECTOR == t_m1 && SCALAR == t_m2) {
 		_m = _initialiseMatrixFromArray(m1->rows, m1->cols, m1->data[0]);
 		for (int i = 0; i < _m->cols; i++) {
-			_m->data[0][i] = pow(_m->data[0][i], m2->data[0][0]);
+			_m->data[0][i] = _pow_(_m->data[0][i], m2->data[0][0]);
 		}
 	} else {
 		struct matrix *first = m1->cols > m2->cols ? m1 : m2;
@@ -425,7 +432,7 @@ struct matrix* _pow(struct matrix *m1, struct matrix *m2, const double *factors,
 		//second is 1x1
 		second = _abs(second, factors, amplitude);
 		for (int i = 0; i < _m->cols; i++) {
-			_m->data[0][i] = pow(_m->data[0][i], second->data[0][0]);
+			_m->data[0][i] = _pow_(_m->data[0][i], second->data[0][0]);
 		}
 
 		_freeMatrix(second);
