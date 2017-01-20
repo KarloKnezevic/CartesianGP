@@ -53,6 +53,13 @@ int main(int argc, char *argv[]) {
 			params->runs);
 	fittestChromosome = getResultsBestChromosome(results);
 
+	//SAVE RESULTS
+	saveResults(results, "stat.txt");
+
+	//SAVE BEST CHROMO
+	saveChromosome(fittestChromosome, "bestsolution.txt");
+	printPretty(fittestChromosome, "hr_bestsolution.txt");
+
 	//PRINT FITTEST
 	printPretty(fittestChromosome, NULL);
 
