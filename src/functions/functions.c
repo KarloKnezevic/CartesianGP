@@ -127,10 +127,10 @@ struct function *getFunction(char const *functionName) {
 		return _init("min2", _minMisc, 2);
 	} else if (strncmp(functionName, "nop", FUNCTIONNAMELENGTH) == 0) {
 		return _init("nop", _nop, 1);
-	} else if (strncmp(functionName, "constS", FUNCTIONNAMELENGTH) == 0) {
-		return _init("constS", _const, 0);
-	} else if (strncmp(functionName, "constV", FUNCTIONNAMELENGTH) == 0) {
-		return _init("constV", _constVector, 0);
+	} else if (strncmp(functionName, "const_1", FUNCTIONNAMELENGTH) == 0) {
+		return _init("const_1", _const1, 0);
+	} else if (strncmp(functionName, "[1..1]", FUNCTIONNAMELENGTH) == 0) {
+		return _init("[1..1]", _constVector1, 0);
 	}
 
 	else {
@@ -469,13 +469,12 @@ struct matrix *_nop(const int numInputs, struct matrix **matrices,
 	return _mulWithScalar(_copyMatrixOf(matrices[0]), amplitude);
 }
 
-struct matrix *_const(const int numInputs, struct matrix **matrices,
+struct matrix *_const1(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude) {
-	//return amplitude * [0,1]
-	return _initialiseMatrixFromScalar(_randDecimal() * amplitude);
+	return _initialiseMatrixFromScalar(amplitude);
 }
 
-struct matrix *_constVector(const int numInputs, struct matrix **matrices,
+struct matrix *_constVector1(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude) {
 	int vectorLen = 20;
 	struct matrix *m = _initialiseMatrix(1, vectorLen);

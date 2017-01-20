@@ -142,10 +142,10 @@ struct matrix *_minMisc(const int numInputs, struct matrix **matrices,
 struct matrix *_nop(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude);
 
-struct matrix *_const(const int numInputs, struct matrix **matrices,
+struct matrix *_const1(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude);
 
-struct matrix *_constVector(const int numInputs, struct matrix **matrices,
+struct matrix *_constVector1(const int numInputs, struct matrix **matrices,
 		const double *connectionWeights, const double amplitude);
 
 
