@@ -50,6 +50,9 @@ struct evaluator *_initialiseEvaluator(struct parameters *params);
 void _validate(struct parameters *params, struct chromosome *chromo,
 		struct dataSet *data, struct evaluator *eval);
 
+void _calculateAllMeasures(struct evaluator *eval,
+		struct matrix *confusionMatrix);
+
 //-----------------------------------------------------------------
 //                            TOSTRING
 //-----------------------------------------------------------------
@@ -65,6 +68,8 @@ void _freeEvaluator(struct evaluator *eval);
 //-----------------------------------------------------------------
 //                             UTILITY
 //-----------------------------------------------------------------
+
+void TEST_EVAL();
 
 /**
  * THE HIGHER, THE BETTER

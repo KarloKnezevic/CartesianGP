@@ -53,6 +53,29 @@ void _validate(struct parameters *params, struct chromosome *chromo,
 
 }
 
+void _calculateAllMeasures(struct evaluator *eval,
+		struct matrix *confusionMatrix) {
+
+	if (NULL == eval) {
+		printf("ERROR: evaluator is not initialised. Cannot save results.\n");
+		return;
+	}
+
+	if (NULL == confusionMatrix) {
+		printf(
+				"ERROR: confusion matrix not initialised. Cannot compute measures.\n");
+		return;
+	}
+
+	eval->accuracy = _computeAccuracy(confusionMatrix);
+	eval->error = _computeError(confusionMatrix);
+	eval->sensitivity = _computeSensitivity(confusionMatrix);
+	eval->specificity = _computeSpecificity(confusionMatrix);
+	eval->precision = _computePrecision(confusionMatrix);
+	eval->DOR = _computeDOR(confusionMatrix);
+	eval->F1 = _computeF1(confusionMatrix);
+}
+
 //-----------------------------------------------------------------
 //                            TOSTRING
 //-----------------------------------------------------------------
@@ -88,6 +111,22 @@ void _freeEvaluator(struct evaluator *eval) {
 //-----------------------------------------------------------------
 //                             UTILITY
 //-----------------------------------------------------------------
+
+void TEST_EVAL() {
+	struct matrix *confusionMatrix = _initialiseMatrix(2, 2);
+	confusionMatrix->data[0][0] = 6;
+	confusionMatrix->data[0][1] = 2;
+	confusionMatrix->data[1][0] = 12;
+	confusionMatrix->data[1][1] = 130;
+
+	struct evaluator *eval = _initialiseEvaluator(NULL);
+
+	_calculateAllMeasures(confusionMatrix, eval);
+	_printEvaluator(eval);
+
+	_freeEvaluator(eval);
+	_freeMatrix(confusionMatrix);
+}
 
 int *_calculate_4_class(struct matrix *confusionMatrix, int class, int *res) {
 	if (NULL == res) {
