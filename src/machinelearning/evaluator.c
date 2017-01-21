@@ -443,9 +443,6 @@ double _computeF1_macro(struct matrix *confusionMatrix) {
 		F += (2 * precision * sensitivity) / (precision + sensitivity);
 	}
 
-	_printMatrix(measures);
-	printf("\n");
-
 	_freeMatrix(measures);
 
 	return F / confusionMatrix->rows;
