@@ -290,11 +290,11 @@ void _setChromosomeActiveNodes(struct chromosome *chromo) {
 }
 
 void _setChromosomeFitness(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data) {
+		struct dataSet *data, struct evaluator *eval) {
 	double fitness;
 
 	_setChromosomeActiveNodes(chromo);
-	fitness = params->fitnessFunction(params, chromo, data);
+	fitness = params->fitnessFunction(params, chromo, data, eval);
 	chromo->fitness = fitness;
 }
 

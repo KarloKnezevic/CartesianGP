@@ -14,7 +14,8 @@
 #include "../math/lialg.h"
 #include "../machinelearning/evaluator.h"
 
-#define SCALAR(X) _getMatrixAsScalar(X)
+#define SCALAR(_X_) 	_getMatrixAsScalar(_X_)
+#define SIGMA_F(_Y_)	1.0 / (1 + exp(-SCALAR(_Y_)))
 
 //-----------------------------------------------------------------
 //                          ERROR
@@ -54,10 +55,10 @@ int softmax(struct parameters *params, struct chromosome *chromo) {
 	}
 
 	int maxIndex = 0;
-	double max = SCALAR(_getChromosomeOutput(chromo, maxIndex));
+	double max = SIGMA_F(_getChromosomeOutput(chromo, maxIndex));
 
 	for (int i = 0; i < _getNumChromosomeOutputs(chromo); i++) {
-		double value = SCALAR(_getChromosomeOutput(chromo, i));
+		double value = SIGMA_F(_getChromosomeOutput(chromo, i));
 
 		if (value > max) {
 			max = SCALAR(_getChromosomeOutput(chromo, i));
@@ -73,7 +74,7 @@ int softmax(struct parameters *params, struct chromosome *chromo) {
 //-----------------------------------------------------------------
 
 double supervisedLearning(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data) {
+		struct dataSet *data, struct evaluator *eval) {
 	int i, j;
 
 	validate(chromo, data);
@@ -109,13 +110,17 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 		}
 
 		//add data to confusion matrix [TRUE CLASS][PREDICTED CLASS]
-		confusionMatrix->data[trueClass][predictedClass] =
-				confusionMatrix->data[trueClass][predictedClass] + 1;
+		confusionMatrix->data[trueClass][predictedClass]++;
 
 	}
 
 //	MatthewsCorrelationCoefficient(confusionMatrix)
 	double fitness = _computeAccuracy(confusionMatrix);
+
+	//eval
+	if (NULL != eval) {
+		_calculateAllMeasures(eval, confusionMatrix);
+	}
 
 	//free resources
 	_freeMatrix(confusionMatrix);
@@ -132,8 +137,8 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 
 void _setCustomFitnessFunction(struct parameters *params,
 		double (*fitnessFunction)(struct parameters *params,
-				struct chromosome *chromo, struct dataSet *data),
-		char const *fitnessFunctionName) {
+				struct chromosome *chromo, struct dataSet *data,
+				struct evaluator *eval), char const *fitnessFunctionName) {
 
 	if (fitnessFunction == NULL) {
 		params->fitnessFunction = supervisedLearning;

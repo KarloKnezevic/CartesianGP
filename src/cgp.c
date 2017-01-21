@@ -244,8 +244,8 @@ void setConnectionWeightRange(struct parameters *params, double weightRange) {
 
 void setCustomFitnessFunction(struct parameters *params,
 		double (*fitnessFunction)(struct parameters *params,
-				struct chromosome *chromo, struct dataSet *data),
-		char const *fitnessFunctionName) {
+				struct chromosome *chromo, struct dataSet *data,
+				struct evaluator *eval), char const *fitnessFunctionName) {
 	_setCustomFitnessFunction(params, fitnessFunction, fitnessFunctionName);
 }
 
@@ -267,8 +267,8 @@ void setCustomReproductionScheme(struct parameters *params,
 }
 
 void setChromosomeFitness(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data) {
-	_setChromosomeFitness(params, chromo, data);
+		struct dataSet *data, struct evaluator *eval) {
+	_setChromosomeFitness(params, chromo, data, eval);
 }
 
 void resetChromosome(struct chromosome *chromo) {
@@ -479,7 +479,7 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 
 	// set fitness of the parents
 	for (i = 0; i < params->mu; i++) {
-		setChromosomeFitness(params, parentChromos[i], data);
+		setChromosomeFitness(params, parentChromos[i], data, NULL);
 	}
 
 	// ECHO
@@ -492,7 +492,7 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 
 		// set fitness of the children of the population
 		for (i = 0; i < params->lambda; i++) {
-			setChromosomeFitness(params, childrenChromos[i], data);
+			setChromosomeFitness(params, childrenChromos[i], data, NULL);
 		}
 
 		// get best chromosome
@@ -512,7 +512,8 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		// display progress
 		if (params->updateFrequency != 0
 				&& (gen % params->updateFrequency == 0 || gen >= numGens - 1)) {
-			printf("%d\t%f\t%d\n", gen, bestChromo->fitness, bestChromo->numActiveNodes);
+			printf("%d\t%f\t%d\n", gen, bestChromo->fitness,
+					bestChromo->numActiveNodes);
 		}
 
 		if (params->evolutionaryStrategy == '+') {

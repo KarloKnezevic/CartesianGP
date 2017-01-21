@@ -14,6 +14,7 @@
 #include "functionset.h"
 #include "constants/constants.h"
 #include "math/lialg.h"
+#include "machinelearning/evaluator.h"
 
 struct parameters {
 	int mu;
@@ -46,7 +47,8 @@ struct parameters {
 	char mutationTypeName[MUTATIONTYPENAMELENGTH];
 
 	double (*fitnessFunction)(struct parameters *params,
-			struct chromosome *chromo, struct dataSet *dat);
+			struct chromosome *chromo, struct dataSet *dat,
+			struct evaluator *eval);
 	char fitnessFunctionName[FITNESSFUNCTIONNAMELENGTH];
 
 	void (*selectionScheme)(struct parameters *params,

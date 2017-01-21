@@ -50,9 +50,6 @@ struct evaluator *_initialiseEvaluator(struct parameters *params);
 //                            VALIDATE
 //-----------------------------------------------------------------
 
-void _validate(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data, struct evaluator *eval);
-
 void _calculateAllMeasures(struct evaluator *eval,
 		struct matrix *confusionMatrix);
 

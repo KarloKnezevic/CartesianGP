@@ -15,6 +15,7 @@
 #include "math/lialg.h"
 
 struct parameters;
+struct evaluator;
 
 struct chromosome {
 	int numInputs;
@@ -90,16 +91,13 @@ void _getBestChromosome(struct chromosome **parents,
 void _setChromosomeActiveNodes(struct chromosome *chromo);
 
 void _setChromosomeFitness(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data);
+		struct dataSet *data, struct evaluator *eval);
 
 void _resetChromosome(struct chromosome *chromo);
 
 //-----------------------------------------------------------------
 //                            TOSTRING
 //-----------------------------------------------------------------
-
-
-
 
 void _printChromosome(struct chromosome *chromo, int weights);
 

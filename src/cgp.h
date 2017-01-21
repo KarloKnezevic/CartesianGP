@@ -29,6 +29,11 @@ struct dataSet;
  */
 struct results;
 
+/**
+ * Evaluator.
+ */
+struct evaluator;
+
 //-----------------------------------------------------------------
 
 struct parameters *initialiseParameters(const int numInputs, const int numNodes,
@@ -123,8 +128,8 @@ void setConnectionWeightRange(struct parameters *params, double weightRange);
  */
 void setCustomFitnessFunction(struct parameters *params,
 		double (*fitnessFunction)(struct parameters *params,
-				struct chromosome *chromo, struct dataSet *data),
-		char const *fitnessFunctionName);
+				struct chromosome *chromo, struct dataSet *data,
+				struct evaluator *eval), char const *fitnessFunctionName);
 
 //-----------------------------------------------------------------
 
@@ -262,7 +267,7 @@ void removeInactiveNodes(struct chromosome *chromo);
  * @param data
  */
 void setChromosomeFitness(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data);
+		struct dataSet *data, struct evaluator *eval);
 
 /**
  * resets all of the chromosome nodes to output zero.

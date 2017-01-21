@@ -64,11 +64,12 @@ int main(int argc, char *argv[]) {
 	printPretty(fittestChromosome, NULL);
 
 	//TEST
-	printf("\n\n---TESTING---\n");
-	setChromosomeFitness(params, fittestChromosome, testingData);
-	printf("Test fitness: %f\n", fittestChromosome->fitness);
+	struct evaluator *eval = _initialiseEvaluator(params);
+	setChromosomeFitness(params, fittestChromosome, testingData, eval);
+	_printEvaluator(eval);
 
 	//FREE
+	_freeEvaluator(eval);
 	freeChromosome(fittestChromosome);
 	freeResults(results);
 	freeDataSet(trainingData);

@@ -48,11 +48,6 @@ struct evaluator *_initialiseEvaluator(struct parameters *params) {
 //                            VALIDATE
 //-----------------------------------------------------------------
 
-void _validate(struct parameters *params, struct chromosome *chromo,
-		struct dataSet *data, struct evaluator *eval) {
-
-}
-
 void _calculateAllMeasures(struct evaluator *eval,
 		struct matrix *confusionMatrix) {
 
@@ -89,7 +84,7 @@ void _printEvaluator(struct evaluator *eval) {
 		return;
 	}
 
-	printf("-----------------------------------------------------------\n");
+	printf("\n\n-----------------------------------------------------------\n");
 	printf("                     *Evaluator*                           \n");
 	printf("-----------------------------------------------------------\n");
 	printf("Accuracy:\t\t%f\n", eval->accuracy);
