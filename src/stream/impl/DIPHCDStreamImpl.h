@@ -9,6 +9,8 @@
 #ifndef DIPHCDSTREAMIMPL_H_
 #define DIPHCDSTREAMIMPL_H_
 
+#include "../../dataset.h"
 
+struct dataSet *_loadDIPHCDFromStream(char const *file, char const *param);
 
 #endif /* DIPHCDSTREAMIMPL_H_ */

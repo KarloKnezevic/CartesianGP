@@ -19,6 +19,7 @@
 #include "impl/GenericStreamImpl.h"
 #include "impl/SCAStreamImpl.h"
 #include "impl/BCWStreamImpl.h"
+#include "impl/DIPHCDStreamImpl.h"
 
 //-----------------------------------------------------------------
 //                       READERS FACTORY
@@ -152,11 +153,6 @@ struct chromosome* _loadChromosomeFromFile(char const *file) {
 	return chromo;
 }
 
-/**
- * THIS FILE SHOULD BE CHANGED ACCORDING TO INPUT DATA.
- *
- * CONSIDER CHANGING DATASET OBJECT.
- */
 struct dataSet *_loadDataSetFromFile(char const *file) {
 	return _loadGenericFromStream(file);
 }
@@ -170,7 +166,7 @@ struct dataSet *_loadBCWDataSetFromFile(char const *file, char const *param) {
 }
 
 struct dataSet *_loadDIPHBCDataSetFromFile(char const *file, char const *param) {
-	return NULL;
+	return _loadDIPHCDFromStream(file, param);
 }
 
 void _loadParametersFromFile(struct parameters *params, char const *file,
