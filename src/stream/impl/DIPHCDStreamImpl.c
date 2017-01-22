@@ -100,16 +100,14 @@ struct dataSet *_loadDIPHCDFromStream(char const *file, char const *param) {
 
 			//first value
 			record = strtok(line, " ,\n");
-			col = -1;
+			col = 0;
 
 			//until the end of line
 			int class = -1;
 			struct matrix *attributeVector = _initialiseMatrix(1,
 					data->numInputs - 1);
 			while (record != NULL) {
-				if (-1 == col) {
-					//ignore ID
-				} else if (col < data->numInputs - 1) {
+				if (col < data->numInputs - 1) {
 					data->inputData[lineNum - readFrom][col] =
 							_initialiseMatrixFromScalar(atof(record));
 
@@ -132,12 +130,10 @@ struct dataSet *_loadDIPHCDFromStream(char const *file, char const *param) {
 				col++;
 			}
 
-			if (class != 0) {
-				for (int i = 0; i < data->numOutputs; i++) {
-					data->outputData[lineNum - readFrom][i] =
-							class == i ? 1 : 0;
-				}
+			for (int i = 0; i < data->numOutputs; i++) {
+				data->outputData[lineNum - readFrom][i] = class == i ? 1 : 0;
 			}
+
 		}
 
 		if (lineNum - readFrom == data->numSamples - 1) {
