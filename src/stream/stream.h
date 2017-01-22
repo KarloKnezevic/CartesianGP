@@ -34,6 +34,8 @@ struct dataSet *_loadMLDataSetFromFile(char const *file, char const *param);
 
 struct dataSet *_loadBCWDataSetFromFile(char const *file, char const *param);
 
+struct dataSet *_loadDIPHBCDataSetFromFile(char const *file, char const *param);
+
 void _loadParametersFromFile(struct parameters *params, char const *file,
 		struct dataSet **trainingData, struct dataSet **testingData);
 
