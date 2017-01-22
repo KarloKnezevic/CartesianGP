@@ -44,6 +44,13 @@ struct parameters *_initialiseParameters(const int numInputs,
 	params->runs = MAXRUN;
 	params->generations = MAXGEN;
 
+	params->log = fopen(LOGNAME, "w");
+
+	if (params->log == NULL) {
+		printf("Warning: cannot open log file: '%s'.\n",
+		LOGNAME);
+	}
+
 	_setNumInputs(params, numInputs);
 	_setNumNodes(params, numNodes);
 	_setNumOutputs(params, numOutputs);
@@ -93,6 +100,13 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 	params->runs = MAXRUN;
 	params->generations = MAXGEN;
 
+	params->log = fopen(LOGNAME, "w");
+
+	if (params->log == NULL) {
+		printf("Warning: cannot open log file: '%s'.\n",
+		LOGNAME);
+	}
+
 	_setNumInputs(params, NUM_INPUT);
 	_setNumNodes(params, NUM_NODES);
 	_setNumOutputs(params, NUM_OUTPUT);
@@ -121,7 +135,7 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 
 	//check inputs
 	if ((*trainingData)->numInputs != (*testingData)->numInputs) {
-		printf(
+		LOG(params,
 				"\nError: training data num inputs %d and testing data num inputs %d is not same. "
 						"These two values should be same. "
 						"\nTerminating.\n", (*trainingData)->numInputs,
@@ -133,7 +147,7 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 
 	//check outputs
 	if ((*trainingData)->numOutputs != (*testingData)->numOutputs) {
-		printf(
+		LOG(params,
 				"\nError: training data num outputs %d and testing data num outputs %d is not same. "
 						"These two values should be same. "
 						"\nTerminating.\n", (*trainingData)->numOutputs,
@@ -160,7 +174,7 @@ void _setMu(struct parameters *params, int mu) {
 	if (mu > 0) {
 		params->mu = mu;
 	} else {
-		printf("\nWarning: mu value '%d' is invalid. "
+		LOG(params, "\nWarning: mu value '%d' is invalid. "
 				"Mu value must have a value of one or greater. "
 				"Mu value left unchanged as '%d'.\n", mu, params->mu);
 	}
@@ -171,7 +185,7 @@ void _setLambda(struct parameters *params, int lambda) {
 	if (lambda > 0) {
 		params->lambda = lambda;
 	} else {
-		printf("\nWarning: lambda value '%d' is invalid. "
+		LOG(params, "\nWarning: lambda value '%d' is invalid. "
 				"Lambda value must have a value of one or greater. "
 				"Lambda value left unchanged as '%d'.\n", lambda,
 				params->lambda);
@@ -184,7 +198,7 @@ void _setEvolutionaryStrategy(struct parameters *params,
 	if (evolutionaryStrategy == '+' || evolutionaryStrategy == ',') {
 		params->evolutionaryStrategy = evolutionaryStrategy;
 	} else {
-		printf("\nWarning: the evolutionary strategy '%c' is invalid. "
+		LOG(params, "\nWarning: the evolutionary strategy '%c' is invalid. "
 				"The evolutionary strategy must be '+' or ','. "
 				"The evolutionary strategy has been left unchanged as '%c'.\n",
 				evolutionaryStrategy, params->evolutionaryStrategy);
@@ -196,7 +210,7 @@ void _setMutationRate(struct parameters *params, double mutationRate) {
 	if (mutationRate >= 0 && mutationRate <= 1) {
 		params->mutationRate = mutationRate;
 	} else {
-		printf("\nWarning: mutation rate '%f' is invalid. "
+		LOG(params, "\nWarning: mutation rate '%f' is invalid. "
 				"The mutation rate must be in the range [0,1]. "
 				"The mutation rate has been left unchanged as '%f'.\n",
 				mutationRate, params->mutationRate);
@@ -210,7 +224,7 @@ void _setRecurrentConnectionProbability(struct parameters *params,
 			&& recurrentConnectionProbability <= 1) {
 		params->recurrentConnectionProbability = recurrentConnectionProbability;
 	} else {
-		printf(
+		LOG(params,
 				"\nWarning: recurrent connection probability '%f' is invalid. "
 						"The recurrent connection probability must be in the range [0,1]. "
 						"The recurrent connection probability has been left unchanged as '%f'.\n",
@@ -221,7 +235,7 @@ void _setRecurrentConnectionProbability(struct parameters *params,
 
 void _setNumInputs(struct parameters *params, int numInputs) {
 	if (numInputs <= 0) {
-		printf("Error: number of chromosome inputs cannot be "
+		LOG(params, "Error: number of chromosome inputs cannot be "
 				"less than one; %d is invalid.\nTerminating.\n", numInputs);
 		exit(0);
 	}
@@ -231,7 +245,7 @@ void _setNumInputs(struct parameters *params, int numInputs) {
 
 void _setNumNodes(struct parameters *params, int numNodes) {
 	if (numNodes < 0) {
-		printf("Error: number of chromosome nodes cannot be "
+		LOG(params, "Error: number of chromosome nodes cannot be "
 				"negative; %d is invalid.\nTerminating.\n", numNodes);
 		exit(0);
 	}
@@ -241,7 +255,7 @@ void _setNumNodes(struct parameters *params, int numNodes) {
 
 void _setNumOutputs(struct parameters *params, int numOutputs) {
 	if (numOutputs < 0) {
-		printf("Error: number of chromosome outputs cannot be "
+		LOG(params, "Error: number of chromosome outputs cannot be "
 				"less than one; %d is invalid.\nTerminating.\n", numOutputs);
 		exit(0);
 	}
@@ -251,8 +265,9 @@ void _setNumOutputs(struct parameters *params, int numOutputs) {
 
 void _setArity(struct parameters *params, int arity) {
 	if (arity < 0) {
-		printf("Error: node arity cannot be less than one; %d is invalid.\n"
-				"Terminating.\n", arity);
+		LOG(params,
+				"Error: node arity cannot be less than one; %d is invalid.\n"
+						"Terminating.\n", arity);
 		exit(0);
 	}
 
@@ -265,7 +280,7 @@ void _setTargetFitness(struct parameters *params, double targetFitness) {
 
 void _setNumRuns(struct parameters *params, int numRuns) {
 	if (numRuns < 1) {
-		printf("Warning: number of runs of %d is invalid. "
+		LOG(params, "Warning: number of runs of %d is invalid. "
 				"Number of runs must be >= 1. "
 				"Number of runs is left unchanged as %d.\n", numRuns,
 				params->runs);
@@ -276,7 +291,7 @@ void _setNumRuns(struct parameters *params, int numRuns) {
 
 void _setNumGenerations(struct parameters *params, int numGenerations) {
 	if (numGenerations < 1) {
-		printf("Warning: number of generations of %d is invalid. "
+		LOG(params, "Warning: number of generations of %d is invalid. "
 				"Number of generations must be >= 1. "
 				"Number of generations is left unchanged as %d.\n",
 				numGenerations, params->generations);
@@ -287,7 +302,7 @@ void _setNumGenerations(struct parameters *params, int numGenerations) {
 
 void _setUpdateFrequency(struct parameters *params, int updateFrequency) {
 	if (updateFrequency < 0) {
-		printf("Warning: update frequency of %d is invalid. "
+		LOG(params, "Warning: update frequency of %d is invalid. "
 				"Update frequency must be >= 0. "
 				"Update frequency is left unchanged as %d.\n", updateFrequency,
 				params->updateFrequency);
@@ -300,7 +315,7 @@ void _setShortcutConnections(struct parameters *params, int shortcutConnections)
 	if (shortcutConnections == 0 || shortcutConnections == 1) {
 		params->shortcutConnections = shortcutConnections;
 	} else {
-		printf("\nWarning: shortcut connection '%d' is invalid. "
+		LOG(params, "\nWarning: shortcut connection '%d' is invalid. "
 				"The shortcut connections takes values 0 or 1. "
 				"The shortcut connection has been left unchanged as '%d'.\n",
 				shortcutConnections, params->shortcutConnections);
@@ -325,45 +340,48 @@ void _printParameters(struct parameters *params) {
 		exit(0);
 	}
 
-	printf("-----------------------------------------------------------\n");
-	printf("                     *Parameters*                          \n");
-	printf("-----------------------------------------------------------\n");
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "                     *Parameters*                          \n");
+	LOG(params, "-----------------------------------------------------------\n");
 
-	printf("-----------------------------------------------------------\n");
-	printf("                    Network structure                      \n");
-	printf("-----------------------------------------------------------\n");
-	printf("Inputs:\t\t\t\t\t%d\n", params->numInputs);
-	printf("Nodes:\t\t\t\t\t%d\n", params->numNodes);
-	printf("Outputs:\t\t\t\t%d\n", params->numOutputs);
-	printf("Node Arity:\t\t\t\t%d\n", params->arity);
-	printf("Connection weights range:\t\t+/- %f\n",
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "                    Network structure                      \n");
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "Inputs:\t\t\t\t\t%d\n", params->numInputs);
+	LOG(params, "Nodes:\t\t\t\t\t%d\n", params->numNodes);
+	LOG(params, "Outputs:\t\t\t\t%d\n", params->numOutputs);
+	LOG(params, "Node Arity:\t\t\t\t%d\n", params->arity);
+	LOG(params, "Connection weights range:\t\t+/- %f\n",
 			params->connectionWeightRange);
-	printf("Amplitude range:\t\t\t+/- %f %s\n", params->amplitudeRange, "const if 1.0");
-	printf("Shortcut Connections:\t\t\t%d\n", params->shortcutConnections);
+	LOG(params, "Amplitude range:\t\t\t+/- %f %s\n", params->amplitudeRange,
+			"const 1 if 0.0");
+	LOG(params, "Shortcut Connections:\t\t\t%d\n", params->shortcutConnections);
 	_printFunctionSet(params);
 
-	printf("-----------------------------------------------------------\n");
-	printf("                   Genetic parameters                      \n");
-	printf("-----------------------------------------------------------\n");
-	printf("Evolutionary Strategy:\t\t\t(%d%c%d)-ES\n", params->mu,
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "                   Genetic parameters                      \n");
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "Evolutionary Strategy:\t\t\t(%d%c%d)-ES\n", params->mu,
 			params->evolutionaryStrategy, params->lambda);
-	printf("Mutation Type:\t\t\t\t%s\n", params->mutationTypeName);
-	printf("Mutation rate:\t\t\t\t%f\n", params->mutationRate);
-	printf("Recurrent Connection Probability:\t%f\n",
+	LOG(params, "Mutation Type:\t\t\t\t%s\n", params->mutationTypeName);
+	LOG(params, "Mutation rate:\t\t\t\t%f\n", params->mutationRate);
+	LOG(params, "Recurrent Connection Probability:\t%f\n",
 			params->recurrentConnectionProbability);
-	printf("Selection scheme:\t\t\t%s\n", params->selectionSchemeName);
-	printf("Reproduction scheme:\t\t\t%s\n", params->reproductionSchemeName);
-	printf("Fitness Function:\t\t\t%s\n", params->fitnessFunctionName);
-	printf("Target Fitness:\t\t\t\t%f\n", params->targetFitness);
+	LOG(params, "Selection scheme:\t\t\t%s\n", params->selectionSchemeName);
+	LOG(params, "Reproduction scheme:\t\t\t%s\n",
+			params->reproductionSchemeName);
+	LOG(params, "Fitness Function:\t\t\t%s\n", params->fitnessFunctionName);
+	LOG(params, "Target Fitness:\t\t\t\t%f\n", params->targetFitness);
 
-	printf("-----------------------------------------------------------\n");
-	printf("                 Algorithm parameters                      \n");
-	printf("-----------------------------------------------------------\n");
-	printf("Runs:\t\t\t\t\t%d\n", params->runs);
-	printf("Generations:\t\t\t\t%d\n", params->generations);
-	printf("Update frequency:\t\t\t%d\n", params->updateFrequency);
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "                 Algorithm parameters                      \n");
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "Runs:\t\t\t\t\t%d\n", params->runs);
+	LOG(params, "Generations:\t\t\t\t%d\n", params->generations);
+	LOG(params, "Update frequency:\t\t\t%d\n", params->updateFrequency);
 
-	printf("-----------------------------------------------------------\n\n");
+	LOG(params,
+			"-----------------------------------------------------------\n\n");
 }
 
 //-----------------------------------------------------------------
@@ -375,6 +393,9 @@ void _freeParameters(struct parameters *params) {
 		printf("Warning: double freeing of parameters prevented.\n");
 		return;
 	}
+
+	fflush(params->log);
+	fclose(params->log);
 
 	free(params->funcSet);
 	free(params);
@@ -412,7 +433,7 @@ void _addNodeFunction(struct parameters *params, char const *functionNames) {
 	}
 
 	if (params->funcSet->numFunctions == 0) {
-		printf("Warning: No Functions added to function set.\n");
+		LOG(params, "Warning: No Functions added to function set.\n");
 	}
 }
 
@@ -421,7 +442,7 @@ void _addCustomNodeFunction(struct parameters *params,
 				const double *weights, const double amplitude),
 		char const *functionName, int maxNumInputs) {
 	if (params->funcSet->numFunctions >= FUNCTIONSETSIZE) {
-		printf(
+		LOG(params,
 				"Warning: functions set has reached maximum capacity (%d). Function '%s' not added.\n",
 				FUNCTIONSETSIZE, functionName);
 		return;

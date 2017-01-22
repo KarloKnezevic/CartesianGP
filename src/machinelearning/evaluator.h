@@ -57,7 +57,7 @@ void _calculateAllMeasures(struct evaluator *eval,
 //                            TOSTRING
 //-----------------------------------------------------------------
 
-void _printEvaluator(struct evaluator *eval);
+void _printEvaluator(struct parameters *params, struct evaluator *eval);
 
 //-----------------------------------------------------------------
 //                          DESTRUCT

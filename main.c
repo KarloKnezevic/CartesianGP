@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 	//TEST
 	struct evaluator *eval = _initialiseEvaluator(params);
 	setChromosomeFitness(params, fittestChromosome, testingData, eval);
-	_printEvaluator(eval);
+	_printEvaluator(params, eval);
 
 	//FREE
 	_freeEvaluator(eval);

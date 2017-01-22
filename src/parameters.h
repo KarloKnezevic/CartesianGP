@@ -9,12 +9,21 @@
 #ifndef PARAMETERS_H_
 #define PARAMETERS_H_
 
+#include <stdio.h>
 #include "dataset.h"
 #include "chromosome.h"
 #include "functionset.h"
 #include "constants/constants.h"
 #include "math/lialg.h"
 #include "machinelearning/evaluator.h"
+
+#define LOG(_params_, _f_, ...) 					\
+	do { 											\
+		printf(_f_, ##__VA_ARGS__);					\
+		fprintf(_params_->log, _f_, ##__VA_ARGS__); \
+		fflush(_params_->log); 						\
+	}												\
+while(0);
 
 struct parameters {
 	int mu;
@@ -40,6 +49,8 @@ struct parameters {
 	int updateFrequency;
 	int runs;
 	int generations;
+
+	FILE *log;
 
 	int shortcutConnections;
 

@@ -61,5 +61,6 @@
 //-----------------------------------------------------------------
 
 #define UPDATEFREQUENCY					1
+#define LOGNAME							"log.txt"
 
 #endif /* CONSTANTS_H_ */

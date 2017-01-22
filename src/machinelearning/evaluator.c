@@ -77,26 +77,28 @@ void _calculateAllMeasures(struct evaluator *eval,
 //                            TOSTRING
 //-----------------------------------------------------------------
 
-void _printEvaluator(struct evaluator *eval) {
+void _printEvaluator(struct parameters *params, struct evaluator *eval) {
 	if (eval == NULL) {
 		printf(
 				"Error: evaluator has not been initialised and cannot be printed.\n");
 		return;
 	}
 
-	printf("\n\n-----------------------------------------------------------\n");
-	printf("                     *Evaluator*                           \n");
-	printf("-----------------------------------------------------------\n");
-	printf("Accuracy:\t\t%f\n", eval->accuracy);
-	printf("Error:\t\t\t%f\n", eval->error);
-	printf("Sensitivity(R):\t\t%f\n", eval->sensitivity);
-	printf("Specificity:\t\t%f\n", eval->specificity);
-	printf("Precision(P):\t\t%f\n", eval->precision);
-	printf("DOR:\t\t\t%f\n", eval->DOR);
-	printf("F1:\t\t\t%f\n\n", eval->F1);
-	printf("F1 micro:\t\t%f\n", eval->F1_micro);
-	printf("F1 macro:\t\t%f\n", eval->F1_macro);
-	printf("-----------------------------------------------------------\n\n");
+	LOG(params,
+			"\n\n-----------------------------------------------------------\n");
+	LOG(params, "                     *Evaluator*                           \n");
+	LOG(params, "-----------------------------------------------------------\n");
+	LOG(params, "Accuracy:\t\t%f\n", eval->accuracy);
+	LOG(params, "Error:\t\t\t%f\n", eval->error);
+	LOG(params, "Sensitivity(R):\t\t%f\n", eval->sensitivity);
+	LOG(params, "Specificity:\t\t%f\n", eval->specificity);
+	LOG(params, "Precision(P):\t\t%f\n", eval->precision);
+	LOG(params, "DOR:\t\t\t%f\n", eval->DOR);
+	LOG(params, "F1:\t\t\t%f\n\n", eval->F1);
+	LOG(params, "F1 micro:\t\t%f\n", eval->F1_micro);
+	LOG(params, "F1 macro:\t\t%f\n", eval->F1_macro);
+	LOG(params,
+			"-----------------------------------------------------------\n\n");
 }
 
 //-----------------------------------------------------------------

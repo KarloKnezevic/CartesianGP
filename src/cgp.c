@@ -419,25 +419,25 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 	int numCandidateChromos;
 
 	if (numGens < 0) {
-		printf(
+		LOG(params,
 				"Error: %d generations is invalid. The number of generations must be >= 0.\n Terminating.\n",
 				numGens);
 		exit(0);
 	}
 
 	if (data != NULL && params->numInputs != data->numInputs) {
-		printf(
+		LOG(params,
 				"Error: The number of inputs specified in the dataSet (%d) does not match the number of inputs specified in the parameters (%d).\n",
 				data->numInputs, params->numInputs);
-		printf("Terminating.\n");
+		LOG(params, "Terminating.\n");
 		exit(0);
 	}
 
 	if (data != NULL && params->numOutputs != data->numOutputs) {
-		printf(
+		LOG(params,
 				"Error: The number of outputs specified in the dataSet (%d) does not match the number of outputs specified in the parameters (%d).\n",
 				data->numOutputs, params->numOutputs);
-		printf("Terminating.\n");
+		LOG(params, "Terminating.\n");
 		exit(0);
 	}
 
@@ -484,8 +484,8 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 
 	// ECHO
 	if (params->updateFrequency != 0) {
-		printf("\n-- Starting CGP --\n\n");
-		printf("Gen\tfitness\n");
+		LOG(params, "\n-- Starting CGP --\n\n");
+		LOG(params, "Gen\tfitness\n");
 	}
 
 	for (gen = 0; gen < numGens; gen++) {
@@ -503,7 +503,8 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		if (getChromosomeFitness(bestChromo) <= params->targetFitness) {
 
 			if (params->updateFrequency != 0) {
-				printf("%d\t%f - Solution Found\n", gen, bestChromo->fitness);
+				LOG(params, "%d\t%f - Solution Found\n", gen,
+						bestChromo->fitness);
 			}
 
 			break;
@@ -512,7 +513,7 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		// display progress
 		if (params->updateFrequency != 0
 				&& (gen % params->updateFrequency == 0 || gen >= numGens - 1)) {
-			printf("%d\t%f\t%d\n", gen, bestChromo->fitness,
+			LOG(params, "%d\t%f\t%d\n", gen, bestChromo->fitness,
 					bestChromo->numActiveNodes);
 		}
 
@@ -580,31 +581,31 @@ struct results* repeatCGP(struct parameters *params, struct dataSet *data,
 	rels = _initialiseResults(params, numRuns);
 
 	for (i = 0; i < numRuns; i++) {
-		printf("----Run %d----\n", i);
+		LOG(params, "----Run %d----\n", i);
 
 		rels->bestChromosomes[i] = runCGP(params, data, numGens);
 
-		printf("Run\tFitness\t\tGenerations\tActive Nodes\n");
+		LOG(params, "Run\tFitness\t\tGenerations\tActive Nodes\n");
 
-		printf("%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
+		LOG(params, "%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
 				rels->bestChromosomes[i]->generation,
 				rels->bestChromosomes[i]->numActiveNodes);
 	}
 
-	printf("\n===RESULTS===\nRun\tFitness\t\tGenerations\tActive Nodes\n");
+	LOG(params, "\n===RESULTS===\nRun\tFitness\t\tGenerations\tActive Nodes\n");
 
 	for (i = 0; i < numRuns; i++) {
-		printf("%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
+		LOG(params, "%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
 				rels->bestChromosomes[i]->generation,
 				rels->bestChromosomes[i]->numActiveNodes);
 	}
 
-	printf("----------------------------------------------------\n");
-	printf("MEAN\t%f\t%f\t%f\n", getAverageFitness(rels),
+	LOG(params, "----------------------------------------------------\n");
+	LOG(params, "MEAN\t%f\t%f\t%f\n", getAverageFitness(rels),
 			_getAverageGenerations(rels), getAverageActiveNodes(rels));
-	printf("MEDIAN\t%f\t%f\t%f\n", getMedianFitness(rels),
+	LOG(params, "MEDIAN\t%f\t%f\t%f\n", getMedianFitness(rels),
 			_getMedianGenerations(rels), _getMedianActiveNodes(rels));
-	printf("----------------------------------------------------\n\n");
+	LOG(params, "----------------------------------------------------\n\n");
 
 	return rels;
 }

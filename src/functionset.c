@@ -29,11 +29,11 @@ void _copyFunctionSet(struct functionSet *funcSetDest,
 void _printFunctionSet(struct parameters *params) {
 	int i;
 
-	printf("Function Set:");
+	LOG(params, "Function Set:");
 
 	for (i = 0; i < params->funcSet->numFunctions; i++) {
-		printf(" %s", params->funcSet->functionNames[i]);
+		LOG(params, " %s", params->funcSet->functionNames[i]);
 	}
 
-	printf(" (%d)\n", params->funcSet->numFunctions);
+	LOG(params, " (%d)\n", params->funcSet->numFunctions);
 }
