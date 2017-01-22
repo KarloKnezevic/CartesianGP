@@ -33,6 +33,9 @@ struct dataSet *_loadGenericMethodDataSetFromFile(char const *method,
 	} else if (strncmp(method, "breast-cancer",
 	PARSER_METHOD_LENGTH) == 0) {
 		return _loadBCWDataSetFromFile(file, param);
+	} else if (strncmp(method, "bin",
+	PARSER_METHOD_LENGTH) == 0) {
+		return _loadDIPHBCDataSetFromFile(file, param);
 	}
 
 	//by default sca
@@ -238,8 +241,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//ADD
 	if (strncmp(
 			chromo->funcSet->functionNames[chromo->nodes[index
-					- chromo->numInputs]->function], "add", FUNCTIONNAMELENGTH)
-			== 0) {
+					- chromo->numInputs]->function], "add",
+			FUNCTIONNAMELENGTH) == 0) {
 
 		fprintf(fp, AMPLITUDE("("),
 				chromo->nodes[index - chromo->numInputs]->amplitude);
@@ -263,8 +266,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//SUB
 	else if (strncmp(
 			chromo->funcSet->functionNames[chromo->nodes[index
-					- chromo->numInputs]->function], "sub", FUNCTIONNAMELENGTH)
-			== 0) {
+					- chromo->numInputs]->function], "sub",
+			FUNCTIONNAMELENGTH) == 0) {
 
 		fprintf(fp, AMPLITUDE("("),
 				chromo->nodes[index - chromo->numInputs]->amplitude);
@@ -288,8 +291,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//MUL
 	else if (strncmp(
 			chromo->funcSet->functionNames[chromo->nodes[index
-					- chromo->numInputs]->function], "mul", FUNCTIONNAMELENGTH)
-			== 0) {
+					- chromo->numInputs]->function], "mul",
+			FUNCTIONNAMELENGTH) == 0) {
 
 		fprintf(fp, AMPLITUDE("("),
 				chromo->nodes[index - chromo->numInputs]->amplitude);
@@ -313,8 +316,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//DIV
 	else if (strncmp(
 			chromo->funcSet->functionNames[chromo->nodes[index
-					- chromo->numInputs]->function], "div", FUNCTIONNAMELENGTH)
-			== 0) {
+					- chromo->numInputs]->function], "div",
+			FUNCTIONNAMELENGTH) == 0) {
 
 		if (_getChromosomeNodeArity(chromo, index - chromo->numInputs) == 1) {
 			_savePrettyChromosomeRecursive(chromo,
@@ -357,8 +360,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//ABS
 	else if (strncmp(
 			chromo->funcSet->functionNames[chromo->nodes[index
-					- chromo->numInputs]->function], "abs", FUNCTIONNAMELENGTH)
-			== 0) {
+					- chromo->numInputs]->function], "abs",
+			FUNCTIONNAMELENGTH) == 0) {
 
 		fprintf(fp, AMPLITUDE("|"),
 				chromo->nodes[index - chromo->numInputs]->amplitude);
@@ -373,8 +376,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//POW
 	else if (strncmp(
 			chromo->funcSet->functionNames[chromo->nodes[index
-					- chromo->numInputs]->function], "pow", FUNCTIONNAMELENGTH)
-			== 0) {
+					- chromo->numInputs]->function], "pow",
+			FUNCTIONNAMELENGTH) == 0) {
 
 		fprintf(fp, AMPLITUDE("(("),
 				chromo->nodes[index - chromo->numInputs]->amplitude);
@@ -415,8 +418,8 @@ void _savePrettyChromosomeRecursive(struct chromosome *chromo, int index,
 	//EXP
 	else if (strncmp(
 			chromo->funcSet->functionNames[chromo->nodes[index
-					- chromo->numInputs]->function], "exp", FUNCTIONNAMELENGTH)
-			== 0) {
+					- chromo->numInputs]->function], "exp",
+			FUNCTIONNAMELENGTH) == 0) {
 
 		fprintf(fp, AMPLITUDE("e^("),
 				chromo->nodes[index - chromo->numInputs]->amplitude);
