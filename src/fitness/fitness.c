@@ -46,7 +46,8 @@ void validate(struct chromosome *chromo, struct dataSet *data) {
  *
  * In case of error, -1 returned
  */
-int softmax(struct parameters *params, struct chromosome *chromo) {
+int softmax(struct parameters *params, struct chromosome *chromo,
+		struct evaluator *eval) {
 	//return index of max output value
 
 	//error state
@@ -59,6 +60,10 @@ int softmax(struct parameters *params, struct chromosome *chromo) {
 
 	for (int i = 0; i < _getNumChromosomeOutputs(chromo); i++) {
 		double value = SIGMA_F(_getChromosomeOutput(chromo, i));
+
+		if (NULL != eval) {
+			LOG(params, "%f ", value);
+		}
 
 		if (value > max) {
 			max = SCALAR(_getChromosomeOutput(chromo, i));
@@ -91,7 +96,7 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 
 		_executeChromosome(chromo, _getDataSetSampleInputs(data, i));
 
-		int predictedClass = softmax(params, chromo);
+		int predictedClass = softmax(params, chromo, eval);
 
 		int trueClass = -1;
 		//if there is K classes, is is used binary notation, and right class is denoted by 1
@@ -103,10 +108,14 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 		}
 
 		if (trueClass == -1 || predictedClass == -1) {
-			printf("ERROR: Dataset has non classified data. "
+			LOG(params, "ERROR: Dataset has non classified data. "
 					"Predicted: %d True: %d Data index: %d Terminating...\n",
 					predictedClass, trueClass, i);
 			exit(0);
+		}
+
+		if (NULL != eval) {
+			LOG(params, " | %d %d\n", trueClass, predictedClass);
 		}
 
 		//add data to confusion matrix [TRUE CLASS][PREDICTED CLASS]
@@ -120,6 +129,9 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 	//eval
 	if (NULL != eval) {
 		_calculateAllMeasures(eval, confusionMatrix);
+		printf("\n===Confusion matrix===\n");
+		_printMatrix(confusionMatrix);
+		printf("\n");
 	}
 
 	//free resources
