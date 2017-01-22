@@ -526,7 +526,7 @@ void _loadParametersFromFile(struct parameters *params, char const *file,
 	fp = fopen(file, "r");
 
 	if (fp == NULL) {
-		printf("Error: file '%s' cannot be found.\nTerminating.\n", file);
+		LOG(params, "Error: file '%s' cannot be found.\nTerminating.\n", file);
 		exit(0);
 	}
 
