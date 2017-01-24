@@ -94,9 +94,9 @@ void _printEvaluator(struct parameters *params, struct evaluator *eval) {
 	LOG(params, "Specificity:\t\t%f\n", eval->specificity);
 	LOG(params, "Precision(P):\t\t%f\n", eval->precision);
 	LOG(params, "DOR:\t\t\t%f\n", eval->DOR);
-	LOG(params, "F1:\t\t\t%f\n\n", eval->F1);
-	LOG(params, "F1 micro:\t\t%f\n", eval->F1_micro);
-	LOG(params, "F1 macro:\t\t%f\n", eval->F1_macro);
+	LOG(params, "F1(2RP/[R+P]):\t\t%f\n\n", eval->F1);
+	LOG(params, "F1 micro(sum[R,P]):\t\t%f\n", eval->F1_micro);
+	LOG(params, "F1 macro(avg(F1)):\t\t%f\n", eval->F1_macro);
 	LOG(params,
 			"-----------------------------------------------------------\n\n");
 }
