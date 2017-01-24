@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <math.h>
 
-#define _EVAL_CLASSES_	4
+#define _EVAL_CLASSES_	5
 
 //-----------------------------------------------------------------
 //                          CONSTRUCTOR
@@ -140,6 +140,10 @@ struct matrix *_calculate_4_class(struct matrix *confusionMatrix, int class,
 		for (int predicted = 0; predicted < confusionMatrix->cols;
 				predicted++) {
 
+			//ALL
+			res->data[class][EVAL_ALL] +=
+					confusionMatrix->data[true][predicted];
+
 			//TP
 			if (true == predicted && true == class) {
 				res->data[class][EVAL_TP] +=
@@ -147,7 +151,7 @@ struct matrix *_calculate_4_class(struct matrix *confusionMatrix, int class,
 			}
 
 			//TN
-			if (true != class && predicted != class) {
+			if (true == predicted && true != class) {
 				res->data[class][EVAL_TN] +=
 						confusionMatrix->data[true][predicted];
 			}
@@ -183,10 +187,7 @@ double _computeAccuracy(struct matrix *confusionMatrix) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
 
 		acc += (measures->data[class][EVAL_TP] + measures->data[class][EVAL_TN])
-				/ (measures->data[class][EVAL_TP]
-						+ measures->data[class][EVAL_TN]
-						+ measures->data[class][EVAL_FP]
-						+ measures->data[class][EVAL_FN]);
+				/ measures->data[class][EVAL_ALL];
 
 		evals++;
 
@@ -221,9 +222,11 @@ double _computeSensitivity(struct matrix *confusionMatrix) {
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
 
-		sensitivity += measures->data[class][EVAL_TP]
-				/ (measures->data[class][EVAL_TP]
-						+ measures->data[class][EVAL_FN]);
+		double denominator = measures->data[class][EVAL_TP]
+				+ measures->data[class][EVAL_FN];
+		if (fabs(denominator) > EPSILON) {
+			sensitivity += measures->data[class][EVAL_TP] / denominator;
+		}
 
 		evals++;
 		if (2 == confusionMatrix->rows) {
@@ -251,9 +254,12 @@ double _computeSpecificity(struct matrix *confusionMatrix) {
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
 
-		specificity += measures->data[class][EVAL_TN]
-				/ (measures->data[class][EVAL_TN]
-						+ measures->data[class][EVAL_FP]);
+		double denominator = measures->data[class][EVAL_TN]
+				+ measures->data[class][EVAL_FP];
+
+		if (fabs(denominator) > EPSILON) {
+			specificity += measures->data[class][EVAL_TN] / denominator;
+		}
 
 		evals++;
 		if (2 == confusionMatrix->rows) {
@@ -281,9 +287,12 @@ double _computePrecision(struct matrix *confusionMatrix) {
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
 
-		precision += measures->data[class][EVAL_TP]
-				/ (measures->data[class][EVAL_TP]
-						+ measures->data[class][EVAL_FP]);
+		double denominator = measures->data[class][EVAL_TP]
+				+ measures->data[class][EVAL_FP];
+
+		if (fabs(denominator) > EPSILON) {
+			precision += measures->data[class][EVAL_TP] / denominator;
+		}
 
 		evals++;
 		if (2 == confusionMatrix->rows) {
@@ -384,8 +393,13 @@ double _computeFn(struct matrix *confusionMatrix, int n) {
 	double sensitivity = _computeSensitivity(confusionMatrix);
 	double precision = _computePrecision(confusionMatrix);
 
-	return ((1 + n * n) * sensitivity * precision)
-			/ ((n * n) * precision + sensitivity);
+	double denominator = (n * n) * precision + sensitivity;
+
+	if (fabs(denominator) < EPSILON) {
+		return 0.0;
+	}
+
+	return ((1 + n * n) * sensitivity * precision) / denominator;
 }
 
 double _computeF1(struct matrix *confusionMatrix) {
@@ -406,13 +420,25 @@ double _computeF1_micro(struct matrix *confusionMatrix) {
 		}
 	}
 
-	double precision = measures->data[0][EVAL_TP]
-			/ (measures->data[0][EVAL_TP] + measures->data[0][EVAL_FP]);
+	double precision = 0;
+	double sensitivity = 0;
+	double F = 0;
 
-	double sensitivity = measures->data[0][EVAL_TP]
-			/ (measures->data[0][EVAL_TP] + measures->data[0][EVAL_FN]);
+	double denominator = measures->data[0][EVAL_TP]
+			+ measures->data[0][EVAL_FP];
+	if (fabs(denominator) > EPSILON) {
+		precision = measures->data[0][EVAL_TP] / denominator;
+	}
 
-	double F = (2 * precision * sensitivity) / (precision + sensitivity);
+	denominator = measures->data[0][EVAL_TP] + measures->data[0][EVAL_FN];
+	if (fabs(denominator) > EPSILON) {
+		sensitivity = measures->data[0][EVAL_TP] / denominator;
+	}
+
+	denominator = precision + sensitivity;
+	if (fabs(denominator) > EPSILON) {
+		F = (2 * precision * sensitivity) / denominator;
+	}
 
 	_freeMatrix(measures);
 
@@ -425,19 +451,30 @@ double _computeF1_macro(struct matrix *confusionMatrix) {
 	_EVAL_CLASSES_);
 
 	double F = 0.0;
-	double precision, sensitivity;
+	double precision, sensitivity, denominator;
 	for (int class = 0; class < confusionMatrix->rows; class++) {
 		measures = _calculate_4_class(confusionMatrix, class, measures);
 
-		precision = measures->data[class][EVAL_TP]
-				/ (measures->data[class][EVAL_TP]
-						+ measures->data[class][EVAL_FP]);
+		precision = 0.0;
+		sensitivity = 0.0;
 
-		sensitivity = measures->data[class][EVAL_TP]
-				/ (measures->data[class][EVAL_TP]
-						+ measures->data[class][EVAL_FN]);
+		denominator = measures->data[class][EVAL_TP]
+				+ measures->data[class][EVAL_FP];
+		if (fabs(denominator) > EPSILON) {
+			precision = measures->data[class][EVAL_TP] / denominator;
+		}
 
-		F += (2 * precision * sensitivity) / (precision + sensitivity);
+		denominator = measures->data[class][EVAL_TP]
+				+ measures->data[class][EVAL_FN];
+		if (fabs(denominator) > EPSILON) {
+			sensitivity = measures->data[class][EVAL_TP] / denominator;
+		}
+
+		denominator = precision + sensitivity;
+		if (fabs(denominator) > EPSILON) {
+			F += (2 * precision * sensitivity) / denominator;
+		}
+
 	}
 
 	_freeMatrix(measures);

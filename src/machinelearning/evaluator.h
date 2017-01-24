@@ -18,6 +18,7 @@
 #define EVAL_TN 	1
 #define EVAL_FP 	2
 #define EVAL_FN 	3
+#define EVAL_ALL 	4
 
 struct evaluator {
 	double accuracy;
