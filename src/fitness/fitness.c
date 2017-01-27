@@ -13,6 +13,7 @@
 #include <string.h>
 #include "../math/lialg.h"
 #include "../machinelearning/evaluator.h"
+#include "../util.h"
 
 #define SCALAR(_X_) 	_getMatrixAsScalar(_X_)
 #define SIGMA_F(_Y_)	1.0 / (1 + exp(-SCALAR(_Y_)))
@@ -66,8 +67,11 @@ int softmax(struct parameters *params, struct chromosome *chromo,
 		}
 
 		if (value > max) {
-			max = SCALAR(_getChromosomeOutput(chromo, i));
+			max = value;
 			maxIndex = i;
+		} else if (fabs(value - max) < EPSILON) {
+			//if values same, randomly choose index
+			maxIndex = _randInt(2) == 0 ? maxIndex : i;
 		}
 	}
 
