@@ -514,16 +514,6 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		}
 
 		//check stagnation
-		if (params->stagnation > 0 && stagnation == params->stagnation) {
-
-			if (params->updateFrequency != 0) {
-				LOG(params, "%d\t%f - Stagnation condition\n", gen,
-						bestChromo->fitness);
-			}
-
-			break;
-		}
-
 		if (0 == stagnation
 				|| (fabs(
 						getChromosomeFitness(bestChromo)
@@ -532,6 +522,16 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 			stagnation++;
 		} else {
 			stagnation = 0;
+		}
+
+		if (params->stagnation > 0 && stagnation == params->stagnation) {
+
+			if (params->updateFrequency != 0) {
+				LOG(params, "%d\t%f - Stagnation condition\n", gen,
+						bestChromo->fitness);
+			}
+
+			break;
 		}
 
 		// display progress
