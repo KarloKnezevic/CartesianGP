@@ -506,8 +506,8 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		if (getChromosomeFitness(bestChromo) <= params->targetFitness) {
 
 			if (params->updateFrequency != 0) {
-				LOG(params, "%d\t%f - Solution Found\n", gen,
-						bestChromo->fitness);
+				LOG(params, "%d\t%f\t%d - Solution Found\n", gen,
+						bestChromo->fitness, bestChromo->numActiveNodes);
 			}
 
 			break;
@@ -527,8 +527,8 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		if (params->stagnation > 0 && stagnation == params->stagnation) {
 
 			if (params->updateFrequency != 0) {
-				LOG(params, "%d\t%f - Stagnation condition\n", gen,
-						bestChromo->fitness);
+				LOG(params, "%d\t%f\t%d - Stagnation condition\n", gen,
+						bestChromo->fitness, bestChromo->numActiveNodes);
 			}
 
 			break;
