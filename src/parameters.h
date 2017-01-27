@@ -49,6 +49,7 @@ struct parameters {
 	int updateFrequency;
 	int runs;
 	int generations;
+	int stagnation;
 
 	FILE *log;
 
@@ -106,6 +107,8 @@ void _setTargetFitness(struct parameters *params, double targetFitness);
 void _setNumRuns(struct parameters *params, int numRuns);
 
 void _setNumGenerations(struct parameters *params, int numGenerations);
+
+void _setNumGenStagnation(struct parameters *params, int numGenStagnation);
 
 void _setUpdateFrequency(struct parameters *params, int updateFrequency);
 

@@ -43,6 +43,7 @@ struct parameters *_initialiseParameters(const int numInputs,
 	params->updateFrequency = UPDATEFREQUENCY;
 	params->runs = MAXRUN;
 	params->generations = MAXGEN;
+	params->stagnation = STAGNATION;
 
 	params->log = fopen(LOGNAME, "w");
 
@@ -99,6 +100,7 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 	params->updateFrequency = UPDATEFREQUENCY;
 	params->runs = MAXRUN;
 	params->generations = MAXGEN;
+	params->stagnation = STAGNATION;
 
 	params->log = fopen(LOGNAME, "w");
 
@@ -298,6 +300,17 @@ void _setNumGenerations(struct parameters *params, int numGenerations) {
 	} else {
 		params->generations = numGenerations;
 	}
+}
+
+void _setNumGenStagnation(struct parameters *params, int numGenStagnation) {
+	if (numGenStagnation < 1) {
+			LOG(params, "Warning: number of generations to stagnate of %d is invalid. "
+					"Number of generations to stagnate must be >= 1. "
+					"Number of generations to stagnate is left unchanged as %d.\n",
+					numGenStagnation, params->stagnation);
+		} else {
+			params->stagnation = numGenStagnation;
+		}
 }
 
 void _setUpdateFrequency(struct parameters *params, int updateFrequency) {

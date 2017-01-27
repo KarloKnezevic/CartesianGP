@@ -55,6 +55,7 @@
 #define POPULATIONSIZE					20 //only used when override cga
 #define MAXGEN							5000
 #define MAXRUN							1
+#define STAGNATION						-1
 
 //-----------------------------------------------------------------
 //                             PRINT

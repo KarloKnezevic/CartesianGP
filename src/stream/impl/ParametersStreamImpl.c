@@ -153,6 +153,12 @@ void _loadParametersFromStream(struct parameters *params, char const *file,
 				_setNumGenerations(params, atoi(record));
 			}
 
+			//stagnation
+			if (strcmp(record, "stagnation") == 0) {
+				record = strtok(NULL, " =\n");
+				_setNumGenStagnation(params, atoi(record));
+			}
+
 			//update frequency
 			if (strcmp(record, "updatefrequency") == 0) {
 				record = strtok(NULL, " =\n");

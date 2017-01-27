@@ -488,6 +488,9 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		LOG(params, "Gen\tfitness\n");
 	}
 
+	int stagnation = 0;
+	double bestStagnationSolution = 0;
+
 	for (gen = 0; gen < numGens; gen++) {
 
 		// set fitness of the children of the population
@@ -508,6 +511,27 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 			}
 
 			break;
+		}
+
+		//check stagnation
+		if (params->stagnation > 0 && stagnation == params->stagnation) {
+
+			if (params->updateFrequency != 0) {
+				LOG(params, "%d\t%f - Stagnation condition\n", gen,
+						bestChromo->fitness);
+			}
+
+			break;
+		}
+
+		if (0 == stagnation
+				|| (fabs(
+						getChromosomeFitness(bestChromo)
+								- bestStagnationSolution) < EPSILON)) {
+			bestStagnationSolution = getChromosomeFitness(bestChromo);
+			stagnation++;
+		} else {
+			stagnation = 0;
 		}
 
 		// display progress
