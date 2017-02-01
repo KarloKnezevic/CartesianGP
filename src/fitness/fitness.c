@@ -129,6 +129,7 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 
 //	MatthewsCorrelationCoefficient(confusionMatrix)
 	double fitness = _computeAccuracy(confusionMatrix);
+	chromo->accuracy = fabs(fitness);
 
 	//eval
 	if (NULL != eval) {
@@ -140,6 +141,11 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 
 	//free resources
 	_freeMatrix(confusionMatrix);
+
+	//if regularization enabled
+	if (1 == params->L1regularization) {
+		return (1 - fabs(fitness)) + chromo->regularization;
+	}
 
 	/**
 	 * Return fitness as 1 - ABS( fitness )

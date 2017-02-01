@@ -56,6 +56,7 @@
 #define MAXGEN							5000
 #define MAXRUN							1
 #define STAGNATION						-1
+#define L1REGULARIZATION				0
 
 //-----------------------------------------------------------------
 //                             PRINT

@@ -44,6 +44,7 @@ struct parameters *_initialiseParameters(const int numInputs,
 	params->runs = MAXRUN;
 	params->generations = MAXGEN;
 	params->stagnation = STAGNATION;
+	params->L1regularization = L1REGULARIZATION;
 
 	params->log = fopen(LOGNAME, "w");
 
@@ -101,6 +102,7 @@ struct parameters *_initialiseParametersFromFile(char const *fileName,
 	params->runs = MAXRUN;
 	params->generations = MAXGEN;
 	params->stagnation = STAGNATION;
+	params->L1regularization = L1REGULARIZATION;
 
 	params->log = fopen(LOGNAME, "w");
 
@@ -304,13 +306,25 @@ void _setNumGenerations(struct parameters *params, int numGenerations) {
 
 void _setNumGenStagnation(struct parameters *params, int numGenStagnation) {
 	if (numGenStagnation < 1) {
-			LOG(params, "Warning: number of generations to stagnate of %d is invalid. "
-					"Number of generations to stagnate must be >= 1. "
-					"Number of generations to stagnate is left unchanged as %d.\n",
-					numGenStagnation, params->stagnation);
-		} else {
-			params->stagnation = numGenStagnation;
-		}
+		LOG(params,
+				"Warning: number of generations to stagnate of %d is invalid. "
+						"Number of generations to stagnate must be >= 1. "
+						"Number of generations to stagnate is left unchanged as %d.\n",
+				numGenStagnation, params->stagnation);
+	} else {
+		params->stagnation = numGenStagnation;
+	}
+}
+
+void _setL1Regularization(struct parameters *params, int L1enabled) {
+	if (L1enabled < 0 || L1enabled > 1) {
+		LOG(params, "Warning: L1 regularization of %d is invalid. "
+				"L1 regularization must be enabled (1) or disabled (0). "
+				"L1 regularization is left unchanged as %d.\n", L1enabled,
+				params->stagnation);
+	} else {
+		params->L1regularization = L1enabled;
+	}
 }
 
 void _setUpdateFrequency(struct parameters *params, int updateFrequency) {
@@ -392,6 +406,8 @@ void _printParameters(struct parameters *params) {
 	LOG(params, "Runs:\t\t\t\t\t%d\n", params->runs);
 	LOG(params, "Generations:\t\t\t\t%d\n", params->generations);
 	LOG(params, "Update frequency:\t\t\t%d\n", params->updateFrequency);
+	LOG(params, "L1 regularization:\t\t\t%s\n",
+			1 == params->L1regularization ? "enabled" : "disabled");
 
 	LOG(params,
 			"-----------------------------------------------------------\n\n");

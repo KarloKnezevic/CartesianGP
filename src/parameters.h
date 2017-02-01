@@ -50,6 +50,7 @@ struct parameters {
 	int runs;
 	int generations;
 	int stagnation;
+	int L1regularization;
 
 	FILE *log;
 
@@ -109,6 +110,8 @@ void _setNumRuns(struct parameters *params, int numRuns);
 void _setNumGenerations(struct parameters *params, int numGenerations);
 
 void _setNumGenStagnation(struct parameters *params, int numGenStagnation);
+
+void _setL1Regularization(struct parameters *params, int L1enabled);
 
 void _setUpdateFrequency(struct parameters *params, int updateFrequency);
 

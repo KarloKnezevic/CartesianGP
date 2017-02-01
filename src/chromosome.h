@@ -23,6 +23,7 @@ struct chromosome {
 	int numNodes;
 
 	int numActiveNodes;
+	double regularization;
 
 	int arity;
 
@@ -33,6 +34,7 @@ struct chromosome {
 	int *activeNodes;
 
 	double fitness;
+	double accuracy;
 
 	struct matrix **outputValues;
 

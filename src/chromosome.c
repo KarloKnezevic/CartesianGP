@@ -485,11 +485,17 @@ void _executeChromosome(struct chromosome *chromo, struct matrix **inputs) {
 		exit(0);
 	}
 
+	//init regularization
+	chromo->regularization = 0;
+
 	//for all active nodes
 	for (i = 0; i < numActiveNodes; i++) {
 
 		//get index of current active node
 		currentActiveNode = chromo->activeNodes[i];
+
+		//sum amplitude (L1 regularization)
+		chromo->regularization += fabs(chromo->nodes[currentActiveNode]->amplitude);
 
 		nodeArity = chromo->nodes[currentActiveNode]->actArity;
 
@@ -679,6 +685,7 @@ void _copyChromosome(struct chromosome *chromoDest,
 	chromoDest->numActiveNodes = chromoSrc->numActiveNodes;
 
 	chromoDest->fitness = chromoSrc->fitness;
+	chromoDest->accuracy = chromoSrc->accuracy;
 
 	chromoDest->generation = chromoSrc->generation;
 }

@@ -485,7 +485,7 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 	// ECHO
 	if (params->updateFrequency != 0) {
 		LOG(params, "\n-- Starting CGP --\n\n");
-		LOG(params, "Gen\tfitness\n");
+		LOG(params, "Gen\tfitness\tActive\tAccuracy\n");
 	}
 
 	int stagnation = 0;
@@ -506,8 +506,9 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		if (getChromosomeFitness(bestChromo) <= params->targetFitness) {
 
 			if (params->updateFrequency != 0) {
-				LOG(params, "%d\t%f\t%d - Solution Found\n", gen,
-						bestChromo->fitness, bestChromo->numActiveNodes);
+				LOG(params, "%d\t%f\t%d\t%f - Solution Found\n", gen,
+						bestChromo->fitness, bestChromo->numActiveNodes,
+						bestChromo->accuracy);
 			}
 
 			break;
@@ -527,8 +528,9 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		if (params->stagnation > 0 && stagnation == params->stagnation) {
 
 			if (params->updateFrequency != 0) {
-				LOG(params, "%d\t%f\t%d - Stagnation condition\n", gen,
-						bestChromo->fitness, bestChromo->numActiveNodes);
+				LOG(params, "%d\t%f\t%d\t%f - Stagnation condition\n", gen,
+						bestChromo->fitness, bestChromo->numActiveNodes,
+						bestChromo->accuracy);
 			}
 
 			break;
@@ -537,8 +539,8 @@ struct chromosome* runCGP(struct parameters *params, struct dataSet *data,
 		// display progress
 		if (params->updateFrequency != 0
 				&& (gen % params->updateFrequency == 0 || gen >= numGens - 1)) {
-			LOG(params, "%d\t%f\t%d\n", gen, bestChromo->fitness,
-					bestChromo->numActiveNodes);
+			LOG(params, "%d\t%f\t%d\t%f\n", gen, bestChromo->fitness,
+					bestChromo->numActiveNodes, bestChromo->accuracy);
 		}
 
 		if (params->evolutionaryStrategy == '+') {
@@ -609,19 +611,24 @@ struct results* repeatCGP(struct parameters *params, struct dataSet *data,
 
 		rels->bestChromosomes[i] = runCGP(params, data, numGens);
 
-		LOG(params, "Run\tFitness\t\tGenerations\tActive Nodes\n");
+		LOG(params, "Run\tFitness\t\tGenerations\tActive Nodes\tAccuracy\n");
 
-		LOG(params, "%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
+		LOG(params, "%d\t%f\t%d\t\t%d\t%f\n", i,
+				rels->bestChromosomes[i]->fitness,
 				rels->bestChromosomes[i]->generation,
-				rels->bestChromosomes[i]->numActiveNodes);
+				rels->bestChromosomes[i]->numActiveNodes,
+				rels->bestChromosomes[i]->accuracy);
 	}
 
-	LOG(params, "\n===RESULTS===\nRun\tFitness\t\tGenerations\tActive Nodes\n");
+	LOG(params,
+			"\n===RESULTS===\nRun\tFitness\t\tGenerations\tActive Nodes\tAccuracy\n");
 
 	for (i = 0; i < numRuns; i++) {
-		LOG(params, "%d\t%f\t%d\t\t%d\n", i, rels->bestChromosomes[i]->fitness,
+		LOG(params, "%d\t%f\t%d\t\t%d\t%f\n", i,
+				rels->bestChromosomes[i]->fitness,
 				rels->bestChromosomes[i]->generation,
-				rels->bestChromosomes[i]->numActiveNodes);
+				rels->bestChromosomes[i]->numActiveNodes,
+				rels->bestChromosomes[i]->accuracy);
 	}
 
 	LOG(params, "----------------------------------------------------\n");

@@ -159,6 +159,12 @@ void _loadParametersFromStream(struct parameters *params, char const *file,
 				_setNumGenStagnation(params, atoi(record));
 			}
 
+			//regularization
+			if (strcmp(record, "regularization") == 0) {
+				record = strtok(NULL, " =\n");
+				_setL1Regularization(params, atoi(record));
+			}
+
 			//update frequency
 			if (strcmp(record, "updatefrequency") == 0) {
 				record = strtok(NULL, " =\n");
