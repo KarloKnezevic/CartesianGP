@@ -48,7 +48,7 @@ void validate(struct chromosome *chromo, struct dataSet *data) {
  * In case of error, -1 returned
  */
 int softmax(struct parameters *params, struct chromosome *chromo,
-		struct evaluator *eval) {
+		struct evaluator *eval, double *sqError, int trueClass) {
 	//return index of max output value
 
 	//error state
@@ -58,9 +58,14 @@ int softmax(struct parameters *params, struct chromosome *chromo,
 
 	int maxIndex = 0;
 	double max = SIGMA_F(_getChromosomeOutput(chromo, maxIndex));
+	double outputForTrue = 0;
 
 	for (int i = 0; i < _getNumChromosomeOutputs(chromo); i++) {
 		double value = SIGMA_F(_getChromosomeOutput(chromo, i));
+
+		if (i == trueClass) {
+			outputForTrue = value;
+		}
 
 		if (NULL != eval) {
 			LOG(params, "%f ", value);
@@ -73,6 +78,11 @@ int softmax(struct parameters *params, struct chromosome *chromo,
 			//if values same, randomly choose index
 			maxIndex = _randInt(2) == 0 ? maxIndex : i;
 		}
+	}
+
+	if (maxIndex != trueClass) {
+		//square error
+		*sqError += (max / outputForTrue) * (max / outputForTrue);
 	}
 
 	return maxIndex;
@@ -95,12 +105,12 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 	struct matrix *confusionMatrix = _initialiseMatrix(params->numOutputs,
 			params->numOutputs);
 
+	double sqError = 0;
+
 	//for each data
 	for (i = 0; i < _getNumDataSetSamples(data); i++) {
 
 		_executeChromosome(chromo, _getDataSetSampleInputs(data, i));
-
-		int predictedClass = softmax(params, chromo, eval);
 
 		int trueClass = -1;
 		//if there is K classes, is is used binary notation, and right class is denoted by 1
@@ -110,6 +120,8 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 				break;
 			}
 		}
+
+		int predictedClass = softmax(params, chromo, eval, &sqError, trueClass);
 
 		if (trueClass == -1 || predictedClass == -1) {
 			LOG(params, "ERROR: Dataset has non classified data. "
@@ -128,8 +140,8 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 	}
 
 //	MatthewsCorrelationCoefficient(confusionMatrix)
-	double fitness = _computeAccuracy(confusionMatrix);
-	chromo->accuracy = fabs(fitness);
+	double fitness = sqError;
+	chromo->accuracy = _computeAccuracy(confusionMatrix);
 
 	//eval
 	if (NULL != eval) {
@@ -144,7 +156,7 @@ double supervisedLearning(struct parameters *params, struct chromosome *chromo,
 
 	//if regularization enabled
 	if (1 == params->L1regularization) {
-		return (1 - fabs(fitness)) + chromo->regularization;
+		return fitness + chromo->regularization;
 	}
 
 	/**
